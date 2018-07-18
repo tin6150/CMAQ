@@ -399,6 +399,7 @@ C Read & interpolate boundary concentrations
                ! running semivolatile POA
                IF ( BCNAME( VAR )( 1:4 ) .EQ. 'APOC' ) THEN 
                   IF ( INDEX( MECHNAME,"NVPOA" ) .EQ. 0 ) THEN
+                    BBUF_TMP = 0.0
                     BCNAME_TMP = 'APNCOM' // BCNAME( VAR )( 5:5 )
 #ifdef parallel
                     IF ( .NOT. INTERPB ( BNDY_AERO_1, BCNAME_TMP, PNAME,

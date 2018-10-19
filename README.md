@@ -11,6 +11,10 @@ CMAQ combines current knowledge in atmospheric science and air quality modeling 
 computing techniques in an open-source framework to deliver fast, technically sound estimates of ozone,
 particulates, toxics, and acid deposition.
 
+**Take our 2018 CMAQ User Survey!**
+* [Link to online survey](https://unc.az1.qualtrics.com/jfe/form/SV_1IcuS1wIZ2PQUu1)
+* Deadline to complete the survey: October 31, 2018.
+
 ## The purpose of CMAQv5.3 beta release
 
 CMAQv5.3b1 is a development version that is not intended for regulatory or research application use. The purpose of releasing the development
@@ -21,6 +25,11 @@ version is to give community members:
 * an opportunity to comment on the code improvements made in the new version.
 * the ability to take advantage of improvements for preliminary studies of their own interest.
 * a reasonable amount of time to ensure the new version is compatible with any features the member may have submitted in the past.
+
+**Community contributions are highly sought:**
+* Test the beta release and post issues and feedback via GitHub.
+* Submit model developments via GitHub. Check out our [Developers' Guide](DOCS/Developers_Guide/CMAQ_Dev_Guide.md).  
+* Please notify our team early if you are interested in submitting a contribution to allow for coordination, testing, etc.
 
 
 ## Getting the CMAQ Repository

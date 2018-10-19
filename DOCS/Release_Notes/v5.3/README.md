@@ -4,6 +4,7 @@ CMAQv5.3 Release Notes
 # Getting Started with CMAQ  
 [Tutorial on installing and running CMAQ](../../../DOCS/Tutorials/CMAQ_GettingStarted.md)  
 [Tutorial on running the CMAQ test case](../../../DOCS/Tutorials/CMAQ_Benchmark.md)  
+_Note: ICON/BCON generation tools are under final stages of development and will be released via GitHub when ready._
 
 # Summary of CMAQv5.3 Updates
 

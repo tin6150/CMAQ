@@ -75,6 +75,7 @@ tar xvzf CMAQv5.2_Benchmark_SingleDay_Output.tar.gz
 ```
 
 ### Build the preprocessor executables
+_Note: ICON/BCON generation tools are under final stages of development and will be released via GitHub when ready. ICON and BCON files are provided with the benchmark data._
 
 ```
 cd $CMAQ_HOME/PREP/icon/scripts
@@ -87,6 +88,7 @@ cd $CMAQ_HOME/PREP/bcon/scripts
 ```
 
 ### Run the preprocessor executables
+_Note: ICON/BCON generation tools are under final stages of development and will be released via GitHub when ready. ICON and BCON files are provided with the benchmark data._
 
 To run the test simulation for the various CMAQ preprocessor programs, change directories to the location of each program and execute the run script.
 

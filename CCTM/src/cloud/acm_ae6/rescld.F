@@ -17,13 +17,6 @@
 !  subject to their copyright restrictions.                              !
 !------------------------------------------------------------------------!
 
-
-C RCS file, release, date & time of last delta, author, state, [and locker]
-C $Header: /project/work/rep/arc/CCTM/src/cloud/cloud_acm_ae6/rescld.F,v 1.7 2011/10/21 16:10:24 yoj Exp $
-
-C what( 1 ) key, module and SID; SCCS file; date and time of last delta:
-C %W% %P% %G% %U%
-
 C:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
       SUBROUTINE RESCLD ( CGRID, JDATE, JTIME, TSTEP,
      &                    N_SPC_WDEP, WDEP_MAP, DEP, RESTRANS )
@@ -65,7 +58,8 @@ C      15 01 Jul 11 G. Sarwar: calculate zenith angle to determine daytime and
 C                    nightime needed for sulfur oxidation via metal catalysis
 C      16 02Aug12 S.Roselle:  instrumented to calculate and return
 C                             transmissivity for resolved clouds
-C      07 Nov 14 J.Bash: Updated call to czangle.F for the ASX_DATA_MOD shared data module.  
+C      07 Nov 14 J.Bash: Updated call to czangle.F for the ASX_DATA_MOD shared data module. 
+C      07 May 18 D. Schwede: Removed call to CZANGLE. COSZEN now calculated in ASX_DATA_MOD
 C  Called by:  CLDPROC
  
 C  Calls the following subroutines:  SCAVWDEP and AQ_MAP
@@ -74,7 +68,10 @@ C-----------------------------------------------------------------------
       USE GRID_CONF           ! horizontal & vertical domain specifications
       USE CGRID_SPCS          ! CGRID mechanism species
       USE UTILIO_DEFN
-      !USE AQ_DATA 
+      USE AQ_DATA,       ONLY: JH2O2_HYDROMETEORS,  JHNO3_HYDROMETEORS
+      USE ASX_DATA_MOD,  ONLY: MET_DATA
+      USE PHOT_MOD,      ONLY: RJ, RJ_RES, RJ_SUB, LH2O2, LHNO3
+
 
       IMPLICIT NONE
 
@@ -96,6 +93,7 @@ C...........Arguments:
       CHARACTER( 120 ) :: XMSG  = ' '    ! Exit status message
 
 C...........Parameters:
+      REAL, PARAMETER :: PERMIN_TO_PERSEC = 1.0 / 60.0
       REAL, PARAMETER :: GPKG = 1.0E+03  ! g/kg
       REAL, PARAMETER :: M2PHA = 1.0E+04 ! 1 hectare = 1.0e4 m**2
       REAL, PARAMETER :: M2PHA_OVER_GPKG = M2PHA / GPKG
@@ -119,7 +117,6 @@ C...........Local Variables:
       INTEGER       ROW                 ! row loop counter
       INTEGER       LAY                 ! layer loop counter
       INTEGER       FINI                ! ending position
-      INTEGER, SAVE :: LOGDEV           ! output log unit number
       INTEGER       MDATE               ! process date (yyyyddd)
       INTEGER, SAVE :: MSTEP            ! met file time step (hhmmss)
       INTEGER       MTIME               ! process time (hhmmss)
@@ -179,9 +176,9 @@ C for INTERPX
 
 C Gridded meteorology data:
 C Latitude and longitude for zenith angle calculation: Golam Sarwar * July 1, 2011 
-!     REAL          COSZEN( NCOLS, NROWS )          ! cosine of zenith angle
-      REAL,    ALLOCATABLE, SAVE :: COSZEN( :,: )   ! cosine of zenith angle
       REAL          COSZ                            ! local cosine of zenith angle
+      REAL          JH2O2                           ! H2O2 photolysis rate, 1/min 
+      REAL          JHNO3                           ! HNO3 photolysis rate, 1/min 
       LOGICAL       DARK                            ! DARK = TRUE is night,  DARK = FALSE is day
 
 C...........External Functions:
@@ -210,13 +207,6 @@ C...........External Functions:
            REAL,    INTENT( IN )    :: ALFA0, ALFA2, ALFA3
            LOGICAL, INTENT( IN )    :: DARK                  !Golam Sarwar, July 1, 2011
         END SUBROUTINE AQ_MAP
-        SUBROUTINE CZANGLE( JDATE, JTIME, NX, NY, COSZEN )
-           INTEGER, INTENT( IN )  :: JDATE
-           INTEGER, INTENT( IN )  :: JTIME
-           INTEGER, INTENT( IN )  :: NX
-           INTEGER, INTENT( IN )  :: NY
-           REAL,    INTENT( OUT ) :: COSZEN( :,: )
-        END SUBROUTINE CZANGLE
       END INTERFACE
 C-----------------------------------------------------------------------
 
@@ -225,8 +215,6 @@ C...Initialization
       IF ( FIRSTIME ) THEN
 
         FIRSTIME = .FALSE.
-
-        LOGDEV = INIT3()
 
 C...open MET_CRO_2D
 
@@ -330,11 +318,6 @@ C...  the met timestep in hours
           CALL M3EXIT( PNAME, JDATE, JTIME, XMSG, XSTAT1 )
         END IF
 
-        ALLOCATE ( COSZEN ( NCOLS,NROWS ), STAT = ALLOCSTAT )
-        IF ( ALLOCSTAT .NE. 0 ) THEN
-          XMSG = 'Failure allocating COSZEN'
-          CALL M3EXIT( PNAME, JDATE, JTIME, XMSG, XSTAT1 )
-        END IF
       END IF  ! FIRSTIME
 
       MDATE = JDATE
@@ -470,10 +453,6 @@ C...Get air density (kg/m3)
         CALL M3EXIT ( PNAME, JDATE, JTIME, XMSG, XSTAT1 )
       END IF
 
-C.. Compute zenith angle; Golam Sarwar, July 1, 2011 
-
-      CALL CZANGLE ( JDATE, JTIME, MY_NCOLS, MY_NROWS, COSZEN ) 
- 
 C...compute layer thicknesses (m)
 
       DO ROW = 1, MY_NROWS
@@ -640,14 +619,18 @@ C...  that participated in cloud chemistry
 
 C...  calculate cosine of zenith angle for the cell and determine day or night; Golam Sarwar 
 
-                  COSZ = COSZEN( COL, ROW )
-
-                  IF ( COSZ .LE. 0.0 ) THEN
+                  COSZ = MET_DATA%COSZEN( COL, ROW )
+                  IF ( COSZ .LE. 0.0 ) THEN 
                     DARK = .TRUE.   ! night
+                    JH2O2_HYDROMETEORS = 0.0D0
+                    JHNO3_HYDROMETEORS = 0.0D0
                   ELSE
                     DARK = .FALSE.  ! day
+                    JH2O2 = RJ_RES( COL, ROW, LAY, LH2O2 )
+                    JHNO3 = RJ_RES( COL, ROW, LAY, LHNO3 )
+                    JH2O2_HYDROMETEORS = REAL( JH2O2*PERMIN_TO_PERSEC, 8 )
+                    JHNO3_HYDROMETEORS = REAL( JHNO3*PERMIN_TO_PERSEC, 8 )
                   END IF
-
                   CALL AQ_MAP ( JDATE, JTIME, WTBAR, WCBAR, TBARC,
      &                          PBARC, CTHK1, AIRM, PRATE1, TAUCLD,
      &                          POLC, CEND, REMOV, REMOVAC, ALFA0,

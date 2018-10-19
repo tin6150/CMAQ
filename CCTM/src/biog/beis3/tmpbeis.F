@@ -17,14 +17,8 @@
 !  subject to their copyright restrictions.                              !
 !------------------------------------------------------------------------!
 
-C RCS file, release, date & time of last delta, author, state, [and locker]
-C $Header: /project/yoj/arc/CCTM/src/biog/beis3/tmpbeis.F,v 1.6 2011/10/21 16:10:18 yoj Exp $
-
-C what(1) key, module and SID; SCCS file; date and time of last delta:
-C %W% %P% %G% %U%
-
 C::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-      SUBROUTINE TMPBEIS312( JDATE, JTIME, TSTEP, N_SPC_BIOG, BEIS_MAP, EMISL )
+      SUBROUTINE TMPBEIS312( JDATE, JTIME, TSTEP, BEIS_MAP, EMISL )
 
 C-----------------------------------------------------------------------
  
@@ -39,8 +33,8 @@ C   solar radiation, and pressure data.
 C   Normalized gridded emissions B3GRD from Normbeis3 (3.12) 
  
 C Subroutines and Functions Called:
-C   BEIS, HRNO, CZANGLE, 
-C   ENVYN, CURRSTEP, HHMMSS, NAMEVAL, UPCASE, CHECKMEM, M3EXIT, M3MSG2,
+C   BEIS, HRNO,  
+C   CURRSTEP, HHMMSS, UPCASE, CHECKMEM, M3EXIT, M3MSG2,
 C   WRITE3, OPEN3, CLOSE3, NEXTIME, TIME2SEC
  
 C Revision History:
@@ -64,6 +58,7 @@ C                calculations.
 C  08/14: J.Bash-Added backwards compatibility for earlier versions of MCIP
 C  07 Nov 14 J.Bash: Updated for the ASX_DATA_MOD shared data module. 
 C  12 Aug 15 D.Wong: Replaced MYPE with IO_PE_INCLUSIVE for parallel I/O implementation
+C  07 May 18 D. Schwede: Removed call to CZANGLE. COSZEN now calculated in ASX_DATA_MOD
 C-----------------------------------------------------------------------
 C Modified from:
  
@@ -99,7 +94,6 @@ C Arguments:
       INTEGER, INTENT(  IN ) :: JDATE   ! current simulation date (YYYYDDD)
       INTEGER, INTENT(  IN ) :: JTIME   ! current simulation time (HHMMSS)
       INTEGER, INTENT(  IN ) :: TSTEP( 3 )      ! timestep vector
-      INTEGER, INTENT(  IN ) :: N_SPC_BIOG      ! model biogenic species
       INTEGER, INTENT(  IN ) :: BEIS_MAP( : )   ! mapping from beis3 to model species
       REAL,    INTENT( OUT ) :: EMISL( :,:,: )  ! emissions in moles/sec
 
@@ -110,7 +104,6 @@ C Parameters:
       REAL,    PARAMETER :: HR2SEC = 1.0 / 3600.0
 
 C Gridded meteorology data:
-      REAL,    ALLOCATABLE, SAVE :: COSZEN( :,: )     ! cosine of zenith angle
       INTEGER, ALLOCATABLE, SAVE :: SWITCH( :,: )     ! Seasonal switch
 
 C Gridded beis emissions
@@ -150,18 +143,12 @@ C Other variables:
       INTEGER, SAVE :: LDATE      ! previous simulation date
       INTEGER, SAVE :: MDATE      ! test date to update beis diag avg
       INTEGER, SAVE :: MTIME      ! test time to update beis diag avg
-      INTEGER, SAVE :: SDATE      ! scenario start date
-      INTEGER, SAVE :: STIME      ! scenario start time
       INTEGER, SAVE :: NSTEPS     ! run duration
       INTEGER, SAVE :: WSTEP  = 0 ! local write counter
       INTEGER          PARTYPE    ! method number to calculate PAR
-      INTEGER, SAVE :: LOGDEV
       INTEGER          C, R, I, J, K, S  ! loop counters and subscripts
 
       LOGICAL          OK        ! check flag
-      LOGICAL, SAVE :: SWITCH_FILE   = .TRUE. ! use frost switch file
-      LOGICAL       :: ASSUME_SUMMER = .TRUE. ! use summer normalized emissions
-      LOGICAL, SAVE :: BEMIS_DIAG             ! true: write diagnostic emiss file
       LOGICAL, SAVE :: LASTTIC                ! true: last sync step this output tstep
       LOGICAL, SAVE :: FIRSTIME = .TRUE.
 
@@ -184,21 +171,13 @@ C for XTRACT3
 #endif
 
       INTERFACE
-         SUBROUTINE CZANGLE( JDATE, JTIME, NX, NY, COSZEN )
-            INTEGER, INTENT( IN )  :: JDATE
-            INTEGER, INTENT( IN )  :: JTIME
-            INTEGER, INTENT( IN )  :: NX
-            INTEGER, INTENT( IN )  :: NY
-            REAL,    INTENT( OUT ) :: COSZEN( :,: )
-         END SUBROUTINE CZANGLE
-         SUBROUTINE BEIS3( JDATE, JTIME, NX, NY, MSPCS, COSZEN, SEMIS,
+         SUBROUTINE BEIS3( JDATE, JTIME, NX, NY, MSPCS, SEMIS,
      &                     SLAI, BIPOL )
             INTEGER, INTENT( IN ) :: JDATE
             INTEGER, INTENT( IN ) :: JTIME
             INTEGER, INTENT( IN ) :: NX
             INTEGER, INTENT( IN ) :: NY
             INTEGER, INTENT( IN ) :: MSPCS
-            REAL,    INTENT( IN ) :: COSZEN( :,: )
             REAL,    INTENT( IN ) :: SEMIS ( :,:,: )
             REAL,    INTENT( IN ) :: SLAI  ( :,:,: )
             REAL,    INTENT( OUT ) :: BIPOL( :,:,: )
@@ -216,17 +195,8 @@ C-----------------------------------------------------------------------
       IF ( FIRSTIME ) THEN
          FIRSTIME = .FALSE.
 
-         LOGDEV = INIT3()
-
 C Determine last timestamp
-         SDATE = ENVINT( 'CTM_STDATE', 'Scenario Start (YYYYJJJ)', 0, IOS )
-         STIME = ENVINT( 'CTM_STTIME', 'Scenario Start (HHMMSS)', 0, IOS )
-         NSTEPS = ENVINT( 'CTM_RUNLEN', 'Scenario Duration (HHMMSS)', 24, IOS )
-         NSTEPS = NSTEPS / TSTEP( 1 )           ! initscen guarantees divisibility
-
-C Check to see if frost date switch file to be used
-         MESG = 'Using a frost date switch file?'
-         SWITCH_FILE = ENVYN ( 'BIOSW_YN', MESG, .TRUE., IOS )
+         NSTEPS = RUNLEN / TSTEP( 1 )           ! initscen guarantees divisibility
 
 C Get normalized emissions file, BGRD
          NNAME = PROMPTMFILE( 
@@ -248,7 +218,7 @@ C Get windowing info for the normalized emissions file
      &                   STRTCOLNB3, ENDCOLNB3, STRTROWNB3, ENDROWNB3 )
 
 C Open and check bioseason file if using
-         IF ( SWITCH_FILE ) THEN
+         IF ( BIOGEMIS_SEASON ) THEN
 
             BNAME = PROMPTMFILE( 
      &              'Enter name for season switch input file',
@@ -276,11 +246,6 @@ C Get domain decomp info for the bioseasons switch file
             CALL CHECKMEM( IOS, 'SWITCH', PNAME )
             SWITCH = 0   ! array
 
-         ELSE
-
-            MESG = 'Use summer normalized emissions?'
-            ASSUME_SUMMER = ENVYN ( 'SUMMER_YN', MESG, .TRUE., IOS )
-
          END IF
 
 C Ensure met data time and grid for this run match beis emissions data files
@@ -306,13 +271,10 @@ C Get domain decomp info for the bioseasons switch file
          CALL SUBHFILE ( MNAME, GXOFF, GYOFF,
      &                   STRTCOLM, ENDCOLM, STRTROWM, ENDROWM )
 
-C Write emissions diagnostic file?
-         BEMIS_DIAG = ENVYN( 'B3GTS_DIAG', 'Write emissions diagnostic file?',
-     &                       .FALSE., IOS )
            
          IF ( BEMIS_DIAG ) THEN
 C Build description for, and open beis diagnostic file
-            MDATE = SDATE; MTIME = STIME
+            MDATE = STDATE; MTIME = STTIME
             CALL NEXTIME( MDATE, MTIME, TSTEP( 1 ) )
 
             GDNAM3D = GRID_NAME  ! from HGRD_DEFN
@@ -340,8 +302,7 @@ C Build description for, and open beis diagnostic file
                VGLVS3D( I ) = VGLVS_GD( I )
             END DO
   
-!           NVARS3D = MSPCS
-            NVARS3D = N_SPC_BIOG
+            NVARS3D = MSPCS
 
             J = 0
             DO I = 1, MSPCS
@@ -350,7 +311,7 @@ C Build description for, and open beis diagnostic file
                   VNAME3D( J ) = EMSPC( I )
                   VDESC3D( J ) = 'biogenic emissions of the indicated species'
                   VTYPE3D( J ) = M3REAL
-                  UNITS3D( J ) = 'gm/s'
+                  UNITS3D( J ) = 'gm s-1'
                END IF
             END DO
 
@@ -383,9 +344,6 @@ C Build name table for variables in normalized emissions file
          AVGEMIS = 0.0 ! array
          AVGLAI  = 0.0 ! array
 
-C Allocate memory for data and read
-         ALLOCATE( COSZEN( NCOLS,NROWS ), STAT=IOS )
-         CALL CHECKMEM( IOS, 'COSZEN', PNAME )
 
 C Read the various categories of normalized emissions
          DO I = 1, NSEASONS 
@@ -428,7 +386,7 @@ C Allocate memory for arrays
          CALL CHECKMEM( IOS, 'NOPOL', PNAME )
 
          IF ( BEMIS_DIAG ) THEN
-            ALLOCATE( EMISS( NCOLS,NROWS,N_SPC_BIOG ), STAT=IOS )
+            ALLOCATE( EMISS( NCOLS,NROWS,MSPCS ), STAT=IOS )
             CALL CHECKMEM( IOS, 'EMISS', PNAME )
          END IF
 
@@ -480,15 +438,12 @@ C Loop thru the number of time steps (hourly)
       EMISX = 0.0   ! array
 #endif
 
-C Compute zenith angle
-      CALL CZANGLE( JDATE, JTIME, MY_NCOLS, MY_NROWS, COSZEN ) 
-
       IF ( JDATE .NE. LDATE ) THEN
 
          CALL WRDAYMSG( JDATE, MESG )               
 
 C If new date, read season switch 
-         IF ( SWITCH_FILE ) THEN
+         IF ( BIOGEMIS_SEASON ) THEN
             MESG = 'Reading gridded season switch data...'
             CALL M3MSG2( MESG ) 
              
@@ -529,7 +484,7 @@ C repopulate the met_cro_2d variable attributes
       END IF
 
 C Calculate temporal non-speciated beis emissions
-      CALL BEIS3( JDATE, JTIME, MY_NCOLS, MY_NROWS, MSPCS, COSZEN, SEMIS, SLAI, BIPOL )
+      CALL BEIS3( JDATE, JTIME, MY_NCOLS, MY_NROWS, MSPCS, SEMIS, SLAI, BIPOL )
 
 C Calculate temporal non-speciated soil NO emissions
       CALL HRNO( JDATE, JTIME, TSTEP, NOPOL )
@@ -538,30 +493,12 @@ C Calculate temporal non-speciated soil NO emissions
       EMPOL( :,:,NSEF )     = NOPOL
 
 C Speciate emissions
-
-#ifdef verbose_tmpbeis
-      EMISX = 0.0; CX = 0; RX = 0    ! arrays
-#endif
       DO K = 1, NSEF
          DO R = 1, MY_NROWS
             DO C = 1, MY_NCOLS
                EMPL = EMPOL( C,R,K ) * HR2SEC
-               IF ( EMPL .LE. 0.0 ) CYCLE
-               I = 0
-               DO S = 1, MSPCS
-                  IF ( BEIS_MAP( S ) .GT. 0 ) THEN
-                     I = I + 1
-                     MLFC = MLFAC( S,K )
-                     EMISL( I,C,R ) = EMISL( I,C,R ) + EMPL * MLFC
-#ifdef verbose_tmpbeis
-                     IF ( EMISL( I,C,R ) .GT. EMISX( I ) ) THEN
-                         EMISX( I ) = EMISL( I,C,R )
-                         CX( I ) = C
-                         RX( I ) = R
-                     END IF
-#endif
-                  END IF
-               END DO
+               IF ( EMPL .GT. 0.0 ) 
+     &            EMISL( :,C,R ) = EMISL( :,C,R ) + EMPL * MLFAC( :,K )
             END DO
          END DO
       END DO
@@ -570,7 +507,7 @@ C Speciate emissions
       WRITE( LOGDEV,* ) ' '
       WRITE( LOGDEV,* ) '       from TMPBEIS312'
       WRITE( LOGDEV,* ) '    Spc   EMISL  MaxC MaxR'
-      DO S = 1, N_SPC_BIOG
+      DO S = 1, MSPCS
          WRITE( LOGDEV,'( 4X, I3, F10.5, 2I4 )' ) S, EMISX( S ), CX( S ), RX( S )
       END DO
 
@@ -582,15 +519,13 @@ C Speciate emissions
       DO K = 1, NSEF
          EMPL = EMPOL( C,R,K ) * HR2SEC
          IF ( EMPL .LE. 0.0 ) CYCLE
-         I = 0
          DO S = 1, MSPCS
             IF ( BEIS_MAP( S ) .GT. 0 ) THEN
-               I = I + 1
                MLFC = MLFAC( S,K )
-               EMISX( I ) = EMISX( I ) + EMPL * MLFC
+               EMISX( S ) = EMISX( S ) + EMPL * MLFC
                IF ( MLFC .NE. 0.0 )
      &            WRITE( LOGDEV,'( 4X, I3, 2X, A6, 2X, I3, 1X, 3( 1PE10.3 ) )' )
-     &                              S, EMSPC( I ), K,  MLFC, EMPL, EMISX( I )
+     &                              S, EMSPC( S ), K,  MLFC, EMPL, EMISX( S )
             END IF
          END DO
       END DO
@@ -601,23 +536,23 @@ C Speciate emissions
 
       IF ( BEMIS_DIAG ) THEN
          DO K = 1, NSEF
-            I = 0
             DO S = 1, MSPCS
-               IF ( BEIS_MAP( S ) .GT. 0 ) THEN
-                  I = I + 1
 ! Unit conversion for the emission and fraction of the sync time step to the output time step
                   MSFC = MSFAC( S,K ) * FLOAT( TIME2SEC( TSTEP( 2 ) ) ) / FLOAT( TIME2SEC( TSTEP( 1 ) ) )
 ! Add the emission for the model output time step
-                  EMISS( :,:,I ) = EMISS( :,:,I ) + EMPOL( :,:,K ) * MSFC
-               END IF
+                  EMISS( :,:,S ) = EMISS( :,:,S ) + EMPOL( :,:,K ) * MSFC
             END DO
          END DO
          IF ( LASTTIC ) THEN
             EMISS = EMISS * HR2SEC   ! convert from gm/h to gm/s
-            IF ( .NOT. WRITE3( SNAME, 'ALL', MDATE, MTIME, EMISS ) ) THEN
-               MESG = 'Could not write to output file "' // TRIM( SNAME ) // '"'
-               CALL M3EXIT( PNAME, JDATE, JTIME, MESG, XSTAT2 )
-            END IF
+            DO S = 1,MSPCS
+               IF ( BEIS_MAP( S ) .GT. 0 ) THEN
+                  IF ( .NOT. WRITE3( SNAME, EMSPC( S ), MDATE, MTIME, EMISS(:,:,S) ) ) THEN
+                     MESG = 'Could not write to output file "' // TRIM( SNAME ) // '"'
+                     CALL M3EXIT( PNAME, JDATE, JTIME, MESG, XSTAT2 )
+                  END IF
+               END IF
+            END DO
             WRITE( LOGDEV,94040 )
      &            'Timestep written to', SNAME,
      &            'for date and time', MDATE, MTIME

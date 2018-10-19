@@ -111,29 +111,29 @@ List of Figures
 
 [Table 7‑22. MCIP output files](CMAQ_OGD_ch07_programs_libraries.md#mcip-output-files)
 
-[Table 8‑1. CMAQ input files](CMAQ_OGD_ch08_input_files.md#Table8-1)
+[Table 8‑1. CMAQ input files](CMAQ_OGD_ch08_input_and_output_files.md#Table8-1)
 
-[Table 8‑2. Coordinate sytem description segment of GRIDDESC](CMAQ_OGD_ch08_input_files.md#Table8-2)
+[Table 8‑2. Coordinate sytem description segment of GRIDDESC](CMAQ_OGD_ch08_input_and_output_files.md#Table8-2)
 
-[Table 8‑3. Grid definition segment of GRIDDESC](CMAQ_OGD_ch08_input_files.md#Table8-3)
+[Table 8‑3. Grid definition segment of GRIDDESC](CMAQ_OGD_ch08_input_and_output_files.md#Table8-3)
 
-[Table 8‑4. GC species namelist file format](CMAQ_OGD_ch08_input_files.md#Table8-4)
+[Table 8‑4. GC species namelist file format](CMAQ_OGD_ch08_input_and_output_files.md#Table8-4)
 
-[Table 8-5. IC_PROFILE format description](CMAQ_OGD_ch08_input_files.md#Table8-5)
+[Table 8-5. IC_PROFILE format description](CMAQ_OGD_ch08_input_and_output_files.md#Table8-5)
 
-[Table 8-6. BC_PROFILE format description](CMAQ_OGD_ch08_input_files.md#Table8-6)
+[Table 8-6. BC_PROFILE format description](CMAQ_OGD_ch08_input_and_output_files.md#Table8-6)
 
-[Table 8-7. CSQY format description](CMAQ_OGD_ch08_input_files.md#Table8-7)
+[Table 8-7. CSQY format description](CMAQ_OGD_ch08_input_and_output_files.md#Table8-7)
 
-[Table 8-8 ET file format description](CMAQ_OGD_ch08_input_files.md#Table8-8)
+[Table 8-8 ET file format description](CMAQ_OGD_ch08_input_and_output_files.md#Table8-8)
 
-[Table 8-9. PROFILES file format description](CMAQ_OGD_ch08_input_files.md#Table8-9)
+[Table 8-9. PROFILES file format description](CMAQ_OGD_ch08_input_and_output_files.md#Table8-9)
 
-[Table 8-10 TOMS Data Profile](CMAQ_OGD_ch08_input_files.md#Table8-10)
+[Table 8-10 TOMS Data Profile](CMAQ_OGD_ch08_input_and_output_files.md#Table8-10)
 
-[Table 8-11. JTABLE file format description](CMAQ_OGD_ch08_input_files.md#Table8-11)
+[Table 8-11. JTABLE file format description](CMAQ_OGD_ch08_input_and_output_files.md#Table8-11)
 
-[Table 8‑12. OMI data format](CMAQ_OGD_ch08_input_files.md#Table8-12)
+[Table 8‑12. OMI data format](CMAQ_OGD_ch08_input_and_output_files.md#Table8-12)
 
 <!-- BEGIN COMMENT -->
 

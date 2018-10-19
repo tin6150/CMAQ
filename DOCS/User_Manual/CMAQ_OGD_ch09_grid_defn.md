@@ -1,6 +1,6 @@
 <!-- BEGIN COMMENT -->
 
-[<< Previous Chapter](CMAQ_OGD_ch08_input_files.md) - [Home](README.md) - [Next Chapter >>](CMAQ_OGD_ch10_new_simulation.md)
+[<< Previous Chapter](CMAQ_OGD_ch08_input_and_output_files.md) - [Home](README.md) - [Next Chapter >>](CMAQ_OGD_ch10_new_simulation.md)
 
 <!-- END COMMENT -->
 
@@ -161,7 +161,7 @@ To create a new mechanism for CMAQ, follow a procedure similar to the above for 
 
 The species namelist files define the parameters of the gas, aerosol, non-reactive, and tracer species simulated by the model. The CMAQ programs read the namelist files during execution to define the sources and processes that impact the simulated concentrations of each of the model output species. The namelist files can be used to apply uniform scaling factors by model species for major model processes. For example, emissions of NO can be reduced by 50% across the board by applying a factor of 0.5 to the emissions scalar column of the gas-phase species namelist file. Similarly, the boundary conditions of O<sub>3</sub> can be increased by 50% by applying a factor of 1.5 to the boundary conditions scalar column of the gas-phase species namelist file.
 
-See [Chapter 8](CMAQ_OGD_ch08_input_files.md) for a description of the format of the namelist file.
+See [Chapter 8](CMAQ_OGD_ch08_input_and_output_files.md) for a description of the format of the namelist file.
 
 When mechanisms are modified or created in CMAQ, new namelist files must be created that include the new species in the mechanism. As described above, the program CHEMMECH will generate namelist files from a mech.def mechanism definition file.  Alternatively, existing namelist files can be used as templates to guide the manual creation of new files.
 
@@ -174,7 +174,7 @@ When mechanisms are modified or created in CMAQ, new namelist files must be crea
 
 <!-- BEGIN COMMENT -->
 
-[<< Previous Chapter](CMAQ_OGD_ch08_input_files.md) - [Home](README.md) - [Next Chapter >>](CMAQ_OGD_ch10_new_simulation.md)<br>
+[<< Previous Chapter](CMAQ_OGD_ch08_input_and_output_files.md) - [Home](README.md) - [Next Chapter >>](CMAQ_OGD_ch10_new_simulation.md)<br>
 CMAQ Operational Guidance Document (c) 2016<br>
 
 <!-- END COMMENT -->

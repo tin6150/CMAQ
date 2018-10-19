@@ -21,7 +21,7 @@ The following sections are included in this manual:
 
 [Chapter 7 (Programs).](CMAQ_OGD_ch07_programs_libraries.md) Detailed descriptions of the CMAQ programs.
 
-[Chapter 8 (Files).](CMAQ_OGD_ch08_input_files.md) Descriptions of the CMAQ input and output files.
+[Chapter 8 (Files).](CMAQ_OGD_ch08_input_and_output_files.md) Descriptions of the CMAQ input and output files.
 
 [Chapter 9 (Model Configuration).](CMAQ_OGD_ch09_grid_defn.md) How to specify new modeling grids, vertical layers, and chemical mechanisms in CMAQ.
 

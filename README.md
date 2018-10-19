@@ -1,5 +1,5 @@
-CMAQv5.3.b1 (beta version)
-==========
+CMAQv5.3.b2 (beta version)
+===========
 
 Community Multiscale Air Quality Model US EPA CMAQ Website: (https://www.epa.gov/cmaq).
 
@@ -29,7 +29,7 @@ To clone code from the CMAQ Git archive, specify the branch (i.e. version number
 a working directory on your server:
 
 ```
-git clone -b 5.3.b1 https://github.com/USEPA/CMAQ.git CMAQ_REPO
+git clone -b 5.3.b2 https://github.com/USEPA/CMAQ.git CMAQ_REPO
 ```
 
 ## CMAQ Repository Guide

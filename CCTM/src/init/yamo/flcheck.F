@@ -112,8 +112,13 @@ C-----------------------------------------------------------------------
 
                      ! check time steps for time dependent files
                      IF ( TSTEP3D .GT. 0 ) THEN
-                        JDATE = STDATE
-                        JTIME = STTIME
+                        IF (SDATE3D .LT.  STDATE) THEN 
+                           JDATE = SDATE3D
+                           JTIME = STIME3D
+                        ELSE 
+                           JDATE = STDATE
+                           JTIME = STTIME
+                        END IF 
 
                         IF ( .NOT. CHECK3( LGCL_NAME( N ), ALLVAR3,
      &                                     JDATE, JTIME ) ) THEN

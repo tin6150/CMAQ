@@ -4,14 +4,15 @@ Post-processing Tools
 ## Overview
 The following utility programs are provided to process and prepare data for model evaluation.  Documentation for each utility is provided in the README files within each subdirectory.  Note that in previous CMAQ releases these utilities have been located under "models/TOOLS".
 
-## Release Notes for version 5.2
+## Release Notes for version 5.3
 The following link summarizes the main updates to these utility programs since the previous release (CMAQ v5.1).
-* [Updates to post-processing tools in CMAQv5.2](../CCTM/docs/Release_Notes/Update_POST.md)
+* [Updates to post-processing tools in CMAQv5.3](../DOCS/Release_Notes/v5.3/postprocessing_tools.md)
 
 ## Utility Programs
 * **[appendwrf](appendwrf/README.md)**:  user can concatenate variables from multiple WRF input or output files into a single file along the time (unlimited) dimension.
 * **[bldoverlay](bldoverlay/README.md)**:  user can create an observation overlay file that can be imported into either PAVE or VERDI.
 * **[block_extract](block_extract/README.md)**: user can extract a time series of 1 or more variables from 1 or more (up to 99) IOAPI files for a specified range of cells.
+* **[calc_tmetric](calc_tmetric/README.md)**: user can create gridded IOAPI files with temporally averaged or summed values that are calculated from one or more gridded time-dependent IOAPI files
 * **[combine](combine/README.md)**: user can combine species from raw CMAQ output files or wrfout input files into a new IOAPI output file.  Species can  be aggregated or transformed into variables of interest (i.e. to match observed quantities from a specific monitoring network).
 * **[hr2day](hr2day/README.md)**: user can create gridded IOAPI files with daily values (e.g. daily sum, daily max 8hr average, etc.) from gridded IOAPI files containing hourly values.  Daily values can be computed using GMT or LST.
 * **[sitecmp](sitecmp/README.md)**: user can generate a csv (comma separated values) file that compares CMAQ generated concentrations with an observed dataset.

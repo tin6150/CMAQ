@@ -13,7 +13,7 @@ particulates, toxics, and acid deposition.
 
 ## The purpose of CMAQv5.3 beta release
 
-CMAQv5.3b1 is a development version that is not intended for regulatory or research application use. The purpose of releasing the development
+CMAQv5.3b2 is a development version that is not intended for regulatory or research application use. The purpose of releasing the development
 version is to give community members:
 
 * a reasonable amount of time to complete any pending feature submissions they would like to submit for the stable release.

@@ -65,6 +65,6 @@ CMAQ v5.3 introduces aero7 and aero7i. Aero6, available in previous versions of 
  * [Updates to the inline_phot_preproc utility](updates_to_inline_phot_preproc.md)
  
 ## Instrumented Models
-CMAQ-DDM and CMAQ-ISAM will be released with the final version of CMAQv5.3 in Spring 2019.
+CMAQ-ISAM will be released with the final version of CMAQv5.3.  CMAQ-DDM will be released later in 2019. 
 
 

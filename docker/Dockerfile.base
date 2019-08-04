@@ -1,0 +1,37 @@
+# Container for OS, gcc-gfortran compiler, openmpi, all from the redhat repo
+# Include tools for interactive use (eg vim) 
+# May need to use it to say (prototype) build CMAQ in a (writable) container
+
+FROM centos:7.6.1810
+MAINTAINER Tin
+
+RUN yum -y update
+
+#RUN yum groupinstall -y "Development tools"
+
+# was each command a new docker layer, unless chained as && ?
+
+RUN yum -y install wget \
+                   curl \
+                   yum-utils \
+                   rpm-build \
+                   git \
+                   csv \
+                   gcc\
+                   gcc-c++\
+                   gcc-gfortran \ 
+                   make \
+                   bind-utils \
+                   bind-utils
+
+RUN yum -y install csh \
+                   tcsh \
+                   vim \
+                   vim \
+                   bc \
+                   tree \
+
+
+RUN yum -y install openmpi-devel
+# or openmpi3-devel ?   there are some ohpc stuff...
+

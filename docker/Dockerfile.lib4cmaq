@@ -12,33 +12,39 @@ MAINTAINER Tin
 # to save build time, need separate Dockerfile/image that does not change in the lower layers
 
 #### instal hdf5 from source ####
-RUN  mkdir -p Downloads; \
-     cd Downloads; \
+RUN  mkdir -p Downloads &&  cd Downloads; \
      wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.8/hdf5-1.8.21/src/hdf5-1.8.21.tar.gz; \
      tar xfz hdf5-1.8.21.tar.gz; \
      cd hdf5-1.8.21; \
-     export CCFLAGS="-g"   FC=gfortran FCFLAGS="-g"; \
-  ## && ./configure --prefix=/opt | tee configure.log \
-  # configure now produces a config.log by default now, thus no need to tee
-     ./configure --prefix=/usr/local --enable-parallel --enable-shared; \
+     export  CCFLAGS="-g"   FC=gfortran FCFLAGS="-g"; \
+     export   CFLAGS="-g"   ;\
+     export CPPFLAGS="-g"   ;\
+     ## && ./configure --prefix=/opt | tee configure.log \
+     # configure now produces a config.log by default now, thus no need to tee
+     # --enable-parallel default to use mpicc, which isn't found yet... may need to specify ortecc?
+     #./configure --enable-parallel --enable-shared --prefix=/usr/local ;\
+     ./configure                   --enable-shared --prefix=/usr/local ;\
      make install 2>&1 | tee make.install.log; \
      cd ..; \
-  ## && rm -rf hdf5-1.8.21 hdf5-1.8.21.tar.gz \
+     ## rm -rf hdf5-1.8.21 hdf5-1.8.21.tar.gz ;\
      cd .. 
      # careful not to end above with \ or the dockerfile RUN command would be treated by the shell and get error
 
 
 #### NetCDF, both C and fortran, from source
 #RUN  test -d Downloads || mkdir Downloads \
-RUN  mkdir -p Downloads && cd Downloads; ;\
+RUN  mkdir -p Downloads && cd Downloads; \
      wget https://github.com/Unidata/netcdf-c/archive/v4.7.0.tar.gz ;\
      tar xfz v4.7.0.tar.gz ;\
      cd netcdf-c-4.7.0     ;\
-  ## && ./configure --enable-remote-fortran-bootstrap 
-  ## &&  ./configure --prefix=/usr/local  --enable-separate-fortran 2>&1 | tee configure.log
-     ./configure --prefix=/usr/local  --enable-separate-fortran  CC=mpicc LDFLAGS=-L/usr/local/lib CFLAGS=-I/usr/local/include ;\
+     ## && ./configure --enable-remote-fortran-bootstrap 
+     ## &&  ./configure --prefix=/usr/local  --enable-separate-fortran 2>&1 | tee configure.log
+     # maybe should be /usr/lib64/openmpi/bin/ortecc
+     #./configure --prefix=/usr/local  --enable-separate-fortran  CC=mpicc LDFLAGS=-L/usr/local/lib CFLAGS=-I/usr/local/include ;\
+     ./configure CC=cc    LDFLAGS=-L/usr/local/lib CFLAGS=-I/usr/local/include --enable-separate-fortran  --prefix=/usr/local  ;\
   ## && ./configure --enable-remote-fortran-bootstrap --prefix=/opt  --enable-separate-fortran | tee configure.log
   ## --enable-separate-fortran ## still dont see libnetcdff.a :(
+     make         2>&1 | tee make.log ;\
      make install 2>&1 | tee make.install.log ;\
      cd .. ;\
   ## && rm -rf netcdf-c-4.7.0 v4.7.0.tar.gz  \
@@ -52,10 +58,15 @@ RUN  mkdir -p Downloads && cd Downloads; ;\
         #export LD_LIBRARY_PATH=/opt/lib:$LD_LIBRARY_PATH
         #./configure --prefix=/opt | tee configure.log
      export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH ;\
-     ./configure --prefix=/usr/local  ;\
+     #./configure --prefix=/usr/local  ;\
+     #./configure --prefix=/usr/local  CC=mpicc LDFLAGS=-L/usr/local/lib CFLAGS=-I/usr/local/include ;\
+     ./configure --prefix=/usr/local   CC=cc    LDFLAGS=-L/usr/local/lib CFLAGS=-I/usr/local/include ;\
+     ./configure CC=cc    LDFLAGS=-L/usr/local/lib CFLAGS=-I/usr/local/include --prefix=/usr/local   ;\
+     # some strange thing about the Makefile not able to do `make install` till after a `make`; thus 2 step process
+     make         2>&1 | tee make.log ;\
      make install 2>&1 | tee make.install.log ;\
      echo $? > _END_BUILD_NETCDF_ ;\
      cd .. ;\
-  ## && rm -rf v4.4.5.tar.gz netcdf-fortran-4.4.5 \
+     ## && rm -rf v4.4.5.tar.gz netcdf-fortran-4.4.5 \
      cd .. 
      # careful not to end above with \ or the dockerfile RUN command would be treated by the shell and get error

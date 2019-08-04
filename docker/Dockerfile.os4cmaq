@@ -13,10 +13,10 @@ MAINTAINER Tin
 # but to have different image, need diff Dockerfile and tag accordingly
 # to save build time, need separate Dockerfile/image that does not change in the lower layers
 
-#RUN yum groupinstall -y "Development tools"
 #RUN yum -y install wget \
 
 RUN  yum -y update       \
+  && yum -y groupinstall "Development tools" \
   && yum -y install wget \
 		 curl \
 		 yum-utils \
@@ -26,6 +26,7 @@ RUN  yum -y update       \
 		 gcc \
 		 gcc-c++ \
 		 gcc-gfortran \ 
+		 m4 \
 		 make \
 		 bind-utils \
 		 libcurl-devel \

@@ -15,9 +15,11 @@ BUILD
 
 ::
 
-	docker build -t tin6150/os4cmaq   -f Dockerfile.os4cmaq   .
-	docker build -t tin6150/lib4cmaq  -f Dockerfile.lib4cmaq  .
-	docker build -t tin6150/cmaq      -f Dockerfile.cmaq      .
+	docker build -t tin6150/os4cmaq   -f Dockerfile.os4cmaq   .  && \
+	docker build -t tin6150/lib4cmaq  -f Dockerfile.lib4cmaq  .  && \
+	docker build -t tin6150/cmaq      -f Dockerfile           .
+
+	#docker build -t tin6150/cmaq      -f Dockerfile.cmaq      .
 
 
 REGISTRY

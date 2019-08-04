@@ -47,7 +47,7 @@ RUN  wget https://github.com/Unidata/netcdf-c/archive/v4.7.0.tar.gz \
   && export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH \
   && ./configure --prefix=/usr/local  \
   && make install 2>&1 | tee make.install.log \
-  && echo $? > _END_BUILD_NETCDF_
+  && echo $? > _END_BUILD_NETCDF_ \
   && cd .. 
 
 

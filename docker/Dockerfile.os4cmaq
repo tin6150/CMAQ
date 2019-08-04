@@ -9,7 +9,9 @@ RUN yum -y update
 
 #RUN yum groupinstall -y "Development tools"
 
-# was each command a new docker layer, unless chained as && ?
+# each command a new docker layer as hash, 
+# chain command using && will reduce layer (and more compact image if there are clean up across layers)
+# but to have different image, need diff Dockerfile and tag accordingly
 
 RUN yum -y install wget \
                    curl \
@@ -34,4 +36,8 @@ RUN yum -y install csh \
 
 RUN yum -y install openmpi-devel
 # or openmpi3-devel ?   there are some ohpc stuff...
+#
+
+RUN  touch _TOP_DIR_OF_CONTAINER_ 
+#  && mkdir /home/tin
 

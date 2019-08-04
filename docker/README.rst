@@ -15,9 +15,9 @@ BUILD
 
 ::
 
-	docker build -t tin6150/os4cmaq   -f Dockerfile.os4cmaq
-	docker build -t tin6150/lib4cmaq  -f Dockerfile.lib4cmaq
-	docker build -t tin6150/cmaq      -f Dockerfile.cmaq
+	docker build -t tin6150/os4cmaq   -f Dockerfile.os4cmaq   .
+	docker build -t tin6150/lib4cmaq  -f Dockerfile.lib4cmaq  .
+	docker build -t tin6150/cmaq      -f Dockerfile.cmaq      .
 
 
 REGISTRY
@@ -33,6 +33,9 @@ HUB
 ===
 
 ref: https://docs.docker.com/docker-hub/builds/
+
+have to configure the build on docker hub web site.  
+would be nice if there is a config file like .travis.yml to configure it [well, maybe not in yaml format]
 
 
 

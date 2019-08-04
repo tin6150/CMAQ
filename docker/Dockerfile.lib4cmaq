@@ -11,6 +11,9 @@ MAINTAINER Tin
 # but to have different image, need diff Dockerfile and tag accordingly
 # to save build time, need separate Dockerfile/image that does not change in the lower layers
 
+# tmp till os4cmaq get build by docker hub.  local build NOT getting used by FROM cuz of tin6150/ prefix :(
+RUN  yum -y install m4
+
 #### instal hdf5 from source ####
 RUN  mkdir -p Downloads &&  cd Downloads; \
      wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.8/hdf5-1.8.21/src/hdf5-1.8.21.tar.gz; \

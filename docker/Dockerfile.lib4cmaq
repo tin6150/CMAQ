@@ -6,49 +6,56 @@ MAINTAINER Tin
 
 
 # each command a new docker layer as hash, 
-# chain command using && will reduce layer (and more compact image if there are clean up across layers)
+# chain command using && (or end line with ';')  will reduce layer (and more compact image if there are clean up across layers)
 # layer that does not change will not be re-downloaded in a pull, but it is still rebuild.
 # but to have different image, need diff Dockerfile and tag accordingly
 # to save build time, need separate Dockerfile/image that does not change in the lower layers
 
 #### instal hdf5 from source ####
-RUN  mkdir Downloads && cd Downloads \
-  && wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.8/hdf5-1.8.21/src/hdf5-1.8.21.tar.gz \
-  &&  tar xzf hdf5-1.8.21.tar.gz \
-  &&  cd hdf5-1.8.21 \
-  &&  export CCFLAGS="-g"   FC=gfortran FCFLAGS="-g" \
+RUN  mkdir -p Downloads; \
+     cd Downloads; \
+     wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.8/hdf5-1.8.21/src/hdf5-1.8.21.tar.gz; \
+     tar xfz hdf5-1.8.21.tar.gz; \
+     cd hdf5-1.8.21; \
+     export CCFLAGS="-g"   FC=gfortran FCFLAGS="-g"; \
   ## && ./configure --prefix=/opt | tee configure.log \
   # configure now produces a config.log by default now, thus no need to tee
-  && ./configure --prefix=/usr/local 2>&1 \
-  && make install 2>&1 | tee make.install.log \
-  ## && make clean \
-  && cd .. \
+     ./configure --prefix=/usr/local --enable-parallel --enable-shared; \
+     make install 2>&1 | tee make.install.log; \
+     cd ..; \
+  ## && rm -rf hdf5-1.8.21 hdf5-1.8.21.tar.gz \
+     cd .. 
+     # careful not to end above with \ or the dockerfile RUN command would be treated by the shell and get error
 
 
-### #NetCDF, both C and fortran
-RUN  wget https://github.com/Unidata/netcdf-c/archive/v4.7.0.tar.gz \
-  && tar -zxf v4.7.0.tar.gz \
-  &&  cd netcdf-c-4.7.0     \
+#### NetCDF, both C and fortran, from source
+#RUN  test -d Downloads || mkdir Downloads \
+RUN  mkdir -p Downloads && cd Downloads; ;\
+     wget https://github.com/Unidata/netcdf-c/archive/v4.7.0.tar.gz ;\
+     tar xfz v4.7.0.tar.gz ;\
+     cd netcdf-c-4.7.0     ;\
   ## && ./configure --enable-remote-fortran-bootstrap 
   ## &&  ./configure --prefix=/usr/local  --enable-separate-fortran 2>&1 | tee configure.log
-  && ./configure --prefix=/usr/local  --enable-separate-fortran  \
+     ./configure --prefix=/usr/local  --enable-separate-fortran  CC=mpicc LDFLAGS=-L/usr/local/lib CFLAGS=-I/usr/local/include ;\
   ## && ./configure --enable-remote-fortran-bootstrap --prefix=/opt  --enable-separate-fortran | tee configure.log
   ## --enable-separate-fortran ## still dont see libnetcdff.a :(
-  && make install 2>&1 | tee make.install.log \
-  ## 
-  && wget https://github.com/Unidata/netcdf-fortran/archive/v4.4.5.tar.gz \
+     make install 2>&1 | tee make.install.log ;\
+     cd .. ;\
+  ## && rm -rf netcdf-c-4.7.0 v4.7.0.tar.gz  \
+  ## #### ---- NetCDF fortran ---- ####
+     wget https://github.com/Unidata/netcdf-fortran/archive/v4.4.5.tar.gz ;\
         # depends on netcdf-c  4.6.2 ...
-  && tar xfz v4.4.5.tar.gz    \
-  && cd netcdf-fortran-4.4.5  \
+     tar xfz v4.4.5.tar.gz    ;\
+     cd netcdf-fortran-4.4.5  ;\
         #XX CC=pgcc FC=pgf95  ## use earlier export with full path
         #XX export LT_SYS_LIBRARY_PATH=/opt/lib
         #export LD_LIBRARY_PATH=/opt/lib:$LD_LIBRARY_PATH
         #./configure --prefix=/opt | tee configure.log
-  && export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH \
-  && ./configure --prefix=/usr/local  \
-  && make install 2>&1 | tee make.install.log \
-  && echo $? > _END_BUILD_NETCDF_ \
-  && cd .. 
-
-
-
+     export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH ;\
+     ./configure --prefix=/usr/local  ;\
+     make install 2>&1 | tee make.install.log ;\
+     echo $? > _END_BUILD_NETCDF_ ;\
+     cd .. ;\
+  ## && rm -rf v4.4.5.tar.gz netcdf-fortran-4.4.5 \
+     cd .. 
+     # careful not to end above with \ or the dockerfile RUN command would be treated by the shell and get error

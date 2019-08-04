@@ -11,7 +11,10 @@ RUN yum -y update
 
 # each command a new docker layer as hash, 
 # chain command using && will reduce layer (and more compact image if there are clean up across layers)
+# layer that does not change will not be re-downloaded in a pull, but it is still rebuild.
 # but to have different image, need diff Dockerfile and tag accordingly
+# to save build time, need separate Dockerfile/image that does not change in the lower layers
+
 
 RUN yum -y install wget \
                    curl \
@@ -39,5 +42,7 @@ RUN yum -y install openmpi-devel
 #
 
 RUN  touch _TOP_DIR_OF_CONTAINER_ 
-#  && mkdir /home/tin
+ && mkdir -p /home/tin
+ && mkdir -p /lhome/tin
+
 

@@ -22,22 +22,22 @@ RUN yum -y install wget \
                    rpm-build \
                    git \
                    csv \
-                   gcc\
-                   gcc-c++\
+                   gcc \
+                   gcc-c++ \
                    gcc-gfortran \ 
                    make \
                    bind-utils \
-                   bind-utils
-
-RUN yum -y install csh \
+                   libcurl-devel \
+									 zlib-devel \
+                   csh  \
                    tcsh \
-                   vim \
-                   vim \
+                   vim  \
+                   tmux \
+                   screen \
                    bc \
-                   tree \
+                   tree  \
+									 openmpi-devel
 
-
-RUN yum -y install openmpi-devel
 # or openmpi3-devel ?   there are some ohpc stuff...
 #
 

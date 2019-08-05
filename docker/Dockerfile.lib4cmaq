@@ -40,14 +40,17 @@ RUN  mkdir -p Downloads && cd Downloads; \
      wget https://github.com/Unidata/netcdf-c/archive/v4.7.0.tar.gz ;\
      tar xfz v4.7.0.tar.gz ;\
      cd netcdf-c-4.7.0     ;\
-     ## && ./configure --enable-remote-fortran-bootstrap 
+     export CPPFLAGS='-DNDEBUG -DgFortran'   ;\
+     #export FFLAGS='-O -w'   ;\
+     export FFLAGS='-g -w'   ;\
+     export CXX='g++'   ;\
      ## &&  ./configure --prefix=/usr/local  --enable-separate-fortran 2>&1 | tee configure.log
      # maybe should be /usr/lib64/openmpi/bin/ortecc
-     #./configure --prefix=/usr/local  --enable-separate-fortran  CC=mpicc LDFLAGS=-L/usr/local/lib CFLAGS=-I/usr/local/include ;\
-     ./configure CC=cc    LDFLAGS=-L/usr/local/lib CFLAGS=-I/usr/local/include --enable-separate-fortran  --prefix=/usr/local  ;\
-  ## && ./configure --enable-remote-fortran-bootstrap --prefix=/opt  --enable-separate-fortran | tee configure.log
-  ## --enable-separate-fortran ## still dont see libnetcdff.a :(
+     #++./configure CC=cc    LDFLAGS=-L/usr/local/lib CFLAGS=-I/usr/local/include --enable-separate-fortran  --prefix=/usr/local  ;\
+     ./configure CC=cc    LDFLAGS=-L/usr/local/lib CFLAGS=-I/usr/local/include --enable-separate-fortran  --prefix=/usr/local  --disable-netcdf4 --disable-dap ;\
+     # --disable-netcdf4 --disable-dap (no hdf5?) suggested by https://github.com/USEPA/CMAQ/blob/5.2.1/DOCS/Tutorials/CMAQ_GettingStarted.md
      make         2>&1 | tee make.log ;\
+     make check   2>&1 | tee make.check.log   ;\
      make install 2>&1 | tee make.install.log ;\
      cd .. ;\
   ## && rm -rf netcdf-c-4.7.0 v4.7.0.tar.gz  \
@@ -73,3 +76,11 @@ RUN  mkdir -p Downloads && cd Downloads; \
      ## && rm -rf v4.4.5.tar.gz netcdf-fortran-4.4.5 \
      cd .. 
      # careful not to end above with \ or the dockerfile RUN command would be treated by the shell and get error
+
+
+RUN  cd / \
+  && touch    _TOP_DIR_OF_CONTAINER_  \
+  && date  >> _TOP_DIR_OF_CONTAINER_  \
+  && echo  "lib4cmaq 2019.0804.2100"  >> _TOP_DIR_OF_CONTAINER_  
+
+ENTRYPOINT [ "/bin/cat", "/_TOP_DIR_OF_CONTAINER_" ]

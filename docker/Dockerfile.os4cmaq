@@ -31,6 +31,8 @@ RUN  yum -y update       \
 		 bind-utils \
 		 libcurl-devel \
 		 zlib-devel \
+		 libssh2-devel \
+		 openssl-devel \
 		 csh  \
 		 tcsh \
 		 vim  \
@@ -43,9 +45,12 @@ RUN  yum -y update       \
 # or openmpi3-devel ?   there are some ohpc stuff...
 #
 
-RUN  touch   _TOP_DIR_OF_CONTAINER_  \
-  && date  > _TOP_DIR_OF_CONTAINER_  \
+RUN  touch    _TOP_DIR_OF_CONTAINER_  \
+  && date  >> _TOP_DIR_OF_CONTAINER_  \
+  && echo  "os4cmaq 2019.0804.2100"  >> _TOP_DIR_OF_CONTAINER_  \
   && mkdir -p /home/tin  \
   && mkdir -p /lhome/tin 
 
+
+ENTRYPOINT [ "/bin/tcsh" ]
 

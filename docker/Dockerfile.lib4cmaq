@@ -81,6 +81,7 @@ RUN  mkdir -p Downloads && cd Downloads; \
 RUN  cd / \
   && touch    _TOP_DIR_OF_CONTAINER_  \
   && date  >> _TOP_DIR_OF_CONTAINER_  \
-  && echo  "lib4cmaq 2019.0804.2100"  >> _TOP_DIR_OF_CONTAINER_  
+  && echo  "lib4cmaq 2019.0804.2211"  >> _TOP_DIR_OF_CONTAINER_  
 
-ENTRYPOINT [ "/bin/cat", "/_TOP_DIR_OF_CONTAINER_" ]
+#ENTRYPOINT [ "/bin/cat", "/_TOP_DIR_OF_CONTAINER_" ]
+# not defining an ENTRYPOINT will default to a shell inside the container

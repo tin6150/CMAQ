@@ -11,9 +11,10 @@ env_prep() {
 
 	#BASEPATH=/opt
 	#export PATH=/opt/pgi/linux86-64/19.4/bin/:$PATH
+	export PATH=/usr/lib64/openmpi/bin:$PATH
 
 	##export compiler=gcc # pgi
-    export CC=cc CCFLAGS="-g"   
+	export CC=cc CCFLAGS="-g"                 # not mpicc or ortecc ? (using that tutorial says for now)
 	export CPPFLAGS='-DNDEBUG -DgFortran'
 	export FC=gfortran FCFLAGS="-g"
 	export FFLAGS='-g -w'
@@ -22,7 +23,7 @@ env_prep() {
     # export SNHOME=/Downloads                      # -or-
     # export SRCBASE=/Downloads                     # -or-
     #export SRCBASE=/local/home/tin/tin-gh    # as appropriate 
-	#export SRCBASE=$(pwd)
+	export SRCBASE=$(pwd)                     # eg /Downloads/...
 	#export DSTBASE=/opt/CMAS4.5.1/rel
 
     #export LD_LIBRARY_PATH=/opt/CMAS4.5.1/rel/lib/ioapi_3:$LD_LIBRARY_PATH
@@ -38,10 +39,11 @@ env_prep() {
 #### will use ioapi 3.2
 #### pre-downloaded into my git repo from https://www.cmascenter.org/ioapi/download/ioapi-3.2.tar.gz inside ioapi/
 setup_ioapi() {
-        #BASEDIR=$SRCBASE/cmaq/ioapi/ioapi  # source dir
-        BASEDIR=${SRCBASE}/ioapi/ioapi  # source dir
-        #mkdir ${BASEDIR}/Linux4   #in git repo now
-		mkdir $BASEDIR/$BIN  > /dev/null 2>&1			# BASEDIR := $(pwd)
+        #--BASEDIR=$SRCBASE/cmaq/ioapi/ioapi  # source dir
+        BASEDIR=${SRCBASE}/ioapi            # source dir
+        #--mkdir ${BASEDIR}/Linux4   #in git repo now
+		mkdir $BASEDIR/$BIN  > /dev/null 2>&1			# BASEDIR include higher level ioapi/ .  BIN is now Linux2_x86_64gfort
+		#### ${BASEDIR}/ioapi 
         mkdir -p /opt/CMAS4.5.1/rel/lib/ioapi_3         # install destination?
         cd $BASEDIR     #cd cmaq/ioapi/ioapi
         cp -p Makefile.pgi_container Makefile       # some edit done, now using pgf95

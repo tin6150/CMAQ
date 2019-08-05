@@ -42,15 +42,19 @@ RUN  yum -y update       \
 		 tree  \
 		 openmpi-devel
 
+# mpicc in /usr/lib64/openmpi/bin
 # or openmpi3-devel ?   there are some ohpc stuff...
 #
 
 RUN  touch    _TOP_DIR_OF_CONTAINER_  \
   && date  >> _TOP_DIR_OF_CONTAINER_  \
-  && echo  "os4cmaq 2019.0804.2100"  >> _TOP_DIR_OF_CONTAINER_  \
-  && mkdir -p /home/tin  \
-  && mkdir -p /lhome/tin 
+  && echo  "os4cmaq 2019.0804.2101"  >> _TOP_DIR_OF_CONTAINER_  \
+  && mkdir -p /home  
+  ## && mkdir -p /home/tin  \
+  ## && mkdir -p /lhome/tin 
 
 
+# how to set PATH ?
+# add /usr/lib64/openmpi/bin
 ENTRYPOINT [ "/bin/tcsh" ]
 

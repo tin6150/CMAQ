@@ -15,7 +15,7 @@ RUN mkdir -p Downloads &&  cd Downloads ;\
     #export BIN='Linux2_x86_64gfort'     ;\
     # better to write the setup.sh script to compile cmaq, so that it can be used on actual host or singularity
     # if docker doesn't work
-    #./setup.sh 2>&1 | tee setup.log ;\
+    ./setup.sh 2>&1 | tee setup.log ;\
     echo $? > _CMAQ_BUILD_END_
 
 
@@ -23,7 +23,7 @@ RUN mkdir -p Downloads &&  cd Downloads ;\
 RUN  cd / \
   && touch    _TOP_DIR_OF_CONTAINER_  \
   && date  >> _TOP_DIR_OF_CONTAINER_  \
-  && echo  "cmaq 2019.0804.2222"  >> _TOP_DIR_OF_CONTAINER_  
+  && echo  "cmaq 2019.0804.2233"  >> _TOP_DIR_OF_CONTAINER_  
 
 
 

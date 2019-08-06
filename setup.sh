@@ -24,7 +24,8 @@ env_prep() {
     # export SRCBASE=/Downloads                     # -or-
     #export SRCBASE=/local/home/tin/tin-gh    # as appropriate 
 	export SRCBASE=$(pwd)                     # eg /Downloads/...
-	#export DSTBASE=/opt/CMAS4.5.1/rel
+	export DSTBASE=/opt/CMAS5.2.1/rel
+	mkdir -p $DSTBASE
 
     #export LD_LIBRARY_PATH=/opt/CMAS4.5.1/rel/lib/ioapi_3:$LD_LIBRARY_PATH
     export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
@@ -40,19 +41,27 @@ env_prep() {
 #### pre-downloaded into my git repo from https://www.cmascenter.org/ioapi/download/ioapi-3.2.tar.gz inside ioapi/
 setup_ioapi() {
         #--BASEDIR=$SRCBASE/cmaq/ioapi/ioapi  # source dir
-        BASEDIR=${SRCBASE}/ioapi            # source dir
+        BASEDIR=${SRCBASE}/Api            # source dir, eg ./Api
         #--mkdir ${BASEDIR}/Linux4   #in git repo now
 		mkdir $BASEDIR/$BIN  > /dev/null 2>&1			# BASEDIR include higher level ioapi/ .  BIN is now Linux2_x86_64gfort
 		#### ${BASEDIR}/ioapi 
-        mkdir -p /opt/CMAS4.5.1/rel/lib/ioapi_3         # install destination?
-        cd $BASEDIR     #cd cmaq/ioapi/ioapi
-        cp -p Makefile.pgi_container Makefile       # some edit done, now using pgf95
+
+        mkdir -p /opt/CMAS5.2.1/rel/lib/ioapi_3         # install destination?
+        cd $BASEDIR     #cd ./Api/ioapi
+
+		## just to be obvious that I have done some edits and using them in the build
+		## copy file first...
+        cp -p Makefile.centos7gcc Makefile       # some edit done, now using gcc-gfortran 
+
+
         #HOME=/local/home/tin/tin-gh/cmaq/ioapi  BIN=Linux4  INSTDIR=/opt/CMAS4.5.1/rel/lib/ioapi_3   make
         #echo $?
         #echo "done with make"
         #HOME=/local/home/tin/tin-gh/cmaq/ioapi  BIN=Linux4  INSTDIR=/opt/CMAS4.5.1/rel/lib/ioapi_3 make install
-        make HOME=${SRCBASE}/ioapi  BIN=Linux4  INSTDIR=/opt/CMAS4.5.1/rel/lib/ioapi_3  install  2>&1 | tee make.install.log
+		export INSTDIR=/opt/CMAS5.2.1/rel/lib/ioapi_3
+        make HOME=${BASEDIR}/ioapi  install  2>&1 | tee make.install.log
         # only 1 file: /opt/CMAS4.5.1/rel/lib/ioapi_3/libioapi.a
+
 
         #cd $HOME/tin-gh/cmaq/ioapi/bin
         # ln -s /opt/lib/libnetcdf.a .
@@ -115,7 +124,7 @@ setup_cmaq451() {
 
 	##### doc/README.txt.rst step 3 ####
 	cd ${M3HOME} # same as ${DSTBASE}  eg /opt/CMAS4.5.1/rel
-	wget 'https://drive.google.com/uc?export=download&id=0B4Gx-y00i4D0TWF4SHNtc29vZ2c' -O  m3data.tgz  # create data/ dir 
+	wget --quiet 'https://drive.google.com/uc?export=download&id=0B4Gx-y00i4D0TWF4SHNtc29vZ2c' -O  m3data.tgz  # create data/ dir 
 	tar xfz m3data.tgz
 
 	##### doc/README.txt.rst step 5 ####
@@ -140,9 +149,11 @@ setup_cmaq451() {
 
 main() {
 	env_prep
-	#setup_ioapi
+	setup_ioapi
+	# below need to be recoded from old 451
 	#setup_m3tools
-	setup_cmaq451
+	#setup_cmaq451
+	#setup_cmaq52   # need to create this new one
 
 }
 

@@ -1,4 +1,7 @@
-# Container for libs needed by cmaq (hdf5, netcdf, with fortran lib)
+# Main Dockerfile for creating CMAQ in a container
+# formerly Dockerfile.cmaq
+# depends on a cascade of 2 other containers
+ 
 
 FROM tin6150/lib4cmaq:latest
 MAINTAINER Tin
@@ -9,7 +12,7 @@ MAINTAINER Tin
 
 #### make ioapi 3.1.  i have the source downloaded in the my git repo of CMAQ ####
 RUN mkdir -p Downloads &&  cd Downloads ;\
-    git clone -b tin_521_docker https://tin6150@github.com/tin6150/CMAQ.git ;\
+    git clone --quiet -b tin_521_docker https://tin6150@github.com/tin6150/CMAQ.git ;\
     cd CMAQ ;\
     git log > cmaq.git.log ;\
     #export BIN='Linux2_x86_64gfort'     ;\

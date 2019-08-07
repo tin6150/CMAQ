@@ -43,7 +43,7 @@ RUN  mkdir -p Downloads && cd Downloads; \
      export CPPFLAGS='-DNDEBUG -DgFortran'   ;\
      #export FFLAGS='-O -w'   ;\
      export FFLAGS='-g -w'   ;\
-     export CXX='g++'   ;\
+     export CXX='g++'        ;\
      ## &&  ./configure --prefix=/usr/local  --enable-separate-fortran 2>&1 | tee configure.log
      # maybe should be /usr/lib64/openmpi/bin/ortecc
      #++./configure CC=cc    LDFLAGS=-L/usr/local/lib CFLAGS=-I/usr/local/include --enable-separate-fortran  --prefix=/usr/local  ;\
@@ -81,7 +81,7 @@ RUN  mkdir -p Downloads && cd Downloads; \
 RUN  cd / \
   && touch    _TOP_DIR_OF_CONTAINER_  \
   && date  >> _TOP_DIR_OF_CONTAINER_  \
-  && echo  "lib4cmaq 2019.0804.2211"  >> _TOP_DIR_OF_CONTAINER_  
+  && echo  "Dockerfile.lib4cmaq 2019.0804.2211 dummy update 2019.0806.2112"  >> _TOP_DIR_OF_CONTAINER_  
 
 #ENTRYPOINT [ "/bin/cat", "/_TOP_DIR_OF_CONTAINER_" ]
 # not defining an ENTRYPOINT will default to a shell inside the container

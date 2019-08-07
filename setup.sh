@@ -43,11 +43,11 @@ setup_ioapi() {
         #--BASEDIR=$SRCBASE/cmaq/ioapi/ioapi  # source dir
         BASEDIR=${SRCBASE}/Api            # source dir, eg ./Api
         #--mkdir ${BASEDIR}/Linux4   #in git repo now
-		mkdir $BASEDIR/$BIN  > /dev/null 2>&1			# BASEDIR include higher level ioapi/ .  BIN is now Linux2_x86_64gfort
+		mkdir -p $BASEDIR/$BIN 			# BASEDIR include higher level ioapi/ .  BIN is now Linux2_x86_64gfort
 		#### ${BASEDIR}/ioapi 
 
         mkdir -p /opt/CMAS5.2.1/rel/lib/ioapi_3         # install destination?
-        cd $BASEDIR     #cd ./Api/ioapi
+        cd $BASEDIR     #cd into ./Api
 
 		## just to be obvious that I have done some edits and using them in the build
 		## copy file first...
@@ -59,10 +59,13 @@ setup_ioapi() {
         #echo "done with make"
         #HOME=/local/home/tin/tin-gh/cmaq/ioapi  BIN=Linux4  INSTDIR=/opt/CMAS4.5.1/rel/lib/ioapi_3 make install
 		export INSTDIR=/opt/CMAS5.2.1/rel/lib/ioapi_3
+        make HOME=${BASEDIR}/ioapi           2>&1 | tee make.log
         make HOME=${BASEDIR}/ioapi  install  2>&1 | tee make.install.log
-        # only 1 file: /opt/CMAS4.5.1/rel/lib/ioapi_3/libioapi.a
+        # in 3.1? only 1 file: /opt/CMAS4.5.1/rel/lib/ioapi_3/libioapi.a
+		# in 3.2, seems to include m3tools 
 
 
+		# these are now being skipped for CMAQ 521
         #cd $HOME/tin-gh/cmaq/ioapi/bin
         # ln -s /opt/lib/libnetcdf.a .
         # ln ... libioapi.a
@@ -72,6 +75,8 @@ setup_ioapi() {
 
 
 #### cmaq m3tools #####
+#### but ioapi 3.2 seems to have completed this as part of general build above
+#### so no longer needed.
 setup_m3tools() {
 		## hmm... refer to build.rst have steps i no longer do... 
         ##defined above## SRCBASE=/local/home/tin/tin-gh    
@@ -97,7 +102,13 @@ setup_m3tools() {
 
 
 setup_cmaq451() {
-	# read doc/README.txt.rst again (build.rst was for intel on lrc).  this is for PGI on singularity container.
+	# for 4.5, use doc/README.txt.rst again (build.rst was for intel on lrc).  this is for PGI on singularity container.
+	# for 5.2, use https://github.com/USEPA/CMAQ/blob/5.2.1/DOCS/Tutorials/CMAQ_Benchmark.md.  use gcc-gfortran
+
+
+
+
+
 	#export DSTBASE=/opt/CMAS4.5.1/rel # done by env_prep fn above
 
 	#export M3HOME=/global/home/groups-sw/pc_adjoint/Tin_Ho/CMAS4.5.1/rel

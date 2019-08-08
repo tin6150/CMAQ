@@ -33,22 +33,11 @@
  setenv CMAQ_DATA $CMAQ_HOME/data
  if ( ! -d $CMAQ_DATA ) mkdir -p $CMAQ_DATA
 
-     #### not sure what to fetch into the data dir yet.
-
  cd $CMAQ_HOME
 
 #===============================================================================
 #> architecture & compiler specific settings
 #===============================================================================
-
-    #### call it as csh ./config_cmaq.csh gcc 
-
-
-#### don't want it to prompt when rerunning the script
-#### unalias cp   
-#### nope, doesn't work.
-#### mv out
-if ( -d /home/username/CMAQ_Project ) /bin/mv /home/username/CMAQ_Project /home/username/CMAQ_Project_OLD
 
 #> Set the compiler option
  if ( $#argv == 1 ) then
@@ -147,19 +136,12 @@ if ( -d /home/username/CMAQ_Project ) /bin/mv /home/username/CMAQ_Project /home/
     case gcc:
   
         #> I/O API, netCDF, and MPI library locations
-        ##setenv IOAPI_MOD_DIR   ioapi_mod_gcc  #> I/O API precompiled modules
-        ##setenv IOAPI_MOD_DIR   /opt/CMAS5.2.1/rel/lib/ioapi_3
-        setenv IOAPI_MOD_DIR   /opt/CMAS5.2.1/rel/Linux2_x86_64gfort
-        ##setenv IOAPI_INCL_DIR  iopai_inc_gcc  #> I/O API include header files
-        setenv IOAPI_INCL_DIR  `pwd`/Api/ioapi
-        ##setenv IOAPI_LIB_DIR   ioapi_lib_gcc  #> I/O API libraries
-        setenv IOAPI_LIB_DIR   /opt/CMAS5.2.1/rel/Linux2_x86_64gfort
-        ##setenv NETCDF_LIB_DIR  netcdf_lib_gcc #> netCDF directory path
-        setenv NETCDF_LIB_DIR  /usr/local/lib
-        ##setenv NETCDF_INCL_DIR netcdf_inc_gcc #> netCDF directory path
-        setenv NETCDF_INCL_DIR /usr/local/include
-        ##setenv MPI_LIB_DIR     mpi_lib_gcc    #> MPI directory path
-        setenv MPI_LIB_DIR     /usr/lib64/openmpi/lib
+        setenv IOAPI_MOD_DIR   ioapi_mod_gcc  #> I/O API precompiled modules
+        setenv IOAPI_INCL_DIR  iopai_inc_gcc  #> I/O API include header files
+        setenv IOAPI_LIB_DIR   ioapi_lib_gcc  #> I/O API libraries
+        setenv NETCDF_LIB_DIR  netcdf_lib_gcc #> netCDF directory path
+        setenv NETCDF_INCL_DIR netcdf_inc_gcc #> netCDF directory path
+        setenv MPI_LIB_DIR     mpi_lib_gcc    #> MPI directory path
     
         #> Compiler Aliases and Flags
         setenv myFC mpif90
@@ -174,8 +156,7 @@ if ( -d /home/username/CMAQ_Project ) /bin/mv /home/username/CMAQ_Project /home/
         setenv myLINK_FLAG #"-openmp"
         setenv extra_lib ""
         #setenv mpi_lib "-lmpi_mpifh"   #> -lmpich for mvapich or -lmpi for openmpi
-        ##setenv mpi_lib ""   #> -lmpich for mvapich or -lmpi for openmpi
-        setenv mpi_lib "-lmpi"   #> -lmpich for mvapich or -lmpi for openmpi
+        setenv mpi_lib ""   #> -lmpich for mvapich or -lmpi for openmpi
     
         breaksw
 

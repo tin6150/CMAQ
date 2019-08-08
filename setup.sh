@@ -157,14 +157,53 @@ setup_cmaq451() {
 }
 
 
+setup_cmaq52() {
+
+	##++ awww... will i need csh to source this??   create a wrapper that source and execute?  setup.sh calling setup.csh ??!
+
+	# may end up just calling this config script directly from Dockerfile
+	cp -p ./config_cmaq.tin.csh ./config_cmaq.csh 
+	#source ./config_cmaq.csh gcc
+	csh ./config_cmaq.csh gcc              # probably just creating bunch of links
+
+	
+
+	#csh ./config_cmaq.tin.csh gcc
+
+	# ++ download test data, will have this done into my git repo already
+	#    https://github.com/USEPA/CMAQ/blob/5.2.1/DOCS/Tutorials/CMAQ_Benchmark.md
+
+	# ++ set username?  it created /home/username literary!
+
+	csh ./bldit_project.csh gcc 2>&1 | tee bldit_icon.log 
+
+	#DIRSTACK=`pwd`
+	CMAQ_HOME=$(pwd)
+	cd $CMAQ_HOME/PREP/bcon/scripts/
+	csh ./bldit_bcon.csh gcc 2>&1 | tee bldit_bcon.log
+	cd $CMAQ_HOME
+
+	#### actually build cmaq here:
+	cd $CMAQ_HOME/CCTM/scripts
+	csh ./bldit_cctm.csh gcc 2>&1 | tee bldit_cctm.log
+
+	cd $CMAQ_HOME
+
+
+	#### run b enchmark script
+	cd $CMAQ_HOME/CCTM/scripts
+	csh ./run_cctm.csh 2>&1 | tee run.benchmark.log
+	#### maybe problem here... continue tomorrow...   FIXME ++ 
+
+}
 
 main() {
 	env_prep
-	setup_ioapi
+	#setup_ioapi
 	# below need to be recoded from old 451
 	#setup_m3tools
 	#setup_cmaq451
-	#setup_cmaq52   # need to create this new one
+	setup_cmaq52   # need to create this new one
 
 }
 

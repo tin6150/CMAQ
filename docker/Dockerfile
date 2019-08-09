@@ -25,8 +25,8 @@ RUN mkdir -p Downloads &&  cd Downloads ;\
 
 RUN  cd / \
   && touch    _TOP_DIR_OF_CONTAINER_  \
-  && date  >> _TOP_DIR_OF_CONTAINER_  \
-  && echo  "Dockerfile.cmaq 2019.0806.2130+"  >> _TOP_DIR_OF_CONTAINER_  
+  && TZ=PST8PDT date  >> _TOP_DIR_OF_CONTAINER_  \
+  && echo  "Dockerfile.cmaq 2019.0808.2330+"  >> _TOP_DIR_OF_CONTAINER_  
 
 
 

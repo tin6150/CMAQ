@@ -47,8 +47,9 @@
 #### don't want it to prompt when rerunning the script
 #### unalias cp   
 #### nope, doesn't work.
-#### mv out
-if ( -d /home/username/CMAQ_Project ) /bin/mv /home/username/CMAQ_Project /home/username/CMAQ_Project_OLD
+#### mv out -- this script sourced multiple time by various bldit_* scripts
+setenv FECHA=`date +%Y.%m%d-%H%M.%s`
+if ( -d /home/username/CMAQ_Project ) /bin/mv /home/username/CMAQ_Project /home/username/CMAQ_Project_OLD.$FECHA
 
 #> Set the compiler option
  if ( $#argv == 1 ) then

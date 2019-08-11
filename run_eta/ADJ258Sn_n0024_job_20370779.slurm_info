@@ -1,0 +1,57 @@
+
+start 2019.0811 3:09pm
+
+
+-rw-rw-r-- 1 tin   itd   204700 Aug 11 15:07 ADJ258Sn_n0024_job_20370779.out
+[root@perceus-00 ADJ_RUN]# pdsh -w n0024.lr6,n0026.lr6,n0027.lr6,n0028.lr6 uptime
+n0027:  15:07:52 up 82 days,  1:23,  0 users,  load average: 18.50, 26.55, 29.77
+n0026:  15:07:52 up 82 days,  1:23,  0 users,  load average: 18.32, 26.46, 29.70
+n0024:  15:07:52 up 82 days,  1:23,  0 users,  load average: 19.08, 26.42, 29.69
+n0028:  15:07:52 up 82 days,  1:23,  0 users,  load average: 18.32, 26.49, 29.76
+[root@perceus-00 ADJ_RUN]# 
+[root@perceus-00 ADJ_RUN]# 
+[root@perceus-00 ADJ_RUN]# pdsh -w n0024.lr6,n0026.lr6,n0027.lr6,n0028.lr6 uptime
+n0028:  15:09:20 up 82 days,  1:25,  0 users,  load average: 28.97, 27.93, 29.97
+n0027:  15:09:20 up 82 days,  1:25,  0 users,  load average: 29.04, 27.99, 29.98
+n0024:  15:09:20 up 82 days,  1:25,  0 users,  load average: 29.33, 27.95, 29.93
+n0026:  15:09:20 up 82 days,  1:25,  0 users,  load average: 28.98, 27.92, 29.92
+[root@perceus-00 ADJ_RUN]# 
+[root@perceus-00 ADJ_RUN]# squeue -u tin 
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+          20370779       lr6 ADJ258Sn      tin  R       2:01      4 n0024.lr6,n0026.lr6,n0027.lr6,n0028.lr6
+[root@perceus-00 ADJ_RUN]# sacct -j 20370779
+       JobID    JobName  Partition    Account  AllocCPUS      State ExitCode 
+------------ ---------- ---------- ---------- ---------- ---------- -------- 
+20370779       ADJ258Sn        lr6        scs        128    RUNNING      0:0 
+20370779.0        orted                   scs          3    RUNNING      0:0 
+[root@perceus-00 ADJ_RUN]# 
+
+
+################################################################################
+
+^**>  watch -n 30  -d "ls -lh *nc; date; squeue -u tin ; grep -n Walltime *000.out"
+
+Every 30.0s: ls -lh *nc; date; squeue -u tin ; grep -n Walltime *000.out                                 Sun Aug 11 15:11:17 2019
+
+-rw-rw-r-- 1 tin itd 28K Aug 11 15:07 SARMAP_258_2012_ALL_HYBRID.AL5CHK.nc
+Sun Aug 11 15:11:17 PDT 2019
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+          20370779       lr6 ADJ258Sn      tin  R       3:56      4 n0024.lr6,n0026.lr6,n0027.lr6,n0028.lr6
+
+
+4 nodes really work much better.
+*nc file was 14G, well, at least within 9 min of run (was writting other notes, likely should have appeared before)
+note step 1 completed by now too (in 9 min of job run time, step report about 480 sec)
+
+-rw-rw-r-- 1 tin itd 14G Aug 11 15:15 SARMAP_258_2012_ALL_HYBRID.AL5CHK.nc
+Sun Aug 11 15:16:09 PDT 2019
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+          20370779       lr6 ADJ258Sn      tin  R       8:55      4 n0024.lr6,n0026.lr6,n0027.lr6,n0028.lr6
+Walltime for backward step     1 (out of   167): 0.480253E+03
+Walltime for backward step     2 (out of   167): 0.501883E+03
+
+
+4 nodes of lr6 seems to give best turnaround time performance.
+
+################################################################################
+

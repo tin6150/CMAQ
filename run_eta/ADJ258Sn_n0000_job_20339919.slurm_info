@@ -1,0 +1,31 @@
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+          20339919       lr6 ADJ258Sn      tin  R    9:17:52     16 n0000.lr6,n0001.lr6,n0002.lr6,n0003.lr6,n0004.lr6,n0005.lr6,n0006.lr6,n0009.lr6,n0010.lr6,n0014.lr6,n0017.lr6,n0019.lr6,n0020.lr6,n0021.lr6,n0025.lr6,n0039.lr6
+       JobID    JobName  Partition    Account  AllocCPUS      State ExitCode 
+------------ ---------- ---------- ---------- ---------- ---------- -------- 
+20339919       ADJ258Sn        lr6        scs        512    RUNNING      0:0 
+20339919.0        orted                   scs         15    RUNNING      0:0 
+
+
+#### maybe only using two nodes
+#### maybe only 32*2 = 64 cores. which is why 64 output files.
+#### pghuy ran on lr3, 16 cores, 4 nodes, which is 64 threads.
+
+
+[root@perceus-00 ADJ_RUN]# pdsh -w n0000.lr6,n0001.lr6,n0002.lr6,n0003.lr6,n0004.lr6,n0005.lr6,n0006.lr6,n0009.lr6,n0010.lr6,n0014.lr6,n0017.lr6,n0019.lr6,n0020.lr6,n0021.lr6,n0025.lr6,n0039.lr6 uptime | sort -n 
+n0000:  10:08:23 up 81 days, 20:24,  1 user,  load average: 32.00, 32.00, 32.03
+n0001:  10:08:23 up 81 days, 20:24,  0 users,  load average: 32.06, 32.03, 32.05
+n0002:  10:08:23 up 81 days, 20:24,  0 users,  load average: 0.00, 0.01, 0.05
+n0003:  10:08:23 up 81 days, 20:24,  0 users,  load average: 0.00, 0.01, 0.05
+n0004:  10:08:23 up 81 days, 20:24,  0 users,  load average: 0.00, 0.01, 0.05
+n0005:  10:08:23 up 81 days, 20:24,  0 users,  load average: 0.00, 0.01, 0.05
+n0006:  10:08:23 up 81 days, 20:24,  0 users,  load average: 0.00, 0.01, 0.05
+n0009:  10:08:23 up 81 days, 20:24,  0 users,  load average: 0.00, 0.01, 0.05
+n0010:  10:08:23 up 81 days, 20:24,  0 users,  load average: 0.00, 0.01, 0.05
+n0014:  10:08:23 up 81 days, 20:24,  0 users,  load average: 0.05, 0.03, 0.05
+n0017:  10:08:23 up 81 days, 20:24,  0 users,  load average: 0.04, 0.03, 0.05
+n0019:  10:08:23 up 81 days, 20:24,  0 users,  load average: 0.00, 0.01, 0.05
+n0020:  10:08:23 up 81 days, 20:47,  1 user,  load average: 0.00, 0.01, 0.05
+n0021:  10:08:23 up 81 days, 20:27,  0 users,  load average: 0.00, 0.01, 0.05
+n0025:  10:08:23 up 81 days, 20:24,  0 users,  load average: 0.00, 0.01, 0.05
+n0039:  10:08:23 up 81 days, 20:23,  0 users,  load average: 0.00, 0.01, 0.05
+

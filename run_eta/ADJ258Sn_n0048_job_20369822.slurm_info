@@ -1,0 +1,51 @@
+
+start 2:43 pm, started right away
+2018.0811
+
+
+**^ tin viz.scs00 /global/scratch/tin ^**>  squeue -u tin 
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+          20369822       lr6 ADJ258Sn      tin  R       0:05      8 n0048.lr6,n0049.lr6,n0052.lr6,n0053.lr6,n0055.lr6,n0057.lr6,n0059.lr6,n0070.lr6
+**^ tin viz.scs00 /global/scratch/tin ^**>  sacct -j 20369822 
+       JobID    JobName  Partition    Account  AllocCPUS      State ExitCode 
+------------ ---------- ---------- ---------- ---------- ---------- -------- 
+20369822       ADJ258Sn        lr6        scs        256    RUNNING      0:0 
+20369822.0        orted                   scs          7    RUNNING      0:0 
+**^ tin viz.scs00 /global/scratch/tin ^**>  
+
+
+
+[root@perceus-00 ADJ_RUN]# pdsh -w n0048.lr6,n0049.lr6,n0052.lr6,n0053.lr6,n0055.lr6,n0057.lr6,n0059.lr6,n0070.lr6 uptime
+n0057:  14:43:47 up 82 days,  1:05,  0 users,  load average: 25.45, 27.49, 26.92
+n0070:  14:43:47 up 82 days, 51 min,  0 users,  load average: 24.53, 26.29, 19.74
+n0049:  14:43:47 up 82 days,  1:18,  0 users,  load average: 24.26, 26.79, 26.80
+n0048:  14:43:47 up 82 days,  1:06,  0 users,  load average: 24.75, 26.99, 26.89
+n0055:  14:43:47 up 82 days,  1:05,  0 users,  load average: 23.81, 26.78, 26.78
+n0052:  14:43:47 up 82 days,  1:05,  0 users,  load average: 25.22, 27.21, 26.93
+n0059:  14:43:47 up 82 days,  3:48,  0 users,  load average: 25.49, 26.73, 19.88
+n0053:  14:43:47 up 82 days,  1:05,  0 users,  load average: 24.58, 26.90, 26.82
+
+
+
+watch -n 30  -d "ls -lh *nc; date; squeue -u tin ; grep -n Walltime *000.out"
+
+
+Every 30.0s: ls -lh *nc; date; squeue -u tin ; grep -n Walltime *000.out                                 Sun Aug 11 14:48:45 2019
+
+-rw-rw-r-- 1 tin itd 28K Aug 11 14:42 SARMAP_258_2012_ALL_HYBRID.AL5CHK.nc
+Sun Aug 11 14:48:45 PDT 2019
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+          20369822       lr6 ADJ258Sn      tin  R       6:04      8 n0048.lr6,n0049.lr6,n0052.lr6,n0053.lr6,n0055.lr6,n0057.lr6,n
+0059.lr6,n0070.lr6
+
+
+
+
+
+
+likely no good for real to run as 8 nodes :(.
+
+trying with 6 nodes...
+
+
+have not been able to read online about wisdom on number of nodes or cores to use.

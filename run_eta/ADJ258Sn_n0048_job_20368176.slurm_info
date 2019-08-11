@@ -1,0 +1,54 @@
+start 2019.0811 2.25pm, but has queue time now
+started in earnest by 2:27 pm
+
+[root@perceus-00 ADJ_RUN]# date
+Sun Aug 11 14:27:15 PDT 2019
+
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+          20369139       lr6 ADJ258Sn      tin PD       0:00      8 (Resources)
+
+       JobID    JobName  Partition    Account  AllocCPUS      State ExitCode 
+------------ ---------- ---------- ---------- ---------- ---------- -------- 
+20369139       ADJ258Sn        lr6        scs        256    PENDING      0:0 
+
+
+
+
+[root@perceus-00 ADJ_RUN]# squeue -u tin 
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+          20369139       lr6 ADJ258Sn      tin  R       0:34      8 n0048.lr6,n0049.lr6,n0052.lr6,n0053.lr6,n0055.lr6,n0057.lr6,n0059.lr6,n0070.lr6
+[root@perceus-00 ADJ_RUN]# pdsh -w n0048.lr6,n0049.lr6,n0052.lr6,n0053.lr6,n0055.lr6,n0057.lr6,n0059.lr6,n0070.lr6 uptime
+n0059:  14:27:14 up 82 days,  3:32,  0 users,  load average: 16.87, 4.46, 1.55
+n0048:  14:27:14 up 82 days, 49 min,  0 users,  load average: 17.55, 22.07, 22.36
+n0049:  14:27:14 up 82 days,  1:01,  0 users,  load average: 17.46, 22.03, 22.36
+n0055:  14:27:14 up 82 days, 49 min,  0 users,  load average: 24.20, 27.40, 22.51
+n0057:  14:27:14 up 82 days, 49 min,  0 users,  load average: 22.89, 26.89, 22.20
+n0052:  14:27:14 up 82 days, 49 min,  0 users,  load average: 18.44, 22.11, 22.34
+n0053:  14:27:14 up 82 days, 49 min,  0 users,  load average: 18.63, 22.16, 22.36
+n0070:  14:27:14 up 82 days, 34 min,  0 users,  load average: 16.86, 4.47, 1.55
+[root@perceus-00 ADJ_RUN]# 
+
+
+
+11+ min, *nc still at 28k, when 4 min was all that was needed in last run with 4 nodes.
+is it a bad node or something just go crazy in locking?
+
+-rw-rw-r-- 1 tin itd 45K Aug 11 14:26 iolog_254.out
+-rw-rw-r-- 1 tin itd 45K Aug 11 14:26 iolog_255.out
+**^ tin n0014.testbed /global/scratch/tin/adj_kzF_O3_GE66_Popdens_258_20369139 ^**>  ls -lh *nc
+-rw-rw-r-- 1 tin itd 28K Aug 11 14:26 SARMAP_258_2012_ALL_HYBRID.AL5CHK.nc
+
+
+cancelling after 15 min of run time
+and still small *nc file.
+
+**^ tin viz.scs00 /global/scratch/tin ^**>  squeue -u tin 
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+          20369139       lr6 ADJ258Sn      tin  R      15:04      8 n0048.lr6,n0049.lr6,n0052.lr6,n0053.lr6,n0055.lr6,n0057.lr6,n0059.lr6,n0070.lr6
+
+
+
+plan to repeat 8 nodes one more time.
+just to be sure last cancel didn't leave in bad state before next start works well.
+
+

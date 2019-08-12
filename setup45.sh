@@ -5,8 +5,6 @@
 #### run as:
 #### ./setup.sh 2>&2 | tee setup.log
 
-#### old version under setup45.sh now
-
 #### CMAQ 5.2.1: build tutorial https://github.com/USEPA/CMAQ/blob/5.2.1/DOCS/Tutorials/CMAQ_GettingStarted.md
 
 env_prep() {
@@ -22,15 +20,18 @@ env_prep() {
 	export FFLAGS='-g -w'
 	export CXX='g++'
 
-	#export SRCBASE=/local/home/tin/tin-gh    # as appropriate 
-	export SRCBASE=$(pwd)                     # eg /Downloads/CMAQ  # from git clone
+    # export SNHOME=/Downloads                      # -or-
+    # export SRCBASE=/Downloads                     # -or-
+    #export SRCBASE=/local/home/tin/tin-gh    # as appropriate 
+	export SRCBASE=$(pwd)                     # eg /Downloads/...
 	export DSTBASE=/opt/CMAS5.2.1/rel
 	mkdir -p $DSTBASE
 
-	export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
-	export PATH=/usr/local/bin:$PATH
+    #export LD_LIBRARY_PATH=/opt/CMAS4.5.1/rel/lib/ioapi_3:$LD_LIBRARY_PATH
+    export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/bin:$PATH
 
-	#export BIN=`uname -s``uname -r | cut -d. -f1`
+    #export BIN=`uname -s``uname -r | cut -d. -f1`
 	export BIN='Linux2_x86_64gfort'
 }
 
@@ -39,25 +40,65 @@ env_prep() {
 #### will use ioapi 3.2
 #### pre-downloaded into my git repo from https://www.cmascenter.org/ioapi/download/ioapi-3.2.tar.gz inside ioapi/
 setup_ioapi() {
-		BASEDIR=${SRCBASE}/Api 			# source dir, eg /Downloads/CMAQ/Api
-		mkdir -p $BASEDIR/$BIN 			# BIN is now Linux2_x86_64gfort
+        #--BASEDIR=$SRCBASE/cmaq/ioapi/ioapi  # source dir
+        BASEDIR=${SRCBASE}/Api            # source dir, eg ./Api
+        #--mkdir ${BASEDIR}/Linux4   #in git repo now
+		mkdir -p $BASEDIR/$BIN 			# BASEDIR include higher level ioapi/ .  BIN is now Linux2_x86_64gfort
+		#### ${BASEDIR}/ioapi 
 
-		cd $BASEDIR     #cd into .../Api
+        mkdir -p /opt/CMAS5.2.1/rel/lib/ioapi_3         # install destination?
+        cd $BASEDIR     #cd into ./Api
+
 		## just to be obvious that I have done some edits and using them in the build
 		## copy file first...
-		cp -p Makefile.centos7gcc Makefile       # some edit done, now using gcc-gfortran 
-		export INSTDIR=${DSTBASE}/lib/ioapi_3 # /opt/CMAS5.2.1/rel/lib/ioapi_3
-		mkdir -p $INSTDIR                     # install destination
-		make HOME=${BASEDIR}/ioapi           2>&1 | tee make.log
-		make HOME=${BASEDIR}/ioapi  install  2>&1 | tee make.install.log
-		# in 3.1? only 1 file: /opt/CMAS4.5.1/rel/lib/ioapi_3/libioapi.a
+        cp -p Makefile.centos7gcc Makefile       # some edit done, now using gcc-gfortran 
+
+
+        #HOME=/local/home/tin/tin-gh/cmaq/ioapi  BIN=Linux4  INSTDIR=/opt/CMAS4.5.1/rel/lib/ioapi_3   make
+        #echo $?
+        #echo "done with make"
+        #HOME=/local/home/tin/tin-gh/cmaq/ioapi  BIN=Linux4  INSTDIR=/opt/CMAS4.5.1/rel/lib/ioapi_3 make install
+		export INSTDIR=/opt/CMAS5.2.1/rel/lib/ioapi_3
+        make HOME=${BASEDIR}/ioapi           2>&1 | tee make.log
+        make HOME=${BASEDIR}/ioapi  install  2>&1 | tee make.install.log
+        # in 3.1? only 1 file: /opt/CMAS4.5.1/rel/lib/ioapi_3/libioapi.a
 		# in 3.2, seems to include m3tools 
 
 
-		cd ${SRCBASE}
+		# these are now being skipped for CMAQ 521
+        #cd $HOME/tin-gh/cmaq/ioapi/bin
+        # ln -s /opt/lib/libnetcdf.a .
+        # ln ... libioapi.a
+
+        cd ${SRCBASE}
 }
 
 
+#### cmaq m3tools #####
+#### but ioapi 3.2 seems to have completed this as part of general build above
+#### so no longer needed.
+setup_m3tools() {
+		## hmm... refer to build.rst have steps i no longer do... 
+        ##defined above## SRCBASE=/local/home/tin/tin-gh    
+        #cd $SRCBASE/cmaq/ioapi/m3tools # cd $HOME/tin-gh/cmaq/ioapi/m3tools
+        #cd cmaq/ioapi/m3tools # cd $HOME/tin-gh/cmaq/ioapi/m3tools
+        cd ${SRCBASE}/ioapi/m3tools 
+        cp -p Makefile.pgi_container Makefile
+		mkdir /opt/CMAS4.5.1/rel/bin
+        #make         2>&1 | tee make.log
+        #make install 2>&1 | tee make.install.log
+        make HOME=${SRCBASE}/ioapi/m3tools  BIN=Linux4  INSTDIR=/opt/CMAS4.5.1/rel/bin  2>&1 | tee make.log
+        #make INSTDIR=/opt/CMAS4.5.1/rel/bin  install 2>&1 | tee make.install.log
+        make install /opt/CMAS4.5.1/rel/bin 2>&1 | tee make.install.log
+        #HOME=${SRCBASE}/ioapi/m3tools  BIN=Linux4  INSTDIR=/opt/CMAS4.5.1/rel/bin   make install  2>&1 | tee make.install.log
+
+        cd ${SRCBASE}
+        #echo "last_line_of_post" >  container_build_done
+        #echo "last_line_of_post" > /container_build_done
+        # singularity build get interrupted and result in no img whatsoever if there are errors with these mkdir or make commands :(
+        # building docker layers first would likely save time for development cycle.
+
+}
 
 
 setup_cmaq451() {
@@ -118,9 +159,7 @@ setup_cmaq451() {
 
 setup_cmaq52() {
 	echo "    **>> starting setup_cmq52 fn... <<**"
-	##++ awww... will i need csh to source this??   create a wrapper that source and execute?  setup.sh calling setup_cmaq52.csh ??!
-	##   or rewrite setup.sh as csh, not too many changes.  export to setenv, w/o =  ...
-	##   yeah... cuz not sure why env not getting inherited :(
+	##++ awww... will i need csh to source this??   create a wrapper that source and execute?  setup.sh calling setup.csh ??!
 
 	# may end up just calling this config script directly from Dockerfile
 	cp -p ./config_cmaq.tin.csh ./config_cmaq.csh 

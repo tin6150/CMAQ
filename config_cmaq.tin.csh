@@ -1,5 +1,9 @@
 #!/bin/csh -f
 
+#### ###########################################################################
+#### master is config_cmaq.tin.csh, then cp to config_cmaq.csh
+#### ###########################################################################
+
 # ================= CMAQv5.2.1 Configuration Script ================= #
 # Requirements: I/O API & netCDF libraries                            #
 #               PGI, Intel, or Gnu Fortran compiler                   #
@@ -47,8 +51,9 @@
 #### don't want it to prompt when rerunning the script
 #### unalias cp   
 #### nope, doesn't work.
-#### mv out
-if ( -d /home/username/CMAQ_Project ) /bin/mv /home/username/CMAQ_Project /home/username/CMAQ_Project_OLD
+#### mv out -- this script sourced multiple time by various bldit_* scripts
+setenv TimeStamp=`date +%Y.%m%d-%H%M`
+if ( -d /home/username/CMAQ_Project ) /bin/mv /home/username/CMAQ_Project /home/username/CMAQ_Project_PRE_${TimeStamp}
 
 #> Set the compiler option
  if ( $#argv == 1 ) then
@@ -209,6 +214,9 @@ if ( -d /home/username/CMAQ_Project ) /bin/mv /home/username/CMAQ_Project /home/
 
 #> Generate Library Locations
  setenv CMAQ_LIB    ${lib_basedir}/${system}/${compilerString}
+ echo "    **>> generated CMAQ _LIB location is: $CMAQ_LIB <<**" ##
+ echo "    **>> from lib_basedir of: ${lib_basedir} <<**"
+ echo "    **>> from system of: ${system} <<**"
  setenv MPI_DIR     $CMAQ_LIB/mpi
  setenv NETCDF_DIR  $CMAQ_LIB/netcdf
  setenv PNETCDF_DIR $CMAQ_LIB/pnetcdf

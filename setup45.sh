@@ -5,6 +5,9 @@
 #### run as:
 #### ./setup.sh 2>&2 | tee setup.log
 
+#### this is for old version 4.5.1 of cmaq.  never completed it
+#### and moved on to 5.2.1 using csh version of setup script
+
 #### CMAQ 5.2.1: build tutorial https://github.com/USEPA/CMAQ/blob/5.2.1/DOCS/Tutorials/CMAQ_GettingStarted.md
 
 env_prep() {

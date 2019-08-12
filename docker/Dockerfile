@@ -18,7 +18,7 @@ RUN mkdir -p Downloads &&  cd Downloads ;\
     #export BIN='Linux2_x86_64gfort'     ;\
     # better to write the setup.sh script to compile cmaq, so that it can be used on actual host or singularity
     # if docker doesn't work
-    ./setup.sh 2>&1 | tee setup.log ;\
+    ./setup.csh 2>&1 | tee setup.log.rst ;\
     echo $? > _CMAQ_BUILD_END_
 
 
@@ -26,11 +26,11 @@ RUN mkdir -p Downloads &&  cd Downloads ;\
 RUN  cd / \
   && touch    _TOP_DIR_OF_CONTAINER_  \
   && TZ=PST8PDT date  >> _TOP_DIR_OF_CONTAINER_  \
-  && echo  "Dockerfile.cmaq 2019.0808.2330+"  >> _TOP_DIR_OF_CONTAINER_  
+  && echo  "Dockerfile.cmaq 2019.0811.2359+"  >> _TOP_DIR_OF_CONTAINER_  
 
 
 
-#ENTRYPOINT ["cat", "/Downloads/netcdf-fortran-4.4.5/_END_BUILD_NETCDF_"]
+#ENTRYPOINT ["cat", "/Downloads/netcdf-fotran-4.4.5/_END_BUILD_NETCDF_"]
 #ENTRYPOINT ["cat", "/Downloads/CMAQ/_CMAQ_BUILD_END_"]
 #ENTRYPOINT ["cat", "/_TOP_DIR_OF_CONTAINER_"]
 

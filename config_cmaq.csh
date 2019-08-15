@@ -52,7 +52,7 @@
 #### unalias cp   
 #### nope, doesn't work.
 #### mv out -- this script sourced multiple time by various bldit_* scripts
-setenv TimeStamp=`date +%Y.%m%d-%H%M`
+setenv TimeStamp `date +%Y.%m%d-%H%M`
 if ( -d /home/username/CMAQ_Project ) /bin/mv /home/username/CMAQ_Project /home/username/CMAQ_Project_PRE_${TimeStamp}
 
 #> Set the compiler option

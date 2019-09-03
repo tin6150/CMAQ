@@ -63,3 +63,8 @@ UTIL/inline_phot_preproc/input
 UTIL/*/bldrun*
 
 #unique to user; below section unlikely to add and commit to repository
+
+
+#### tin
+*.img    
+TMP/

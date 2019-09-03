@@ -1,0 +1,126 @@
+start time 2019.0811 ~5:53
+take about 10min per step, ~28 hours, so expect finish ~10pm on mon 8/12
+
+JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+20378177       lr6 ADJ258Sn      tin  R       3:01      4 n0029.lr6,n0030.lr6,n0031.lr6,n0047.lr6
+
+
+[root@perceus-00 ADJ_RUN]# pdsh -w n0029.lr6,n0030.lr6,n0031.lr6,n0047.lr6 uptime
+n0031: Warning: Permanently added 'n0031.lr6,10.0.41.31' (ECDSA) to the list of known hosts.
+n0030: Warning: Permanently added 'n0030.lr6,10.0.41.30' (ECDSA) to the list of known hosts.
+n0029: Warning: Permanently added 'n0029.lr6,10.0.41.29' (ECDSA) to the list of known hosts.
+n0047: Warning: Permanently added 'n0047.lr6,10.0.41.47' (ECDSA) to the list of known hosts.
+n0047:  17:57:05 up 82 days,  4:19,  0 users,  load average: 31.10, 16.35, 6.82
+n0030:  17:57:05 up 82 days,  4:12,  0 users,  load average: 31.03, 15.95, 6.40
+n0031:  17:57:05 up 82 days,  4:12,  0 users,  load average: 31.20, 16.04, 6.44
+n0029:  17:57:05 up 82 days,  4:12,  0 users,  load average: 30.96, 15.89, 6.37
+[root@perceus-00 ADJ_RUN]# pdsh -w n0029.lr6,n0030.lr6,n0031.lr6,n0047.lr6 uptime
+n0031: Warning: Permanently added 'n0031.lr6,10.0.41.31' (ECDSA) to the list of known hosts.
+n0030: Warning: Permanently added 'n0030.lr6,10.0.41.30' (ECDSA) to the list of known hosts.
+n0029: Warning: Permanently added 'n0029.lr6,10.0.41.29' (ECDSA) to the list of known hosts.
+n0047: Warning: Permanently added 'n0047.lr6,10.0.41.47' (ECDSA) to the list of known hosts.
+n0031:  18:38:48 up 82 days,  4:54,  0 users,  load average: 31.89, 31.98, 30.29
+n0030:  18:38:48 up 82 days,  4:54,  0 users,  load average: 32.16, 32.11, 30.34
+n0029:  18:38:48 up 82 days,  4:54,  1 user,  load average: 32.26, 32.10, 30.34
+n0047:  18:38:48 up 82 days,  5:01,  0 users,  load average: 32.36, 32.28, 30.46
+
+
+**^ tin n0029.lr6 ~ ^**>  pstree
+systemd-+-agetty
+        |-auditd---{auditd}
+        |-chronyd
+        |-crond
+        |-dbus-daemon
+        |-gssproxy---5*[{gssproxy}]
+        |-ibacm---3*[{ibacm}]
+        |-irqbalance
+        |-lvmetad
+        |-munged---3*[{munged}]
+        |-rpc.statd
+        |-rpcbind
+        |-rsyslogd---5*[{rsyslogd}]
+        |-slurmd
+        |-slurmstepd-+-slurm_script---mpirun-+-32*[cctm---2*[{cctm}]]
+        |            |                       |-srun-+-srun
+        |            |                       |      `-3*[{srun}]
+        |            |                       `-4*[{mpirun}]
+        |            `-4*[{slurmstepd}]
+        |-sshd---sshd---sshd---bash---pstree
+        |-systemd-journal
+        |-systemd-logind
+        |-systemd-udevd
+        `-wulfd
+
+
+
+tin      241182 241177  0 17:53 ?        00:00:00 /bin/csh /var/spool/slurmd/job20378177/slurm_script
+
+tin      241205 241182  0 17:53 ?        00:00:00 /global/software/sl-7.x86_64/modules/gcc/6.3.0/openmpi/3.0.1-gcc/bin/mpirun -v -np 128 /global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB/built_gcc_gfortran_parallel_O3_default-eddy/bin/CCTM/cctm
+
+tin      241210 241205  0 17:53 ?        00:00:00 srun --ntasks-per-node=1 --kill-on-bad-exit --cpu_bind=none --nodes=3 --nodelist=n0030.lr6,n0031.lr6,n0047.lr6 --ntasks=3 orted -mca ess "slurm" -mca ess_base_jobid "2064252928" -mca ess_base_vpid "1" -mca ess_base_num_procs "4" -mca orte_node_regex "n[4:29-31,47].lr6@0(4)" -mca orte_hnp_uri "2064252928.0;tcp://10.0.41.29,10.4.41.29:49033;ud://452187.2430.1"
+
+tin      241211 241210  0 17:53 ?        00:00:00 srun --ntasks-per-node=1 --kill-on-bad-exit --cpu_bind=none --nodes=3 --nodelist=n0030.lr6,n0031.lr6,n0047.lr6 --ntasks=3 orted -mca ess "slurm" -mca ess_base_jobid "2064252928" -mca ess_base_vpid "1" -mca ess_base_num_procs "4" -mca orte_node_regex "n[4:29-31,47].lr6@0(4)" -mca orte_hnp_uri "2064252928.0;tcp://10.0.41.29,10.4.41.29:49033;ud://452187.2430.1"
+
+tin      241218 241205 97 17:53 ?        00:44:39 /global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB/built_gcc_gfortran_parallel_O3_default-eddy/bin/CCTM/cctm  (32 or 33 of these)
+
+
+################################################################################
+
+**^ tin n0029.lr6 ~ ^**>  free -h
+              total        used        free      shared  buff/cache   available
+Mem:            93G         16G         48G        1.3G         27G         70G
+Swap:          8.0G        1.1G        6.9G
+**^ tin n0029.lr6 ~ ^**>  
+
+
+the thing is CPU bound, only need 16G of RAM, ie 0.5 per core.
+
+top - 18:54:38 up 82 days,  5:10,  1 user,  load average: 32.13, 32.15, 31.48
+Tasks: 667 total,  33 running, 634 sleeping,   0 stopped,   0 zombie
+%Cpu(s): 78.9 us, 21.1 sy,  0.0 ni,  0.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+KiB Mem : 97596032 total, 50497892 free, 17742864 used, 29355276 buff/cache
+KiB Swap:  8388604 total,  7281580 free,  1107024 used. 74295432 avail Mem 
+
+   PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND           
+241218 tin       20   0 2030732 525300  30056 R 100.0  0.5  59:36.20 cctm              
+241220 tin       20   0 2007964 502016  17272 R 100.0  0.5  59:49.34 cctm              
+241223 tin       20   0 2007956 510280  17320 R 100.0  0.5  59:52.36 cctm              
+241225 tin       20   0 2007948 497072  17304 R 100.0  0.5  59:55.78 cctm              
+241230 tin       20   0 2007952 498892  17344 R 100.0  0.5  59:54.86 cctm              
+241232 tin       20   0 2007944 501040  17312 R 100.0  0.5  59:54.83 cctm              
+241234 tin       20   0 2008388 499236  17392 R 100.0  0.5  59:49.36 cctm              
+241235 tin       20   0 2008384 509264  17460 R 100.0  0.5  59:49.71 cctm              
+241237 tin       20   0 2008400 509616  17472 R 100.0  0.5  59:52.70 cctm              
+241238 tin       20   0 2008384 508024  17456 R 100.0  0.5  59:52.68 cctm              
+241240 tin       20   0 2008392 507896  17460 R 100.0  0.5  59:55.60 cctm              
+241244 tin       20   0 2008384 499276  17448 R 100.0  0.5  59:59.69 cctm              
+241221 tin       20   0 2007940 512032  17444 R  99.7  0.5  59:50.19 cctm              
+241222 tin       20   0 2007964 498756  17268 R  99.7  0.5  59:51.72 cctm              
+241224 tin       20   0 2007948 499272  17324 R  99.7  0.5  59:52.88 cctm              
+241226 tin       20   0 2007956 499440  17292 R  99.7  0.5  59:55.04 cctm              
+241227 tin       20   0 2007948 501396  17344 R  99.7  0.5  59:56.97 cctm              
+241228 tin       20   0 2007956 501672  17332 R  99.7  0.5  59:56.77 cctm              
+241229 tin       20   0 2007948 499760  17448 R  99.7  0.5  60:00.12 cctm              
+241231 tin       20   0 2007944 501892  17312 R  99.7  0.5  59:58.21 cctm              
+241233 tin       20   0 1545448 511512  17296 R  99.7  0.5  59:55.70 cctm              
+241236 tin       20   0 2008376 509560  17448 R  99.7  0.5  59:49.46 cctm              
+241239 tin       20   0 2008392 501844  17456 R  99.7  0.5  59:55.91 cctm              
+241241 tin       20   0 2008384 509332  17468 R  99.7  0.5  59:58.55 cctm              
+241242 tin       20   0 2008388 497628  17436 R  99.7  0.5  59:55.09 cctm              
+241243 tin       20   0 2008380 499336  17440 R  99.7  0.5  59:59.46 cctm              
+241245 tin       20   0 2008380 504768  17452 R  99.7  0.5  60:03.26 cctm              
+241246 tin       20   0 2008392 503496  17460 R  99.7  0.5  59:59.40 cctm              
+241247 tin       20   0 2008376 503480  17464 R  99.7  0.5  60:00.63 cctm              
+241248 tin       20   0 2008380 502112  17456 R  99.7  0.5  60:00.82 cctm              
+241219 tin       20   0 2007948 512852  17268 R  99.3  0.5  59:48.79 cctm              
+241249 tin       20   0 2008512 500216  17688 R  99.3  0.5  60:02.78 cctm              
+241945 tin       20   0   58968   2856   1536 R   0.7  0.0   0:00.08 top               
+    10 root      20   0       0      0      0 S   0.3  0.0 103:25.18 rcu_sched         
+ 13283 root      20   0    4360    556    432 S   0.3  0.0 475:47.58 wulfd             
+     1 root      20   0   43624   3816   2532 S   0.0  0.0   1:59.39 systemd           
+     2 root      20   0       0      0      0 S   0.0  0.0   0:00.66 kthreadd          
+     3 root      20   0       0      0      0 S   0.0  0.0   0:08.59 ksoftirqd/0       
+     8 root      rt   0       0      0      0 S   0.0  0.0   0:07.05 migration/0       
+     9 root      20   0       0      0      0 S   0.0  0.0   0:00.00 rcu_bh            
+    11 root      rt   0       0      0      0 S   0.0  0.0   0:19.22 watchdog/0     
+

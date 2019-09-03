@@ -1,0 +1,34 @@
+# make file to compile for ALPHA
+
+CC = cc
+CFLAGS = -std1 -g
+CLITEFLAGS = -g
+
+OBJECTS =	fw_util.o \
+		m3bld.o \
+		bld_parser.o \
+		bld_scanner.o \
+		action.o \
+		sms.o 
+
+m3bld: $(OBJECTS)
+	 $(CC) -o m3bld $(OBJECTS)
+
+bld_parser.o:	bld_parser.c
+	$(CC) -c $(CLITEFLAGS) bld_parser.c
+
+bld_scanner.o:	bld_scanner.c sms.h tokens.h
+	$(CC) -c $(CLITEFLAGS) bld_scanner.c
+
+action.o:	action.c sms.h tokens.h
+	$(CC) -c $(CLITEFLAGS) action.c
+
+sms.o:	sms.c sms.h tokens.h
+	$(CC) -c $(CLITEFLAGS) sms.c
+
+module.o:	module.c sms.h tokens.h
+	$(CC) -c $(CLITEFLAGS) module.c
+
+fw_util.o:	fw_util.c sms.h tokens.h
+	$(CC) -c $(CLITEFLAGS) fw_util.c
+

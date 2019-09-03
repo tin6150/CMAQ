@@ -1,0 +1,26 @@
+# SHELL = /bin/sh
+
+win32.lst : bld_parser.c bld_scanner.c sms.c action.c m3bld.c module.c
+	@echo "copy these file to Win32 platform and compile"
+	@echo " m3bld.c"
+	@echo " bld_parser.c"
+	@echo " bld_scanner.c"
+	@echo " action.c"
+	@echo " sms.c"
+	@echo " module.c"
+	@echo " fw_util.c"
+	@echo " edssTypes.h"
+	@echo " sms.h"
+	@echo " softwareVersion.h"
+	@echo " tokens.h"
+	@echo " utsname.h"
+
+bld_parser.c:	bld_parser.y win32.sed
+	yacc -vtdl bld_parser.y
+	mv y.tab.h tokens.h
+	sed -f win32.sed < y.tab.c > bld_parser.c
+
+bld_scanner.c:	bld_scanner.l
+	lex bld_scanner.l
+	mv lex.yy.c bld_scanner.c
+

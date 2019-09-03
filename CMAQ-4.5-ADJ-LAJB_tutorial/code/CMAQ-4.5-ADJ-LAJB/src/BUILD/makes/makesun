@@ -1,0 +1,39 @@
+CC=gcc
+CC_OPTS=-c 
+CLITEFLAGS=$(CC_OPTS)
+
+OBJECTS =	fw_util.o \
+		m3bld.o \
+		bld_parser.o \
+		bld_scanner.o \
+		action.o \
+		sms.o 
+
+m3bld: $(OBJECTS)
+	 $(CC) -o m3bld $(OBJECTS)
+
+clean:
+	rm -f *.o 
+
+bld_parser.o:	y.tab.c bld_parser.sed 
+	sed -f bld_parser.sed < y.tab.c > bld_parser.c
+	$(CC) -c $(CLITEFLAGS) bld_parser.c
+
+y.tab.c:	bld_parser.y
+	yacc -vtdl bld_parser.y
+	mv y.tab.h tokens.h
+
+bld_scanner.o:	bld_scanner.c sms.h tokens.h
+#	$(CC) $(CC_OPTS) bld_scanner.c
+#	don't do extensive semantic checks: lex doesn't write good enough code
+	$(CC) -c $(CLITEFLAGS) bld_scanner.c
+
+bld_scanner.c:	bld_scanner.l
+	lex bld_scanner.l
+	mv lex.yy.c bld_scanner.c
+
+# dependencies
+m3bld.o:	sms.h
+action.o:	sms.h
+sms.o:	sms.h
+bld_parser.o:	bld_parser.c sms.h

@@ -1,0 +1,11 @@
+      INTEGER        N_GC_EMIS
+      PARAMETER     (N_GC_EMIS =  1)
+      INTEGER        N_GC_EMISD
+      PARAMETER     (N_GC_EMISD = N_GC_EMIS)
+      CHARACTER*16   GC_EMIS(N_GC_EMISD)
+      INTEGER        GC_EMIS_MAP(N_GC_EMISD)
+      REAL           GC_EMIS_FAC(N_GC_EMISD)
+      
+      DATA   GC_EMIS(  1), GC_EMIS_MAP(  1) / 'BENZ            ',   1 /
+      DATA   GC_EMIS_FAC(  1) /      1.0 /
+      

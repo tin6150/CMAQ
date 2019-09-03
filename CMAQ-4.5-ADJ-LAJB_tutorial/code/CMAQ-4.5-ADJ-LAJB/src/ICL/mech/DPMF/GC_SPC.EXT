@@ -1,0 +1,13 @@
+      INTEGER        N_GC_SPC
+      PARAMETER     (N_GC_SPC = 1)
+      INTEGER        N_GC_SPCD
+      PARAMETER     (N_GC_SPCD = N_GC_SPC + 1 )
+      CHARACTER*16   GC_SPC(N_GC_SPCD)
+      REAL           GC_MOLWT(N_GC_SPCD)
+
+C     Emissions data for DPMC in input emission files are in g/s but the
+C     unit is recorded as mol/s (so that CMAQ accepts it). That is why I
+C     specify that the molar mass of DPMF is 1 g/mol here. See notes of
+C     May 21st 2014 (fourth page) for more information on that subject.
+      DATA          GC_SPC(  1), GC_MOLWT(  1) / 'DPMF            ', 1.0 /
+      

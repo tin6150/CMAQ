@@ -1,0 +1,7 @@
+This is the code of the (or rather "one of the") adjoint of the Community
+Multiscale Air Quality (CMAQ) model. The code has been adapted by Lucas
+A. J. Bastien from the adjoint of CMAQ v4.5 initially written by Hakami et
+al. (see Hakami et al. "The Adjoint of CMAQ", Environmental Science and
+Technology, 2007, 41, 7807) and initially downloaded from:
+http://people.cs.vt.edu/~asandu/Software/CMAQ_ADJ/CMAQ_ADJ.html on January 08th
+2013.

@@ -1,0 +1,9 @@
+      INTEGER        N_GC_DDEP
+      PARAMETER     (N_GC_DDEP =  1)
+      INTEGER        N_GC_DDEPD
+      PARAMETER     (N_GC_DDEPD = N_GC_DDEP)
+      CHARACTER*16   GC_DDEP(N_GC_DDEPD)
+      INTEGER        GC_DDEP_MAP(N_GC_DDEPD)
+      
+      DATA          GC_DDEP(  1), GC_DDEP_MAP(  1) / 'DPMF            ',   1 /
+      

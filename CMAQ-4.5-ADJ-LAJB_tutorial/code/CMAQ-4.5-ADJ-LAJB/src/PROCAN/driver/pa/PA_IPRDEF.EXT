@@ -1,0 +1,101 @@
+
+C***************************************************************************
+C  Significant portions of Models-3/CMAQ software were developed by        *
+C  Government employees and under a United States Government contract.     *
+C  Portions of the software were also based on information from non-       *
+C  Federal sources, including software developed by research institutions  *
+C  through jointly funded cooperative agreements. These research institu-  *
+C  tions have given the Government permission to use, prepare derivative   *
+C  works, and distribute copies of their work to the public within the     *
+C  Models-3/CMAQ software release and to permit others to do so. EPA       *
+C  therefore grants similar permissions for use of Models-3/CMAQ software, *
+C  but users are requested to provide copies of derivative works to the    *
+C  Government without re-strictions as to use by others.  Users are        *
+C  responsible for acquiring their own copies of commercial software       *
+C  associated with the Models-3/CMAQ release and are also responsible      *
+C  to those vendors for complying with any of the vendors' copyright and   *
+C  license restrictions. In particular users must obtain a Runtime license *
+C  for Orbix from IONA Technologies for each CPU used in Models-3/CMAQ     *
+C  applications.                                                           *
+C                                                                          *
+C  Portions of I/O API, PAVE, and the model builder are Copyrighted        *
+C  1993-1997 by MCNC--North Carolina Supercomputing Center and are         *
+C  used with their permissions subject to the above restrictions.          *
+C***************************************************************************
+
+C RCS file, release, date & time of last delta, author, state, [and locker]
+C $Header: /global/home/groups-sw/ac_seasonal/lbastien/CMAQ/v4.5-ADJ/models/PROCAN/src/driver/pa/PA_IPRDEF.EXT,v 1.1.1.1 2005/09/09 19:19:11 sjr Exp $ 
+
+C what(1) key, module and SID; SCCS file; date and time of last delta:
+C %W% %P% %G% %U%
+
+C......................................................................
+C  INCLUDE FILE: PA_IPRDEF.EXT
+C
+C  CONTAINS: Defines science processes contained in the CMAQ and the 
+C            IPR operators that can be used
+C
+C  DEPENDENT UPON: Nothing, but if the process names and/or operator
+C                  names are changed, the definitions of the 
+C                  operators must be re-programmed in pa_setup_ipr.F.
+C
+C  REVISION HISTORY: Prototype created by Jerry Gipson, Sept, 1997
+C                      for the targeted CTM
+C                    Modified June 3, 1998 by Jerry Gipson to add PING
+C                      to the CTM science processes
+C
+C......................................................................
+
+      INTEGER NPROCS                   ! No. of CTM science processes
+      PARAMETER ( NPROCS = 12 )
+
+      INTEGER NOPNAMES                 ! Number of IPR_OUTPUT operators
+      PARAMETER ( NOPNAMES = 17 )
+
+      CHARACTER*16 PROCNAME( NPROCS )  ! Names of CTM science processes
+
+      DATA  PROCNAME(  1 ) / 'XADV            ' /
+      DATA  PROCNAME(  2 ) / 'YADV            ' /
+      DATA  PROCNAME(  3 ) / 'ZADV            ' /
+      DATA  PROCNAME(  4 ) / 'ADJC            ' /
+      DATA  PROCNAME(  5 ) / 'HDIF            ' /
+      DATA  PROCNAME(  6 ) / 'VDIF            ' /
+      DATA  PROCNAME(  7 ) / 'EMIS            ' /
+      DATA  PROCNAME(  8 ) / 'DDEP            ' /
+      DATA  PROCNAME(  9 ) / 'CLDS            ' /
+      DATA  PROCNAME( 10 ) / 'CHEM            ' /
+      DATA  PROCNAME( 11 ) / 'AERO            ' /
+      DATA  PROCNAME( 12 ) / 'PING            ' /
+
+
+      CHARACTER*16 OPNAME( NOPNAMES )  ! IPR_OUTPUT Operator names
+
+      DATA  OPNAME(  1 ) / 'XADV            ' /
+      DATA  OPNAME(  2 ) / 'YADV            ' /
+      DATA  OPNAME(  3 ) / 'ZADV            ' /
+      DATA  OPNAME(  4 ) / 'ADJC            ' /
+      DATA  OPNAME(  5 ) / 'HDIF            ' /
+      DATA  OPNAME(  6 ) / 'VDIF            ' /
+      DATA  OPNAME(  7 ) / 'EMIS            ' /
+      DATA  OPNAME(  8 ) / 'DDEP            ' /
+      DATA  OPNAME(  9 ) / 'CLDS            ' /
+      DATA  OPNAME( 10 ) / 'CHEM            ' /
+      DATA  OPNAME( 11 ) / 'AERO            ' /
+      DATA  OPNAME( 12 ) / 'XYADV           ' /
+      DATA  OPNAME( 13 ) / 'XYZADV          ' /
+      DATA  OPNAME( 14 ) / 'TOTADV          ' /
+      DATA  OPNAME( 15 ) / 'TOTDIF          ' /
+      DATA  OPNAME( 16 ) / 'TOTTRAN         ' /
+      DATA  OPNAME( 17 ) / 'PING            ' /
+
+c
+c  Operator 12-16 definitions:
+c      XYADV   = XADV + YADV
+c      XYZADV  = XADV + YADV + ZADV
+c      TOTADV  = XADV + YADV + ZADV + ADJC
+c      TOTDIF  = HDIF + VDIF
+c      TOTTRAN = XADV + YADV + ZADV + ADJC + HDIF + VDIF
+
+
+C............................ end PA_IPRDEF.EXT .........................
+ 

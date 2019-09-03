@@ -1,0 +1,7 @@
+      INTEGER        N_NR_DDEP
+      PARAMETER     (N_NR_DDEP = 0)
+      INTEGER        N_NR_DDEPD
+      PARAMETER     (N_NR_DDEPD = 1)
+      CHARACTER*16   NR_DDEP(N_NR_DDEPD)
+      INTEGER        NR_DDEP_MAP(N_NR_DDEPD)
+      

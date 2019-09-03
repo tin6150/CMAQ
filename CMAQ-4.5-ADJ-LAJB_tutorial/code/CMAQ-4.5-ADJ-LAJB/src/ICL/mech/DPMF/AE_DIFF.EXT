@@ -1,0 +1,7 @@
+      INTEGER        N_AE_DIFF
+      PARAMETER     (N_AE_DIFF = 0)
+      INTEGER        N_AE_DIFFD
+      PARAMETER     (N_AE_DIFFD = 1)
+      CHARACTER*16   AE_DIFF(N_AE_DIFFD)
+      INTEGER        AE_DIFF_MAP(N_AE_DIFFD)
+      

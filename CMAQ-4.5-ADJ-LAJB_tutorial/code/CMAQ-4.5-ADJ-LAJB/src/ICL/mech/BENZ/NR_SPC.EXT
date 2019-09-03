@@ -1,0 +1,7 @@
+      INTEGER        N_NR_SPC
+      PARAMETER     (N_NR_SPC = 0)
+      INTEGER        N_NR_SPCD
+      PARAMETER     (N_NR_SPCD = 1)
+      CHARACTER*16   NR_SPC(N_NR_SPCD)
+      REAL           NR_MOLWT(N_NR_SPCD)
+      

@@ -1,0 +1,7 @@
+      INTEGER        N_AE_ADV
+      PARAMETER     (N_AE_ADV = 0)
+      INTEGER        N_AE_ADVD
+      PARAMETER     (N_AE_ADVD = 1)
+      CHARACTER*16   AE_ADV(N_AE_ADVD)
+      INTEGER        AE_ADV_MAP(N_AE_ADVD)
+      

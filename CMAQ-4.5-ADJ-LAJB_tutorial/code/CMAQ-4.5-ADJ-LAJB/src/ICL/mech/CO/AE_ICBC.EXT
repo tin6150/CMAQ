@@ -1,0 +1,8 @@
+      INTEGER        N_AE_ICBC
+      PARAMETER     (N_AE_ICBC = 0)
+      INTEGER        N_AE_ICBCD
+      PARAMETER     (N_AE_ICBCD = 1)
+      CHARACTER*16   AE_ICBC(N_AE_ICBCD)
+      INTEGER        AE_ICBC_MAP(N_AE_ICBCD)
+      REAL           AE_ICBC_FAC(N_AE_ICBCD)
+      

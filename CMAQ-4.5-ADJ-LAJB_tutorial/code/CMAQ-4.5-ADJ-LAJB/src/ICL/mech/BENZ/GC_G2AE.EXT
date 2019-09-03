@@ -1,0 +1,8 @@
+      INTEGER        N_GC_G2AE
+      PARAMETER     (N_GC_G2AE = 0)
+      INTEGER        N_GC_G2AED
+      PARAMETER     (N_GC_G2AED = 1)
+      CHARACTER*16   GC_G2AE(N_GC_G2AED)
+      INTEGER        GC_G2AE_MAP(N_GC_G2AED)
+      REAL           GC_G2AE_FAC(N_GC_G2AED)
+        

@@ -1,0 +1,7 @@
+      INTEGER        N_NR_ADV
+      PARAMETER     (N_NR_ADV = 0)
+      INTEGER        N_NR_ADVD
+      PARAMETER     (N_NR_ADVD = 1)
+      CHARACTER*16   NR_ADV(N_NR_ADVD)
+      INTEGER        NR_ADV_MAP(N_NR_ADVD)
+      

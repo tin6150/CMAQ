@@ -1,0 +1,9 @@
+      INTEGER        N_GC_ADV
+      PARAMETER     (N_GC_ADV =  1)
+      INTEGER        N_GC_ADVD
+      PARAMETER     (N_GC_ADVD = N_GC_ADV)
+      CHARACTER*16   GC_ADV(N_GC_ADVD)
+      INTEGER        GC_ADV_MAP(N_GC_ADVD)
+        
+      DATA          GC_ADV(  1), GC_ADV_MAP(  1) / 'BENZ            ',   1 /
+      

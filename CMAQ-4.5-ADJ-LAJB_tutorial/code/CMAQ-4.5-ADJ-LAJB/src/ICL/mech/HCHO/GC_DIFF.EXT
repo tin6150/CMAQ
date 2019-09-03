@@ -1,0 +1,8 @@
+      INTEGER        N_GC_DIFF
+      PARAMETER     (N_GC_DIFF =  1)
+      INTEGER        N_GC_DIFFD
+      PARAMETER     (N_GC_DIFFD = N_GC_DIFF)
+      CHARACTER*16   GC_DIFF(N_GC_DIFFD)
+      INTEGER        GC_DIFF_MAP(N_GC_DIFFD)
+
+      DATA          GC_DIFF(  1), GC_DIFF_MAP(  1) / 'HCHO            ',   1 /

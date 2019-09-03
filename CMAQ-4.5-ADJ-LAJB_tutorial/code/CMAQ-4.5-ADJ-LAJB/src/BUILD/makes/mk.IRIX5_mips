@@ -1,0 +1,4 @@
+CC = cc
+
+CFLAGS = -ansi -fullwarn -g
+CLITEFLAGS = -ansi -g

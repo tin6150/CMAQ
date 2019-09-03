@@ -1,0 +1,626 @@
+#!/bin/bash
+#
+# Portions of Models-3/CMAQ software were developed or based on information
+# from various groups: Federal Government employees, contractors working on a
+# United States Government contract, and non-Federal sources (including
+# research institutions).  These research institutions have given the
+# Government permission to use, prepare derivative works, and distribute copies
+# of their work in Models-3/CMAQ to the public and to permit others to do so.
+# EPA therefore grants similar permissions for use of the Models-3/CMAQ
+# software, but users are requested to provide copies of derivative works to
+# the Government without restrictions as to use by others.  Users are
+# responsible for acquiring their own copies of commercial software associated
+# with Models-3/CMAQ and for complying with vendor requirements.  Software
+# copyrights by the MCNC Environmental Modeling Center are used with their
+# permissions subject to the above restrictions.
+#
+# Author: Lucas A. J. Bastien
+#
+# This script loads the environment required to build CMAQ-v4.5-ADJ. This
+# script does not define parts of the environment that DIRECTLY depend on user
+# choices. This file should not be modified by the user. The user-dependent
+# environment should be defined in a separate file, sourced prior to sourcing
+# this file.
+
+# Define DIR_SRC for convenience
+export DIR_SRC=$DIR_REPO/src
+
+# The definition of Popt depends on whether ParOpt is defined or not
+if [ ! -z ${ParOpt+x} ]; then
+  export Popt=SE
+  export ModPar=par
+  export STENEX_POPT=se_snl
+  export PAR_GOODIES="-Dparallel -Dcluster -DINTERPB=PINTERPB -DM3ERR=PM3ERR\
+                      -DM3EXIT=PM3EXIT -DM3WARN=PM3WARN -DSHUT3=PSHUT3\
+                      -DWRITE3=PWRITE3 -DSUBST_READ3=PREAD3"
+  export LIB_PARIO="-L$DIR_INSTL/lib/PARIO -lpario"
+  export CC_PAR=mpicc
+  export FC_PAR=mpif90
+  export s_OR_p=p
+else
+  export Popt=NOOP
+  export ModPar=par_noop
+  export STENEX_POPT=noop_f90
+  export PAR_GOODIES="-DINTERPB=INTERP3 -DSUBST_READ3=READ3"
+  export LIB_PARIO=""
+  export CC_PAR=${CC}
+  export FC_PAR=${FC}
+  export s_OR_p=s
+fi
+
+#############################
+# OBJECT FILES LIST (PARIO) #
+#############################
+
+export OBJ_PARIO="$DIR_INSTL/bld/PARIO/pinterpb_mod.o\
+                  $DIR_INSTL/bld/PARIO/alloc_data_mod.o\
+                  $DIR_INSTL/bld/PARIO/piomaps_mod.o\
+                  $DIR_INSTL/bld/PARIO/boundary.o\
+                  $DIR_INSTL/bld/PARIO/get_write_map.o\
+                  $DIR_INSTL/bld/PARIO/get_read_map.o\
+                  $DIR_INSTL/bld/PARIO/growbuf.o\
+                  $DIR_INSTL/bld/PARIO/gtndxhdv.o\
+                  $DIR_INSTL/bld/PARIO/initm3io.o\
+                  $DIR_INSTL/bld/PARIO/interpol.o\
+                  $DIR_INSTL/bld/PARIO/pinterpb.o\
+                  $DIR_INSTL/bld/PARIO/pio_end.o\
+                  $DIR_INSTL/bld/PARIO/pio_init.o\
+                  $DIR_INSTL/bld/PARIO/pm3err.o\
+                  $DIR_INSTL/bld/PARIO/pm3exit.o\
+                  $DIR_INSTL/bld/PARIO/pm3warn.o\
+                  $DIR_INSTL/bld/PARIO/pshut3.o\
+                  $DIR_INSTL/bld/PARIO/pwrgrdd.o\
+                  $DIR_INSTL/bld/PARIO/prdgrdd.o\
+                  $DIR_INSTL/bld/PARIO/pwrite3.o\
+                  $DIR_INSTL/bld/PARIO/pread3.o\
+                  $DIR_INSTL/bld/PARIO/readbndy.o\
+                  $DIR_INSTL/bld/PARIO/subdmap.o\
+                  $DIR_INSTL/bld/PARIO/wrsubmap.o"
+
+##############################
+# OBJECT FILES LIST (STENEX) #
+##############################
+
+export OBJ_STENEX_se_snl="$DIR_INSTL/bld/STENEX/se_snl/se_comm_info_ext.o\
+                          $DIR_INSTL/bld/STENEX/se_snl/se_disp_info_ext.o\
+                          $DIR_INSTL/bld/STENEX/se_snl/se_domain_info_ext.o\
+                          $DIR_INSTL/bld/STENEX/se_snl/se_ori_ext.o\
+                          $DIR_INSTL/bld/STENEX/se_snl/se_pe_info_ext.o\
+                          $DIR_INSTL/bld/STENEX/se_snl/se_subgrid_info_ext.o\
+                          $DIR_INSTL/bld/STENEX/se_snl/se_reconfig_grid_info_ext.o\
+                          $DIR_INSTL/bld/STENEX/se_snl/se_bndy_copy_info_ext.o\
+                          $DIR_INSTL/bld/STENEX/se_snl/se_internal_util_module.o\
+                          $DIR_INSTL/bld/STENEX/se_snl/se_global_max_module.o\
+                          $DIR_INSTL/bld/STENEX/se_snl/se_global_min_module.o\
+                          $DIR_INSTL/bld/STENEX/se_snl/se_global_sum_module.o\
+                          $DIR_INSTL/bld/STENEX/se_snl/se_util_module.o\
+                          $DIR_INSTL/bld/STENEX/se_snl/se_data_send_module.o\
+                          $DIR_INSTL/bld/STENEX/se_snl/se_data_recv_module.o\
+                          $DIR_INSTL/bld/STENEX/se_snl/se_slice_module.o \
+                          $DIR_INSTL/bld/STENEX/se_snl/se_comm_module.o \
+                          $DIR_INSTL/bld/STENEX/se_snl/se_gather_module.o\
+                          $DIR_INSTL/bld/STENEX/se_snl/se_data_copy_module.o \
+                          $DIR_INSTL/bld/STENEX/se_snl/se_reconfig_grid_module.o\
+                          $DIR_INSTL/bld/STENEX/se_snl/se_bndy_copy_module.o \
+                          $DIR_INSTL/bld/STENEX/se_snl/swap_sandia.o \
+                          $DIR_INSTL/bld/STENEX/se_snl/swap_sandia_routines.o\
+                          $DIR_INSTL/bld/STENEX/se_snl/se_init_module.o \
+                          $DIR_INSTL/bld/STENEX/se_snl/se_term_module.o \
+                          $DIR_INSTL/bld/STENEX/se_snl/se_modules.o"
+
+export OBJ_STENEX_noop_f90="$DIR_INSTL/bld/STENEX/noop_f90/noop_comm_module.o\
+                            $DIR_INSTL/bld/STENEX/noop_f90/noop_data_copy_module.o\
+                            $DIR_INSTL/bld/STENEX/noop_f90/noop_gather_module.o\
+                            $DIR_INSTL/bld/STENEX/noop_f90/noop_global_max_module.o\
+                            $DIR_INSTL/bld/STENEX/noop_f90/noop_global_min_module.o\
+                            $DIR_INSTL/bld/STENEX/noop_f90/noop_global_sum_module.o\
+                            $DIR_INSTL/bld/STENEX/noop_f90/noop_init_module.o\
+                            $DIR_INSTL/bld/STENEX/noop_f90/noop_term_module.o\
+                            $DIR_INSTL/bld/STENEX/noop_f90/noop_slice_module.o\
+                            $DIR_INSTL/bld/STENEX/noop_f90/noop_util_module.o\
+                            $DIR_INSTL/bld/STENEX/noop_f90/noop_modules.o"
+
+#############################
+# OBJECT FILES LIST (JPROC) #
+#############################
+
+export OBJ_JPROC_jproc_table="$DIR_INSTL/bld/JPROC/driver/jproc_table/calczen.o\
+                              $DIR_INSTL/bld/JPROC/driver/jproc_table/chj.o\
+                              $DIR_INSTL/bld/JPROC/driver/jproc_table/index2.o\
+                              $DIR_INSTL/bld/JPROC/driver/jproc_table/intavg.o\
+                              $DIR_INSTL/bld/JPROC/driver/jproc_table/interp.o\
+                              $DIR_INSTL/bld/JPROC/driver/jproc_table/jproc.o\
+                              $DIR_INSTL/bld/JPROC/driver/jproc_table/o3scal.o\
+                              $DIR_INSTL/bld/JPROC/driver/jproc_table/optics.o\
+                              $DIR_INSTL/bld/JPROC/driver/jproc_table/pntavg.o\
+                              $DIR_INSTL/bld/JPROC/driver/jproc_table/readcsqy.o\
+                              $DIR_INSTL/bld/JPROC/driver/jproc_table/readet.o\
+                              $DIR_INSTL/bld/JPROC/driver/jproc_table/reado2.o\
+                              $DIR_INSTL/bld/JPROC/driver/jproc_table/reado3.o\
+                              $DIR_INSTL/bld/JPROC/driver/jproc_table/readprof.o\
+                              $DIR_INSTL/bld/JPROC/driver/jproc_table/readtoms.o\
+                              $DIR_INSTL/bld/JPROC/driver/jproc_table/setaer.o\
+                              $DIR_INSTL/bld/JPROC/driver/jproc_table/setair.o\
+                              $DIR_INSTL/bld/JPROC/driver/jproc_table/setalb.o\
+                              $DIR_INSTL/bld/JPROC/driver/jproc_table/setcld.o\
+                              $DIR_INSTL/bld/JPROC/driver/jproc_table/srband.o\
+                              $DIR_INSTL/bld/JPROC/driver/jproc_table/subgrid.o\
+                              $DIR_INSTL/bld/JPROC/driver/jproc_table/tridiag.o\
+                              $DIR_INSTL/bld/JPROC/driver/jproc_table/twostr.o"
+
+#####################################
+# OBJECT FILES LIST (ICON AND BCON) #
+#####################################
+
+export OBJ_ICON_driver="$DIR_INSTL/bld/ICON/driver/icon/HGRD_DEFN.o\
+                        $DIR_INSTL/bld/ICON/driver/icon/VGRD_DEFN.o\
+                        $DIR_INSTL/bld/ICON/driver/icon/findex.o\
+                        $DIR_INSTL/bld/ICON/driver/icon/get_envlist.o\
+                        $DIR_INSTL/bld/ICON/driver/icon/icon.o\
+                        $DIR_INSTL/bld/ICON/driver/icon/lat_lon.o\
+                        $DIR_INSTL/bld/ICON/driver/icon/lr_interp.o\
+                        $DIR_INSTL/bld/ICON/driver/icon/lst_spc_map.o\
+                        $DIR_INSTL/bld/ICON/driver/icon/ngc_spc_map.o\
+                        $DIR_INSTL/bld/ICON/driver/icon/opn_ic_file.o\
+                        $DIR_INSTL/bld/ICON/driver/icon/setup_logdev.o"
+
+export OBJ_BCON_driver="$DIR_INSTL/bld/BCON/driver/bcon/HGRD_DEFN.o\
+                        $DIR_INSTL/bld/BCON/driver/bcon/VGRD_DEFN.o\
+                        $DIR_INSTL/bld/BCON/driver/bcon/bcon.o\
+                        $DIR_INSTL/bld/BCON/driver/bcon/findex.o\
+                        $DIR_INSTL/bld/BCON/driver/bcon/get_envlist.o\
+                        $DIR_INSTL/bld/BCON/driver/bcon/lat_lon.o\
+                        $DIR_INSTL/bld/BCON/driver/bcon/lr_interp.o\
+                        $DIR_INSTL/bld/BCON/driver/bcon/lst_spc_map.o\
+                        $DIR_INSTL/bld/BCON/driver/bcon/ngc_spc_map.o\
+                        $DIR_INSTL/bld/BCON/driver/bcon/opn_bc_file.o"
+
+# As of now, ICON is hard coded to be built with par_noop
+export OBJ_ICON_par="$DIR_INSTL/bld/ICON/par/par_noop/mapping_init_noop.o\
+                     $DIR_INSTL/bld/ICON/par/par_noop/par_init_noop.o\
+                     $DIR_INSTL/bld/ICON/par/par_noop/par_term_noop.o\
+                     $DIR_INSTL/bld/ICON/par/par_noop/reconfig_domain_noop.o\
+                     $DIR_INSTL/bld/ICON/par/par_noop/shift_map_noop.o"
+
+if [ $ModInpt == profile ]; then
+  export OBJ_ICON_input="$DIR_INSTL/bld/ICON/input/profile/prof_driver.o\
+                         $DIR_INSTL/bld/ICON/input/profile/prof_icout.o\
+                         $DIR_INSTL/bld/ICON/input/profile/prof_vinterp.o"
+  export OBJ_BCON_input="$DIR_INSTL/bld/BCON/input/profile/prof_bcout.o\
+                         $DIR_INSTL/bld/BCON/input/profile/prof_driver.o\
+                         $DIR_INSTL/bld/BCON/input/profile/prof_vinterp.o"
+
+elif [ $ModInpt == m3conc ]; then
+  export OBJ_ICON_input="$DIR_INSTL/bld/ICON/input/m3conc/m3_ck_ctmmet.o\
+                         $DIR_INSTL/bld/ICON/input/m3conc/m3_ck_ctms.o\
+                         $DIR_INSTL/bld/ICON/input/m3conc/m3_ck_icmet.o\
+                         $DIR_INSTL/bld/ICON/input/m3conc/m3_ck_pdm.o\
+                         $DIR_INSTL/bld/ICON/input/m3conc/m3_ck_ping.o\
+                         $DIR_INSTL/bld/ICON/input/m3conc/m3_driver.o\
+                         $DIR_INSTL/bld/ICON/input/m3conc/m3_icout.o\
+                         $DIR_INSTL/bld/ICON/input/m3conc/m3_ping.o\
+                         $DIR_INSTL/bld/ICON/input/m3conc/m3_vinterp.o"
+  export OBJ_BCON_input="$DIR_INSTL/bld/BCON/input/m3conc/m3_bcout.o\
+                         $DIR_INSTL/bld/BCON/input/m3conc/m3_ck_bdy.o\
+                         $DIR_INSTL/bld/BCON/input/m3conc/m3_ck_ctms.o\
+                         $DIR_INSTL/bld/BCON/input/m3conc/m3_ck_met.o\
+                         $DIR_INSTL/bld/BCON/input/m3conc/m3_ck_pdm.o\
+                         $DIR_INSTL/bld/BCON/input/m3conc/m3_ck_ping.o\
+                         $DIR_INSTL/bld/BCON/input/m3conc/m3_driver.o\
+                         $DIR_INSTL/bld/BCON/input/m3conc/m3_ping.o\
+                         $DIR_INSTL/bld/BCON/input/m3conc/m3_vinterp.o"
+fi
+
+if [ $ModMech == mc_noop ]; then
+  export DIR_ModMech="noop"
+  export OBJ_ICON_mech_conv="$DIR_INSTL/bld/ICON/mech_conv/noop/gc_spc_map.o"
+  export OBJ_BCON_mech_conv="$DIR_INSTL/bld/BCON/mech_conv/noop/gc_spc_map.o"
+fi
+
+############################
+# OBJECT FILES LIST (CCTM) #
+############################
+
+export OBJ_CCTM_adjoint="$DIR_INSTL/bld/git_verbose.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/barrier_${s_OR_p}.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/walltime_${s_OR_p}.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/adjverbose.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/advstepmin.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/find_lun.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/forcing_adj.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/hdiff_adj_${s_OR_p}.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/sciproc.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/rd_advstepmin.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/rd_chk.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/rd_l2chk.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/rd_l4chk.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/rd_l5chk.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/rd_l5fchk.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/rd_receptor.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/tridiag_adj.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/wr_advstepmin.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/wr_chk.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/wr_l2chk.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/wr_l4chk.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/wr_l5chk.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/wr_l5fchk.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/wr_aconc.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/wr_al5chk.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/xadvppm_adj.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/yadvppm_adj.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/zadvppm_adj.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/sciproc_adj.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/vdiffim_adj.o\
+                         $DIR_INSTL/bld/CCTM/adjoint/driver.o"
+
+if [ $ModAdjChem == cb4 ]; then
+  export OBJ_CCTM_adjoint_chem="$DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/KPP_Data_mod.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/KPP_Precision.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/KPP_Pars.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/KPP_Function.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/KPP_Glob.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/KPP_HessianSP.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/KPP_HessianTE.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/KPP_Init.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/KPP_JacobianSP.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/KPP_JacobianTE.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/KPP_LinAlg.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/KPP_Util.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/kppIntegrator.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/kppIntegrator_adj.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/kppModel.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/kppcalcks.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/kppdriver.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/kppdriver_adj.o"
+elif [ $ModAdjChem == SAPRC99ROS ]; then
+  export OBJ_CCTM_adjoint_chem="$DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/saprc99ros_Precision.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/saprc99ros_Parameters.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/saprc99ros_Monitor.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/saprc99ros_Global.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/saprc99ros_Initialize.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/saprc99ros_Rates.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/saprc99ros_Function.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/saprc99ros_JacobianSP.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/saprc99ros_Jacobian.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/saprc99ros_HessianSP.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/saprc99ros_Hessian.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/saprc99ros_LinearAlgebra.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/saprc99ros_Integrator.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/saprc99ros_adj_Integrator.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/CMAQKPP_SAPRC99_INTERFACE.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/chem.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/chem_adj.o"
+elif [ $ModAdjChem == SAPRC99TAGFORMROS ]; then
+  export OBJ_CCTM_adjoint_chem="$DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/saprc99tagformros_Precision.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/saprc99tagformros_Parameters.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/saprc99tagformros_Monitor.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/saprc99tagformros_Global.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/saprc99tagformros_Initialize.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/saprc99tagformros_Rates.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/saprc99tagformros_Function.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/saprc99tagformros_JacobianSP.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/saprc99tagformros_Jacobian.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/saprc99tagformros_LinearAlgebra.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/saprc99tagformros_Integrator.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/CMAQKPP_SAPRC99TAGFORM_INTERFACE.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/chem.o\
+                                $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/chem_adj.o"
+elif [ $ModAdjChem == noop ]; then
+    export OBJ_CCTM_adjoint_chem="$DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/chem.o\
+                                  $DIR_INSTL/bld/CCTM/adjoint/chem_${ModAdjChem}/chem_adj.o"
+fi
+
+export OBJ_CCTM_adjutil="$DIR_INSTL/bld/CCTM/adjutil/ADJPRM.o\
+                         $DIR_INSTL/bld/CCTM/adjutil/debug_functions.o"
+
+# Exclude driver from list because redefined in ADJ code
+if [ $ModDriver == ctm ]; then
+  export DIR_ModDriver=ctm
+  export OBJ_CCTM_driver="$DIR_INSTL/bld/CCTM/driver/ctm/HGRD_DEFN.o\
+                          $DIR_INSTL/bld/CCTM/driver/ctm/VGRD_DEFN.o\
+                          $DIR_INSTL/bld/CCTM/driver/ctm/CGRID_SPCS.o\
+                          $DIR_INSTL/bld/CCTM/driver/ctm/GRID_CONF.o\
+                          $DIR_INSTL/bld/CCTM/driver/ctm/PCGRID_DEFN.o\
+                          $DIR_INSTL/bld/CCTM/driver/ctm/advstep.o\
+                          $DIR_INSTL/bld/CCTM/driver/ctm/hcontvel.o\
+                          $DIR_INSTL/bld/CCTM/driver/ctm/wr_conc.o"
+elif [ $ModDriver == ctm_yamo ]; then
+  export DIR_ModDriver=yamo
+  export OBJ_CCTM_driver="$DIR_INSTL/bld/CCTM/driver/yamo/HGRD_DEFN.o\
+                          $DIR_INSTL/bld/CCTM/driver/yamo/VGRD_DEFN.o\
+                          $DIR_INSTL/bld/CCTM/driver/yamo/CGRID_SPCS.o\
+                          $DIR_INSTL/bld/CCTM/driver/yamo/GRID_CONF.o\
+                          $DIR_INSTL/bld/CCTM/driver/yamo/PCGRID_DEFN.o\
+                          $DIR_INSTL/bld/CCTM/driver/yamo/WVEL_DEFN.o\
+                          $DIR_INSTL/bld/CCTM/driver/yamo/advstep.o\
+                          $DIR_INSTL/bld/CCTM/driver/yamo/hcontvel.o\
+                          $DIR_INSTL/bld/CCTM/driver/yamo/wr_conc.o"
+fi
+
+if [ $ModPar == par ]; then
+  export OBJ_CCTM_par="$DIR_INSTL/bld/CCTM/par/par/par_init.o\
+                       $DIR_INSTL/bld/CCTM/par/par/par_term.o\
+                       $DIR_INSTL/bld/CCTM/par/par/distr_env.o"
+elif [ $ModPar == par_noop ]; then
+  export OBJ_CCTM_par="$DIR_INSTL/bld/CCTM/par/par_noop/par_init_noop.o\
+                       $DIR_INSTL/bld/CCTM/par/par_noop/par_term_noop.o"
+fi
+
+if [ $ModInit == init ]; then
+  export DIR_ModInit=init
+  export OBJ_CCTM_init="$DIR_INSTL/bld/CCTM/init/init/diffmsg.o\
+                        $DIR_INSTL/bld/CCTM/init/init/flcheck.o\
+                        $DIR_INSTL/bld/CCTM/init/init/grdcheck.o\
+                        $DIR_INSTL/bld/CCTM/init/init/initscen.o\
+                        $DIR_INSTL/bld/CCTM/init/init/load_cgrid.o\
+                        $DIR_INSTL/bld/CCTM/init/init/opconc.o\
+                        $DIR_INSTL/bld/CCTM/init/init/setup_logdev.o"
+elif [ $ModInit == init_yamo ]; then
+  export DIR_ModInit=yamo
+  export OBJ_CCTM_init="$DIR_INSTL/bld/CCTM/init/yamo/diffmsg.o\
+                        $DIR_INSTL/bld/CCTM/init/yamo/flcheck.o\
+                        $DIR_INSTL/bld/CCTM/init/yamo/grdcheck.o\
+                        $DIR_INSTL/bld/CCTM/init/yamo/initscen.o\
+                        $DIR_INSTL/bld/CCTM/init/yamo/load_cgrid.o\
+                        $DIR_INSTL/bld/CCTM/init/yamo/opconc.o\
+                        $DIR_INSTL/bld/CCTM/init/yamo/setup_logdev.o"
+fi
+
+if [ $ModAdjc == denrate ]; then
+  export OBJ_CCTM_adjcon="$DIR_INSTL/bld/CCTM/adjcon/denrate/adjadv.o"
+fi
+
+# There is only one option for ModCpl
+export OBJ_CCTM_couple="$DIR_INSTL/bld/CCTM/couple/gencoor/couple.o\
+                        $DIR_INSTL/bld/CCTM/couple/gencoor/ppmv_msmr.o"
+
+if [ $ModHadv == hppm ]; then
+  export DIR_ModHadv=hppm
+  export OBJ_CCTM_hadv="$DIR_INSTL/bld/CCTM/hadv/hppm/advbc_map.o\
+                        $DIR_INSTL/bld/CCTM/hadv/hppm/hppm.o\
+                        $DIR_INSTL/bld/CCTM/hadv/hppm/rdbcon.o\
+                        $DIR_INSTL/bld/CCTM/hadv/hppm/xadvppm.o\
+                        $DIR_INSTL/bld/CCTM/hadv/hppm/yadvppm.o\
+                        $DIR_INSTL/bld/CCTM/hadv/hppm/zfdbc.o"
+fi
+
+if [ $ModVadv == vppm ]; then
+  export DIR_ModVadv=vppm
+  export OBJ_CCTM_vadv="$DIR_INSTL/bld/CCTM/vadv/vppm/vcontvel.o\
+                        $DIR_INSTL/bld/CCTM/vadv/vppm/vppm.o\
+                        $DIR_INSTL/bld/CCTM/vadv/vppm/zadvppm.o"
+fi
+
+
+if [ $ModHdiff == multiscale ]; then
+  export OBJ_CCTM_hdiff="$DIR_INSTL/bld/CCTM/hdiff/multiscale/deform.o\
+                         $DIR_INSTL/bld/CCTM/hdiff/multiscale/hcdiff3d.o\
+                         $DIR_INSTL/bld/CCTM/hdiff/multiscale/hdiff.o\
+                         $DIR_INSTL/bld/CCTM/hdiff/multiscale/rho_j.o"
+fi
+
+if [ $ModVdiff == eddy ]; then
+  export OBJ_CCTM_vdiff="$DIR_INSTL/bld/CCTM/vdiff/eddy/AERO_EMIS.o\
+                         $DIR_INSTL/bld/CCTM/vdiff/eddy/conv_cgrid.o\
+                         $DIR_INSTL/bld/CCTM/vdiff/eddy/edyintb.o\
+                         $DIR_INSTL/bld/CCTM/vdiff/eddy/opddep.o\
+                         $DIR_INSTL/bld/CCTM/vdiff/eddy/opemis.o\
+                         $DIR_INSTL/bld/CCTM/vdiff/eddy/opmet.o\
+                         $DIR_INSTL/bld/CCTM/vdiff/eddy/opssemis.o\
+                         $DIR_INSTL/bld/CCTM/vdiff/eddy/rddepv.o\
+                         $DIR_INSTL/bld/CCTM/vdiff/eddy/rdemis.o\
+                         $DIR_INSTL/bld/CCTM/vdiff/eddy/rdmet.o\
+                         $DIR_INSTL/bld/CCTM/vdiff/eddy/ssemis.o\
+                         $DIR_INSTL/bld/CCTM/vdiff/eddy/tridiag.o\
+                         $DIR_INSTL/bld/CCTM/vdiff/eddy/vdiff_map.o\
+                         $DIR_INSTL/bld/CCTM/vdiff/eddy/vdiffim.o"
+fi
+
+if [ $ModPhot == phot ]; then
+  export OBJ_CCTM_phot="$DIR_INSTL/bld/CCTM/phot/phot/phot.o"
+fi
+
+if [ $ModPing == ping_noop ]; then
+  export DIR_ModPing=ping_noop
+  export OBJ_CCTM_ping="$DIR_INSTL/bld/CCTM/ping/ping_noop/ping_noop.o"
+fi
+
+# Chem driver = file with definition of subroutine CHEM, re-defined in ADJ code
+if [ $ModChem == chem_noop ]; then
+  export OBJ_CCTM_chem_DRIVER="$DIR_INSTL/bld/CCTM/chem/chem_noop/chem_noop.o"
+  export OBJ_CCTM_chem=""
+fi
+
+if [ $ModAero == aero_noop ]; then
+  export OBJ_CCTM_aero="$DIR_INSTL/bld/CCTM/aero/aero_noop/aero_noop.o"
+fi
+
+if [ $ModAdepv == aero_depv_noop ]; then
+  export OBJ_CCTM_aero_depv="$DIR_INSTL/bld/CCTM/aero_depv/aero_depv_noop/aero_depv_noop.o"
+fi
+
+if [ $ModCloud == cloud_noop ]; then
+  export OBJ_CCTM_cloud="$DIR_INSTL/bld/CCTM/cloud/cloud_noop/cloud_noop.o"
+fi
+
+# Only choice is pa
+export OBJ_CCTM_procan="$DIR_INSTL/bld/CCTM/procan/pa/PAGRD_DEFN.o\
+                        $DIR_INSTL/bld/CCTM/procan/pa/pa_init.o\
+                        $DIR_INSTL/bld/CCTM/procan/pa/pa_irr.o\
+                        $DIR_INSTL/bld/CCTM/procan/pa/pa_irr_ctl.o\
+                        $DIR_INSTL/bld/CCTM/procan/pa/pa_mkhdr.o\
+                        $DIR_INSTL/bld/CCTM/procan/pa/pa_output.o\
+                        $DIR_INSTL/bld/CCTM/procan/pa/pa_update.o"
+
+# Only choice is util
+export OBJ_CCTM_util="$DIR_INSTL/bld/CCTM/util/util/cksummer.o\
+                      $DIR_INSTL/bld/CCTM/util/util/findex.o\
+                      $DIR_INSTL/bld/CCTM/util/util/get_envlist.o\
+                      $DIR_INSTL/bld/CCTM/util/util/lstepf.o\
+                      $DIR_INSTL/bld/CCTM/util/util/subhfile.o"
+
+export OBJ_CCTM="$OBJ_CCTM_adjutil $OBJ_CCTM_driver $OBJ_CCTM_par\
+                 $OBJ_CCTM_init $OBJ_CCTM_adjcon $OBJ_CCTM_couple\
+                 $OBJ_CCTM_hadv $OBJ_CCTM_vadv $OBJ_CCTM_hdiff\
+                 $OBJ_CCTM_vdiff $OBJ_CCTM_phot $OBJ_CCTM_ping\
+                 $OBJ_CCTM_chem $OBJ_CCTM_aero $OBJ_CCTM_aero_depv\
+                 $OBJ_CCTM_cloud $OBJ_CCTM_procan $OBJ_CCTM_util\
+                 $OBJ_CCTM_adjoint_chem $OBJ_CCTM_adjoint"
+
+###############################
+# OBJECT FILES LIST (ADJPOST) #
+###############################
+
+export OBJ_ADJPOST="$DIR_INSTL/bld/git_verbose.o\
+                    $DIR_INSTL/bld/ADJPOST/ADJPOST_MODULE.o\
+                    $DIR_INSTL/bld/ADJPOST/check_inputs.o\
+                    $DIR_INSTL/bld/ADJPOST/create_outputs.o\
+                    $DIR_INSTL/bld/ADJPOST/adjpost.o"
+
+######################
+# SUBSTS DEFINITIONS #
+######################
+
+export SUBST_GRID_ID=-DSUBST_GRID_ID=
+# IOAPI include files
+export SUBST_IOPARMS=-DSUBST_IOPARMS=\\\"PARMS3.EXT\\\"
+export SUBST_IOFDESC=-DSUBST_IOFDESC=\\\"FDESC3.EXT\\\"
+export SUBST_IODECL=-DSUBST_IODECL=\\\"IODECL3.EXT\\\"
+# CMAQ include files (general cctm)
+export SUBST_PE_COMM=-DSUBST_PE_COMM=\\\"PE_COMM.EXT\\\"
+export SUBST_CONST=-DSUBST_CONST=\\\"CONST.EXT\\\"
+export SUBST_FILES_ID=-DSUBST_FILES_ID=\\\"FILES_CTM.EXT\\\"
+export SUBST_EMPR_VD=-DSUBST_EMPR_VD=\\\"EMISPRM.vdif.EXT\\\"
+export SUBST_EMPR_CH=-DSUBST_EMPR_CH=\\\"EMISPRM.chem.EXT\\\"
+export SUBST_RXCMMN=-DSUBST_RXCMMN=\\\"RXCM.EXT\\\"
+export SUBST_RXDATA=-DSUBST_RXDATA=\\\"RXDT.EXT\\\"
+# CMAQ include files (GC)
+export SUBST_GC_SPC=-DSUBST_GC_SPC=\\\"GC_SPC.EXT\\\"
+export SUBST_GC_EMIS=-DSUBST_GC_EMIS=\\\"GC_EMIS.EXT\\\"
+export SUBST_GC_ICBC=-DSUBST_GC_ICBC=\\\"GC_ICBC.EXT\\\"
+export SUBST_GC_DIFF=-DSUBST_GC_DIFF=\\\"GC_DIFF.EXT\\\"
+export SUBST_GC_DDEP=-DSUBST_GC_DDEP=\\\"GC_DDEP.EXT\\\"
+export SUBST_GC_DEPV=-DSUBST_GC_DEPV=\\\"GC_DEPV.EXT\\\"
+export SUBST_GC_ADV=-DSUBST_GC_ADV=\\\"GC_ADV.EXT\\\"
+export SUBST_GC_CONC=-DSUBST_GC_CONC=\\\"GC_CONC.EXT\\\"
+export SUBST_GC_G2AE=-DSUBST_GC_G2AE=\\\"GC_G2AE.EXT\\\"
+export SUBST_GC_G2AQ=-DSUBST_GC_G2AQ=\\\"GC_G2AQ.EXT\\\"
+export SUBST_GC_SCAV=-DSUBST_GC_SCAV=\\\"GC_SCAV.EXT\\\"
+export SUBST_GC_WDEP=-DSUBST_GC_WDEP=\\\"GC_WDEP.EXT\\\"
+# CMAQ include files (AE)
+export SUBST_AE_SPC=-DSUBST_AE_SPC=\\\"AE_SPC.EXT\\\"
+export SUBST_AE_EMIS=-DSUBST_AE_EMIS=\\\"AE_EMIS.EXT\\\"
+export SUBST_AE_ICBC=-DSUBST_AE_ICBC=\\\"AE_ICBC.EXT\\\"
+export SUBST_AE_DIFF=-DSUBST_AE_DIFF=\\\"AE_DIFF.EXT\\\"
+export SUBST_AE_DDEP=-DSUBST_AE_DDEP=\\\"AE_DDEP.EXT\\\"
+export SUBST_AE_DEPV=-DSUBST_AE_DEPV=\\\"AE_DEPV.EXT\\\"
+export SUBST_AE_ADV=-DSUBST_AE_ADV=\\\"AE_ADV.EXT\\\"
+export SUBST_AE_CONC=-DSUBST_AE_CONC=\\\"AE_CONC.EXT\\\"
+export SUBST_AE_A2AQ=-DSUBST_AE_A2AQ=\\\"AE_A2AQ.EXT\\\"
+export SUBST_AE_SCAV=-DSUBST_AE_SCAV=\\\"AE_SCAV.EXT\\\"
+export SUBST_AE_WDEP=-DSUBST_AE_WDEP=\\\"AE_WDEP.EXT\\\"
+# CMAQ include files (NR)
+export SUBST_NR_SPC=-DSUBST_NR_SPC=\\\"NR_SPC.EXT\\\"
+export SUBST_NR_EMIS=-DSUBST_NR_EMIS=\\\"NR_EMIS.EXT\\\"
+export SUBST_NR_ICBC=-DSUBST_NR_ICBC=\\\"NR_ICBC.EXT\\\"
+export SUBST_NR_DIFF=-DSUBST_NR_DIFF=\\\"NR_DIFF.EXT\\\"
+export SUBST_NR_DDEP=-DSUBST_NR_DDEP=\\\"NR_DDEP.EXT\\\"
+export SUBST_NR_DEPV=-DSUBST_NR_DEPV=\\\"NR_DEPV.EXT\\\"
+export SUBST_NR_ADV=-DSUBST_NR_ADV=\\\"NR_ADV.EXT\\\"
+export SUBST_NR_N2AE=-DSUBST_NR_N2AE=\\\"NR_N2AE.EXT\\\"
+export SUBST_NR_N2AQ=-DSUBST_NR_N2AQ=\\\"NR_N2AQ.EXT\\\"
+export SUBST_NR_SCAV=-DSUBST_NR_SCAV=\\\"NR_SCAV.EXT\\\"
+export SUBST_NR_WDEP=-DSUBST_NR_WDEP=\\\"NR_WDEP.EXT\\\"
+# CMAQ include files (TR)
+export SUBST_TR_SPC=-DSUBST_TR_SPC=\\\"TR_SPC.EXT\\\"
+export SUBST_TR_EMIS=-DSUBST_TR_EMIS=\\\"TR_EMIS.EXT\\\"
+export SUBST_TR_ICBC=-DSUBST_TR_ICBC=\\\"TR_ICBC.EXT\\\"
+export SUBST_TR_DIFF=-DSUBST_TR_DIFF=\\\"TR_DIFF.EXT\\\"
+export SUBST_TR_DDEP=-DSUBST_TR_DDEP=\\\"TR_DDEP.EXT\\\"
+export SUBST_TR_DEPV=-DSUBST_TR_DEPV=\\\"TR_DEPV.EXT\\\"
+export SUBST_TR_ADV=-DSUBST_TR_ADV=\\\"TR_ADV.EXT\\\"
+export SUBST_TR_T2AQ=-DSUBST_TR_T2AQ=\\\"TR_T2AQ.EXT\\\"
+export SUBST_TR_SCAV=-DSUBST_TR_SCAV=\\\"TR_SCAV.EXT\\\"
+export SUBST_TR_WDEP=-DSUBST_TR_WDEP=\\\"TR_WDEP.EXT\\\"
+# CMAQ include files (process analysis)
+export SUBST_PACTL_ID=-DSUBST_PACTL_ID=\\\"PA_CTL.EXT\\\"
+export SUBST_PACMN_ID=-DSUBST_PACMN_ID=\\\"PA_CMN.EXT\\\"
+export SUBST_PADAT_ID=-DSUBST_PADAT_ID=\\\"PA_DAT.EXT\\\"
+# MPI include files
+export SUBST_MPICH=-DSUBST_MPICH=\\\"mpif.h\\\"
+# Stenex NOOP include files (I used the suffix _NOOP in the name of the
+# variables to make the distinction with other stenex modules)
+export SUBST_MODULES_NOOP=-DSUBST_MODULES=NOOP_MODULES
+export SUBST_DATA_COPY_NOOP=-DSUBST_DATA_COPY=NOOP_DATA_COPY
+export SUBST_BARRIER_NOOP=-DSUBST_BARRIER=NOOP_BARRIER
+export SUBST_SUBGRID_INDEX_NOOP=-DSUBST_SUBGRID_INDEX=NOOP_SUBGRID_INDEX
+# Stenex include files that depend on the definition of Popt (I used the suffix
+# _POPT in the name of the variables to make the distinction with other stenex
+# modules)
+export SUBST_MODULES_POPT=-DSUBST_MODULES=${Popt}_MODULES
+export SUBST_BARRIER_POPT=-DSUBST_BARRIER=${Popt}_BARRIER
+export SUBST_GLOBAL_MAX_POPT=-DSUBST_GLOBAL_MAX=${Popt}_GLOBAL_MAX
+export SUBST_GLOBAL_MIN_POPT=-DSUBST_GLOBAL_MIN=${Popt}_GLOBAL_MIN
+export SUBST_GLOBAL_MIN_DATA_POPT=-DSUBST_GLOBAL_MIN_DATA=${Popt}_GLOBAL_MIN_DATA
+export SUBST_GLOBAL_TO_LOCAL_COORD_POPT=-DSUBST_GLOBAL_TO_LOCAL_COORD=${Popt}_GLOBAL_TO_LOCAL_COORD
+export SUBST_GLOBAL_SUM_POPT=-DSUBST_GLOBAL_SUM=${Popt}_GLOBAL_SUM
+export SUBST_GLOBAL_LOGICAL_POPT=-DSUBST_GLOBAL_LOGICAL=${Popt}_GLOBAL_LOGICAL
+export SUBST_LOOP_INDEX_POPT=-DSUBST_LOOP_INDEX=${Popt}_LOOP_INDEX
+export SUBST_SUBGRID_INDEX_POPT=-DSUBST_SUBGRID_INDEX=${Popt}_SUBGRID_INDEX
+export SUBST_HI_LO_BND_PE_POPT=-DSUBST_HI_LO_BND_PE=${Popt}_HI_LO_BND_PE
+export SUBST_SUM_CHK_POPT=-DSUBST_SUM_CHK=${Popt}_SUM_CHK
+export SUBST_INIT_ARRAY_POPT=-DSUBST_INIT_ARRAY=${Popt}_INIT_ARRAY
+export SUBST_COMM_POPT=-DSUBST_COMM=${Popt}_COMM
+export SUBST_MY_REGION_POPT=-DSUBST_MY_REGION=${Popt}_MY_REGION
+export SUBST_SLICE_POPT=-DSUBST_SLICE=${Popt}_SLICE
+export SUBST_GATHER_POPT=-DSUBST_GATHER=${Popt}_GATHER
+export SUBST_DATA_COPY_POPT=-DSUBST_DATA_COPY=${Popt}_DATA_COPY
+export SUBST_IN_SYN_POPT=-DSUBST_IN_SYN=${Popt}_IN_SYN
+
+export SUBSTS="$SUBST_GRID_ID $SUBST_IOPARMS $SUBST_IOFDESC $SUBST_IODECL\
+               $SUBST_PE_COMM $SUBST_CONST $SUBST_FILES_ID $SUBST_EMPR_VD\
+               $SUBST_EMPR_CH $SUBST_RXCMMN $SUBST_RXDATA $SUBST_GC_SPC\
+               $SUBST_GC_EMIS $SUBST_GC_ICBC $SUBST_GC_DIFF $SUBST_GC_DDEP\
+               $SUBST_GC_DEPV $SUBST_GC_ADV $SUBST_GC_CONC $SUBST_GC_G2AE\
+               $SUBST_GC_G2AQ $SUBST_GC_SCAV $SUBST_GC_WDEP $SUBST_AE_SPC\
+               $SUBST_AE_EMIS $SUBST_AE_ICBC $SUBST_AE_DIFF $SUBST_AE_DDEP\
+               $SUBST_AE_DEPV $SUBST_AE_ADV $SUBST_AE_CONC $SUBST_AE_A2AQ\
+               $SUBST_AE_SCAV $SUBST_AE_WDEP $SUBST_NR_SPC $SUBST_NR_EMIS\
+               $SUBST_NR_ICBC $SUBST_NR_DIFF $SUBST_NR_DDEP $SUBST_NR_DEPV\
+               $SUBST_NR_ADV $SUBST_NR_N2AE $SUBST_NR_N2AQ $SUBST_NR_SCAV\
+               $SUBST_NR_WDEP $SUBST_TR_SPC $SUBST_TR_EMIS $SUBST_TR_ICBC\
+               $SUBST_TR_DIFF $SUBST_TR_DDEP $SUBST_TR_DEPV $SUBST_TR_ADV\
+               $SUBST_TR_T2AQ $SUBST_TR_SCAV $SUBST_TR_WDEP $SUBST_PACTL_ID\
+               $SUBST_PACMN_ID $SUBST_PADAT_ID $SUBST_MPICH"
+
+export SUBST_STENEX_NOOP="$SUBST_MODULES_NOOP $SUBST_DATA_COPY_NOOP\
+                          $SUBST_BARRIER_NOOP $SUBST_SUBGRID_INDEX_NOOP"
+
+export SUBST_STENEX_POPT="$SUBST_MODULES_POPT $SUBST_BARRIER_POPT\
+                          $SUBST_GLOBAL_MAX_POPT $SUBST_GLOBAL_MIN_POPT\
+                          $SUBST_GLOBAL_MIN_DATA_POPT\
+                          $SUBST_GLOBAL_TO_LOCAL_COORD_POPT\
+                          $SUBST_GLOBAL_SUM_POPT $SUBST_GLOBAL_LOGICAL_POPT\
+                          $SUBST_LOOP_INDEX_POPT $SUBST_SUBGRID_INDEX_POPT\
+                          $SUBST_HI_LO_BND_PE_POPT $SUBST_SUM_CHK_POPT\
+                          $SUBST_INIT_ARRAY_POPT $SUBST_COMM_POPT\
+                          $SUBST_MY_REGION_POPT $SUBST_SLICE_POPT\
+                          $SUBST_GATHER_POPT $SUBST_DATA_COPY_POPT\
+                          $SUBST_IN_SYN_POPT"
+
+#################
+# INCLUDE FILES #
+#################
+
+export INC_MECH=$DIR_SRC/ICL/mech/$Mechanism
+# If DIR_INC_TRAC is defined, use it to define a user-defined INC_TRAC
+# directory. Use default location otherwise.
+if [ ! -z ${DIR_INC_TRAC+x} ]; then
+  export INC_TRAC=$DIR_INC_TRAC
+else
+  export INC_TRAC=$DIR_SRC/ICL/mech/trac0
+fi
+export INC_CONST=$DIR_SRC/ICL/fixed/const
+export INC_FILES=$DIR_SRC/ICL/fixed/filenames
+export INC_PAR=$DIR_SRC/ICL/fixed/par
+export INC_EMCTRL=$DIR_SRC/ICL/fixed/emctrl

@@ -1,0 +1,11 @@
+      INTEGER        N_GC_DEPV
+      PARAMETER     (N_GC_DEPV =  1)
+      INTEGER        N_GC_DEPVD
+      PARAMETER     (N_GC_DEPVD = N_GC_DEPV)
+      CHARACTER*16   GC_DEPV(N_GC_DEPVD)
+      INTEGER        GC_DEPV_MAP(N_GC_DEPVD)
+      REAL           GC_DEPV_FAC(N_GC_DEPVD)
+      
+      DATA   GC_DEPV(  1), GC_DEPV_MAP(  1) / 'VD_DPMF         ',   1 /
+      DATA   GC_DEPV_FAC(  1) /      1.0 /
+      

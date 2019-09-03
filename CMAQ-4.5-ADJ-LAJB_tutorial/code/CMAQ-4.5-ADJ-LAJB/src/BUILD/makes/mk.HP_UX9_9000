@@ -1,0 +1,4 @@
+CC = /200p_scratch/gnu/hppa1.1-hp-hpux9.03/bin/gcc
+
+CFLAGS = -D$(EDSS_OS) -g
+CLITEFLAGS = -D$(EDSS_OS) -g

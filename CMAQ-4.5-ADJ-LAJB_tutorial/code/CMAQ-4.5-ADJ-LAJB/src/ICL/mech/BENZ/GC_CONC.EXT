@@ -1,0 +1,9 @@
+      INTEGER        N_GC_CONC
+      PARAMETER     (N_GC_CONC = 1)
+      INTEGER        N_GC_CONCD
+      PARAMETER     (N_GC_CONCD = N_GC_CONC)
+      CHARACTER*16   GC_CONC(N_GC_CONCD)
+      INTEGER        GC_CONC_MAP(N_GC_CONCD)
+      
+      DATA          GC_CONC(  1), GC_CONC_MAP(  1) / 'BENZ            ',   1 /
+

@@ -8,8 +8,8 @@ does not yet work.
 Original README.md from CMAQ from EPA/CMAS is at README.orig.md
 
 
-Model from Lucas
-~~~~~~~~~~~~~~~~
+Adjoin Model from Lucas
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Lucas wrote a model that Ling/Huy are running.  He has a couple of papers.
 supplement said to have source code:
@@ -21,4 +21,9 @@ if can't find latest from github, then maybe better off get code from Ling...
 just copy into my forked CMAQ repo, and code would be avail then.
 
 
+
+run_eta
+=======
+
+this folder contain scripts and logs that run Lucas' adjoin model.
 

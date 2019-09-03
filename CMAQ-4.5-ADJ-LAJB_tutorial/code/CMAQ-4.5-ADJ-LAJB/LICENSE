@@ -1,0 +1,35 @@
+All the code of CMAQ and its adjoint is release under the following license:
+
+Portions of Models-3/CMAQ software were developed or based on information from
+various groups: Federal Government employees, contractors working on a United
+States Government contract, and non-Federal sources (including research
+institutions).  These research institutions have given the Government
+permission to use, prepare derivative works, and distribute copies of their
+work in Models-3/CMAQ to the public and to permit others to do so.  EPA
+therefore grants similar permissions for use of the Models-3/CMAQ software, but
+users are requested to provide copies of derivative works to the Government
+without restrictions as to use by others.  Users are responsible for acquiring
+their own copies of commercial software associated with Models-3/CMAQ and for
+complying with vendor requirements.  Software copyrights by the MCNC
+Environmental Modeling Center are used with their permissions subject to the
+above restrictions.
+
+Additionally, the code that I (Lucas A. J. Bastien) added to the original code
+of the adjoint of CMAQ v4.5 may be released under the terms of the General
+Public License (GPL), Version 3 whenever it does not conflict with the above
+license. Whenever it conflicts with the above license, the above license
+prevails. For more information on the GPL, Version 3, please visit:
+http://www.gnu.org/licenses/licenses.html.
+
+If a file or a piece of code (including in versions archived in this git
+repository tree, no matter which branch) says that the corresponding code is
+released under the GPL, and if the GPL for this file or piece of code conflicts
+with the above licence (the one from EPA), then the above license (the one from
+EPA) prevails over the GPL, no matter what the file or piece of code says.
+
+Why this mess? Because I used to assign the GPL license to all the code I
+wrote, but then realized it might conflict with the above license (the one from
+EPA).
+
+Now you have all the information you need to share the code according to the
+appropriate license!

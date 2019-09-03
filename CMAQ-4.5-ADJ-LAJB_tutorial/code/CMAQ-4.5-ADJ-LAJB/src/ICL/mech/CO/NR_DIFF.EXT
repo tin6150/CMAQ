@@ -1,0 +1,7 @@
+      INTEGER        N_NR_DIFF
+      PARAMETER     (N_NR_DIFF = 0)
+      INTEGER        N_NR_DIFFD
+      PARAMETER     (N_NR_DIFFD = 1)
+      CHARACTER*16   NR_DIFF(N_NR_DIFFD)
+      INTEGER        NR_DIFF_MAP(N_NR_DIFFD)
+      

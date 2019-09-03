@@ -1,0 +1,4 @@
+CC = cc
+
+CFLAGS = -Gn -g
+CLITEFLAGS = -Gn -g

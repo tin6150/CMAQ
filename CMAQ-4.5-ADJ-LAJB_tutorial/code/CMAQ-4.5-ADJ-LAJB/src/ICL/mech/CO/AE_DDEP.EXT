@@ -1,0 +1,7 @@
+      INTEGER        N_AE_DDEP
+      PARAMETER     (N_AE_DDEP = 0)
+      INTEGER        N_AE_DDEPD
+      PARAMETER     (N_AE_DDEPD = 1)
+      CHARACTER*16   AE_DDEP(N_AE_DDEPD)
+      INTEGER        AE_DDEP_MAP(N_AE_DDEPD)
+      

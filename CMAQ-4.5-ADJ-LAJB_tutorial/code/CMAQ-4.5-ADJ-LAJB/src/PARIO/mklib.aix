@@ -1,0 +1,32 @@
+#! /bin/csh -f
+
+# RCS file, release, date & time of last delta, author, state, [and locker]
+# $Header: /global/home/groups-sw/ac_seasonal/lbastien/CMAQ/v4.5-ADJ/models/PARIO/src/mklib.aix,v 1.1.1.1 2005/09/09 16:18:17 sjr Exp $ 
+
+# what(1) key, module and SID; SCCS file; date and time of last delta:
+# %W% %P% %G% %U%
+
+# Make a parallel I/O library for the IBM/RS6000/SP
+
+ set echo
+ set IOAPI = /work/yoj/tools/m3io/include
+ set MPI   = /usr/lpp/ppe.poe/include
+
+#dmget $IOAPI/PARMS3.EXT $IOAPI/FDESC3.EXT $IOAPI/IODECL3.EXT $MPI/mpif.h
+
+# stnd version
+ mpcc -c *.c
+#mpxlf90 -c -I $IOAPI -I $MPI -qfixed=132 -O3 -qstrict *.F *.f
+#mpxlf90 -c -qintsize=8 -I $IOAPI -I $MPI -qfixed=132 -O3 -qstrict *.F *.f
+#mpxlf90 -c -I $IOAPI -I $MPI -qfixed=132 -O3 -qstrict *.F *.f
+ mpxlf90 -c -qsave -I $IOAPI -qfixed=132 -O3 -qstrict -Q -qarch=auto -qtune=auto *.F *.f
+ ar -rv libpario.a *.o
+ rm *.o
+
+# debug version
+ mpcc -c -g *.c
+#mpxlf90 -c -qintsize=8 -g -I $IOAPI -I $MPI -qfixed=132 -qfloat=nans *.F *.f
+#mpxlf90 -c -g -I $IOAPI -I $MPI -qfixed=132 -qfloat=nans *.F *.f
+ mpxlf90 -c -g -qsave -I $IOAPI -qfixed=132 -qfloat=nans -qarch=auto -qtune=auto *.F *.f
+ ar -rv libpario.debug.a *.o
+

@@ -1,0 +1,8 @@
+      INTEGER        N_NR_ICBC
+      PARAMETER     (N_NR_ICBC = 0)
+      INTEGER        N_NR_ICBCD
+      PARAMETER     (N_NR_ICBCD = 1)
+      CHARACTER*16   NR_ICBC(N_NR_ICBCD)
+      INTEGER        NR_ICBC_MAP(N_NR_ICBCD)
+      REAL           NR_ICBC_FAC(N_NR_ICBCD)
+      

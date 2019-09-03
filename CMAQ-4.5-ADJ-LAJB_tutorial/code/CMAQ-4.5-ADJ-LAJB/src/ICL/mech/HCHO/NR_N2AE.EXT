@@ -1,0 +1,8 @@
+      INTEGER        N_NR_N2AE
+      PARAMETER     (N_NR_N2AE = 0)
+      INTEGER        N_NR_N2AED
+      PARAMETER     (N_NR_N2AED = 1)
+      CHARACTER*16   NR_N2AE(N_NR_N2AED)
+      INTEGER        NR_N2AE_MAP(N_NR_N2AED)
+      REAL           NR_N2AE_FAC(N_NR_N2AED)
+      

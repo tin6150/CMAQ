@@ -1,0 +1,146 @@
+Installation instructions for CMAQ-v4.5-ADJ-LAJB or, for short,
+"CMAQ-v4.5-ADJ", or "CMAQ-ADJ".
+
+This is the code of the (or rather "one of the") adjoint of the Community
+Multiscale Air Quality (CMAQ) model. The code has been adapted by Lucas
+A. J. Bastien from the adjoint of CMAQ v4.5 initially written by Hakami et
+al. (see Hakami et al. "The Adjoint of CMAQ", Environmental Science and
+Technology, 2007, 41, 7807) and initially downloaded from:
+http://people.cs.vt.edu/~asandu/Software/CMAQ_ADJ/CMAQ_ADJ.html on January 08th
+2013.
+
+Author: Lucas A. J. Bastien
+
+Here is the procedure I use to build the code. I recommend you to try it like
+that first, and to later adapt to your taste as you see fit. Note: my run
+scripts rely on the naming convention described below.
+
+I build the code in directories that are siblings (i.e. on the same
+hierarchical level as) the "src" directory. I prefix the names of these build
+directories with "built_", followed by the name of the C compiler, followed by
+the name of the fortran compiler, followed by either "serial" or "parallel"
+(depending on whether MPI support is enabled), followed by the name of the
+chemical mechanism. My directory tree inside the CMAQ-ADJ directory therefore
+looks something like:
+
+built_gcc_gfortran_parallel_BENZ/
+built_gcc_gfortran_parallel_CO/
+built_gcc_gfortran_parallel_DPMF/
+built_gcc_gfortran_parallel_HCHO/
+built_gcc_gfortran_parallel_SAPRC99ROS/
+built_gcc_gfortran_serial_BENZ/
+built_gcc_gfortran_serial_CO/
+built_gcc_gfortran_serial_DPMF/
+built_gcc_gfortran_serial_HCHO/
+built_gcc_gfortran_serial_SAPRC99ROS/
+environment
+environment-user_example
+LICENSE
+makefile
+notes-on-building-the-code.txt
+notes-on-running-the-code.txt
+README
+src/
+
+Note: as of now, the available chemical mechanisms are:
+
+ - BENZ (benzene in tracer mode)
+ - DPMF (DPMF in tracer mode, DPMF = Fine diesel PM)
+ - CO (CO in tracer mode)
+ - HCHO (HCHO in tracer mode)
+ - SAPRC99ROS (SAPRC99 chemical mechanism, with Rosenbrock-type solver)
+
+The steps to build the code are:
+
+##############################
+# Create the build directory #
+##############################
+
+In this exemple, we will build built_gcc_gfortran_serial_BENZ
+
+$> mkdir built_gcc_gfortran_serial_BENZ
+
+#######################################
+# Prepare the "user environment file" #
+#######################################
+
+a) Go to the build directory
+
+$> cd built_gcc_gfortran_serial_BENZ
+
+b) copy the template user environment file
+
+$> cp ../environment-user_example environment-user
+
+c) Edit this file to adjust the appropriate variables
+
+The example file should work "as is" on gpanda for our test case though.
+
+Note 1: Un-comment the "ParOpt" line if you want MPI support.
+
+Note 2: For using the SAPRC99ROS chemical mechanism, set the following (leave
+the others "as is", except for "ParOpt" -- this one depends on whether you want
+MPI support, as explained in note 1):
+
+export ModMech=mc_noop
+export Mechanism=saprc99
+export ModChem=chem_noop
+export ModAdjChem=SAPRC99ROS
+
+####################################
+# Source the user environment file #
+####################################
+
+$> source environment-user
+
+Notes : the user environment file sources the "global" environment file. The
+global environment sets up, among other things, the lists of files that must be
+compiled. The idea is that the user should never have to modify the global
+environment file or the makefile (see below), but only the user environment
+file. In this scenario, the developper(s) are responsible for maintaining the
+global environment file and the makefile. If the developper(s) add or remove a
+source (i.e. code) file, they will most likely have to update the global
+environment file (and maybe the makefile, but this is less likely).
+
+############################################################
+# Create a sim link to the makefile in the build directory #
+############################################################
+
+$> ln -s ../makefile ./
+
+# And build everything
+
+$> make dir
+$> make pario
+$> make stenex
+$> make jproc
+$> make icon
+$> make bcon
+$> make cctm
+$> make adjpost
+
+Done !
+
+Notes :
+
+ - Target "dir" must absolutely be made first. It creates the directory tree
+   that will host the built files and executables.
+
+ - Targets "pario" and "stenex" must absolutely be made next (the ordering
+   between these two does not matter though), except if you are only interested
+   in adjpost, which does not depend on pario not stenex.
+
+ - Targets "jproc", "icon", "bcon", are optionnal and can be made in any order.
+
+ - Target "cctm" builds both the forward and adjoint model into one single
+   executable.
+
+ - Target "adjpost" is optionnal, it is the adjoint post-processor. It only
+   depends on target "dir" (not on pario and stenex).
+
+ - [Warning!! Dangerous!!] Use "make clean" to remove the built files, the
+   executables, and the built directory tree. Before you do that, do make sure
+   that you are in the correct directory, and that the user environment file is
+   properly defined and sourced (in particular, please carefully check the
+   value of environment variable $DIR_INSTL)!! It might be safer to remove the
+   build directory manually and start from sratch.

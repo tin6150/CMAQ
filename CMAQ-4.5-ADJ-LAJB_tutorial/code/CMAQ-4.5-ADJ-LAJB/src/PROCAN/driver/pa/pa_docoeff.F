@@ -1,0 +1,89 @@
+
+C***************************************************************************
+C  Significant portions of Models-3/CMAQ software were developed by        *
+C  Government employees and under a United States Government contract.     *
+C  Portions of the software were also based on information from non-       *
+C  Federal sources, including software developed by research institutions  *
+C  through jointly funded cooperative agreements. These research institu-  *
+C  tions have given the Government permission to use, prepare derivative   *
+C  works, and distribute copies of their work to the public within the     *
+C  Models-3/CMAQ software release and to permit others to do so. EPA       *
+C  therefore grants similar permissions for use of Models-3/CMAQ software, *
+C  but users are requested to provide copies of derivative works to the    *
+C  Government without re-strictions as to use by others.  Users are        *
+C  responsible for acquiring their own copies of commercial software       *
+C  associated with the Models-3/CMAQ release and are also responsible      *
+C  to those vendors for complying with any of the vendors' copyright and   *
+C  license restrictions. In particular users must obtain a Runtime license *
+C  for Orbix from IONA Technologies for each CPU used in Models-3/CMAQ     *
+C  applications.                                                           *
+C                                                                          *
+C  Portions of I/O API, PAVE, and the model builder are Copyrighted        *
+C  1993-1997 by MCNC--North Carolina Supercomputing Center and are         *
+C  used with their permissions subject to the above restrictions.          *
+C***************************************************************************
+
+C RCS file, release, date & time of last delta, author, state, [and locker]
+C $Header: /global/home/groups-sw/ac_seasonal/lbastien/CMAQ/v4.5-ADJ/models/PROCAN/src/driver/pa/pa_docoeff.F,v 1.1.1.1 2005/09/09 19:19:11 sjr Exp $ 
+
+C what(1) key, module and SID; SCCS file; date and time of last delta:
+C @(#)pa_docoeff.F	1.1 /project/mod3/PROCAN/src/driver/pa/SCCS/s.pa_docoeff.F 04 Jul 1997 14:13:18
+
+
+
+      SUBROUTINE DOCOEFF( COEF, COUT )
+
+C***********************************************************************
+C
+C  FUNCTION: To transform a coeffincient from numerical to character
+C            form for output reports   
+C
+C  PRECONDITIONS: None
+C 
+C  KEY SUBROUTINES/FUNCTIONS CALLED: None
+C
+C  REVISION HISTORY: Prototype created by Jerry Gipson, August, 1996
+C                    Modified May, 1997 by Jerry Gipson to be consistent
+C                      with beta CTM
+C
+C***********************************************************************
+      IMPLICIT NONE
+      
+C..INCLUDES: None
+      
+C..ARGUMENTS:
+      CHARACTER*( * )  COUT ! Output coefficient
+
+      REAL COEF             ! Coefficient for output term 
+
+                                        
+C..PARAMETERS: None
+
+C..EXTERNAL FUNCTIONS: None
+
+
+C..SAVED LOCAL VARIABLES: 
+
+C..SCRATCH LOCAL VARIABLES
+
+      INTEGER N   ! Loop index
+         
+C***********************************************************************
+
+      DO N = 1, LEN( COUT )
+         COUT( N : N ) = ' '
+      ENDDO
+
+      IF( ABS( COEF ) .NE. 1.0 ) THEN
+         WRITE( COUT, '( 2X, F7.4 )' ) ABS( COEF )
+         COUT( 11 : 11 ) = '*'
+      ENDIF   
+
+      IF( COEF .GE. 0.0 ) THEN
+         COUT( 1 : 1 ) = '+'
+      ELSE
+         COUT( 1 : 1 ) = '-'
+      ENDIF
+
+      RETURN 
+      END

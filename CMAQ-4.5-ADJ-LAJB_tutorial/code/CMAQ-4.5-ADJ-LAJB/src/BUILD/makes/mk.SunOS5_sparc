@@ -1,0 +1,7 @@
+# CC = /opt/SUNWspro/bin/cc
+
+CFLAGS = -Xc -v -g
+CLITEFLAGS = -Xc -g
+
+
+

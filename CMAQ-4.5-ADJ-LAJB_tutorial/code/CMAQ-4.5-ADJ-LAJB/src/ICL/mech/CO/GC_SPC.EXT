@@ -1,0 +1,9 @@
+      INTEGER        N_GC_SPC
+      PARAMETER     (N_GC_SPC = 1)
+      INTEGER        N_GC_SPCD
+      PARAMETER     (N_GC_SPCD = N_GC_SPC + 1 )
+      CHARACTER*16   GC_SPC(N_GC_SPCD)
+      REAL           GC_MOLWT(N_GC_SPCD)
+      
+      DATA          GC_SPC(  1), GC_MOLWT(  1) / 'CO              ', 28.01 /
+      

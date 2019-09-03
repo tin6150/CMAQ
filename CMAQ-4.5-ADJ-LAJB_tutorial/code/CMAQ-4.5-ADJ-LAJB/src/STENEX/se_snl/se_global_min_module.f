@@ -1,0 +1,88 @@
+C RCS file, release, date & time of last delta, author, state, [and locker]
+C $Header: /global/home/groups-sw/ac_seasonal/lbastien/CMAQ/v4.5-ADJ/models/STENEX/src/se_snl/se_global_min_module.f,v 1.1.1.1 2005/09/09 18:58:42 sjr Exp $
+
+C what(1) key, module and SID; SCCS file; date and time of last delta:
+C %W% %P% %G% %U%
+
+C --------------------------------------------------------------------------
+C Purpose:
+C
+C   use F90 interface feature to achieve "faked" polymorphism for global min
+C   determining routine
+C
+C Revision history:
+C
+C   Orginal version: 11/05/99 by David Wong
+C
+C Parameter List:
+C
+C   In: var -- distributed variable which needs be determined the min value
+C              among all processors
+C
+C Local Variable:
+C
+C   min   -- minimum value among all processors
+C   error -- error code of mpi call
+C
+C Include Files:
+C
+C   mpif.h
+C -----------------------------------------------------------------------------
+
+        module se_global_min_module
+
+        implicit none
+
+        interface se_global_min
+          module procedure se_global_imin, se_global_rmin
+        end interface
+
+        contains
+
+C -----------------------------------------------------------------------------
+        function se_global_imin (var) result (se_global_imin_result)
+
+	implicit none
+
+        integer :: se_global_imin_result
+        integer, intent(in) :: var
+
+	include "mpif.h"
+
+	integer min
+        integer error
+
+	call mpi_reduce (var, min, 1, mpi_integer, MPI_MIN, 0, 
+     &                   mpi_comm_world, error)
+
+        call mpi_bcast (min, 1, mpi_integer, 0, mpi_comm_world, error)
+
+        se_global_imin_result = min
+
+	return
+	end function se_global_imin
+
+C -----------------------------------------------------------------------------
+        function se_global_rmin (var) result (se_global_rmin_result)
+
+	implicit none
+
+        real :: se_global_rmin_result
+        real, intent(in) :: var
+
+	include "mpif.h"
+
+	real min
+        integer error
+
+	call mpi_reduce (var, min, 1, mpi_real, MPI_MIN, 0, 
+     &                   mpi_comm_world, error)
+
+        call mpi_bcast (min, 1, mpi_real, 0, mpi_comm_world, error)
+
+        se_global_rmin_result = min
+
+	return
+	end function se_global_rmin
+
+        end module se_global_min_module

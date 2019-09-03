@@ -6,7 +6,12 @@
 #### ./setup.csh 2>&1 |  tee setup.log    # sh
 #### ./setup.csh      |& tee setup.log    # csh
 
-#### need to rewrite from sh to csh
+#### this is new version of setup*csh, for CMAQ 5.2.1
+#### had converted from sh to csh when giving up setup45.csh
+#### maybe functional...
+#### but moving on to compile Lucas' Adjoin model, which seems to be wiht CMAQ 4.5...
+#### see setup_adjoin.sh  (hmm... back to bash...)
+
 
 #### CMAQ 5.2.1: build tutorial https://github.com/USEPA/CMAQ/blob/5.2.1/DOCS/Tutorials/CMAQ_GettingStarted.md
 
@@ -125,7 +130,7 @@ being_setup_cmaq52:
 
 	echo "    **>> calling ./bldit_project.csh ... <<**"
 	./bldit_project.csh gcc |& tee bldit_project.log 
-		## ++ mkdir: cannot create directory ‘/home/username/CMAQ_Project/POST/combine/scripts/spec_def_files’: File exists
+		## ++ mkdir: cannot create directory /home/username/CMAQ_Project/POST/combine/scripts/spec_def_files: File exists
 		## edit /home/tin/tin-gh/CMAQ/PREP/bcon/scripts ???
 
 

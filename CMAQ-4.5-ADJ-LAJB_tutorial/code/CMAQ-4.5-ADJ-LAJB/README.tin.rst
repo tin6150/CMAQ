@@ -7,7 +7,7 @@ source
 
 # copy the main source files:
 
-cd /global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB  
+cd /global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB   # source dir
 cp -pr LICENSE makefile environment-user_example src documentation environment /global/scratch/tin/tin-gh/CMAQ/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB
 
 

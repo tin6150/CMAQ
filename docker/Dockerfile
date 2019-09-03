@@ -19,14 +19,18 @@ RUN mkdir -p Downloads &&  cd Downloads ;\
     # better to write the setup.sh script to compile cmaq, so that it can be used on actual host or singularity
     # if docker doesn't work
     ./setup.csh 2>&1 | tee setup.log.rst ;\
-    echo $? > _CMAQ_BUILD_END_
+    echo $? > _CMAQ_BUILD_END_ ;\
+
+    # Adding a bash script to compile Lucas Adjoin models
+		bash ./setup_adjoin.sh  2>&1 | tee setup.adjoin.log.rst ;\
+    echo $? > _CMAQ_ADJOIN_BUILD_END_
 
 
 
 RUN  cd / \
   && touch    _TOP_DIR_OF_CONTAINER_  \
   && TZ=PST8PDT date  >> _TOP_DIR_OF_CONTAINER_  \
-  && echo  "Dockerfile.cmaq 2019.0811.2359+"  >> _TOP_DIR_OF_CONTAINER_  
+  && echo  "Dockerfile.cmaq 2019.0902.2130+"  >> _TOP_DIR_OF_CONTAINER_  
 
 
 

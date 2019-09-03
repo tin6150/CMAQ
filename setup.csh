@@ -16,7 +16,8 @@
 #### CMAQ 5.2.1: build tutorial https://github.com/USEPA/CMAQ/blob/5.2.1/DOCS/Tutorials/CMAQ_GettingStarted.md
 
 
-#### argggg... no fn in t/csh :(  http://www.grymoire.com/Unix/CshTop10.txt
+#### argggg... no fn in csh :(  http://www.grymoire.com/Unix/CshTop10.txt
+#### what about fish?
 
 #########################################
 ### formerly fn called env_prep() {  ####
@@ -28,6 +29,9 @@
 	### setenv PATH            "${PATH}:${AMGEN_HOME}/bin"
 	### *** CONCLUSION: Best use space and the lower case version!!
 	### LD_LIBRARY_PATH seems to be okay with the setenv LD_LIBRARY_PATH and colon separated list...
+	echo "    **>> ========================================== <<**"
+	echo "    **>> start of env_prep in setup.csh             <<**"
+	echo "    **>> ========================================== <<**"
 
 	# notice how syntax highlight treat PATH vs path differently!
 	if(! ${?PATH} ) then
@@ -50,9 +54,11 @@
 	setenv CCFLAGS  "-g"                       # not mpicc or ortecc ? (using that tutorial says for now)
 	setenv CPPFLAGS '-DNDEBUG -DgFortran'
 	setenv FC 		gfortran 
+	setenv myFC 	/usr/bin/gfortran # seems to be needed by bldit_bcon.csh:270
 	setenv FCFLAGS 	"-g"
 	setenv FFLAGS 	'-g -w'
 	setenv CXX 		'g++'
+	setenv compilerString  gcc  # needed by run_cctm.csh, but didn't think i need to set it myself in here... but hopefully solve complain.
 
 	#setenv SRCBASE /local/home/tin/tin-gh    # as appropriate 
 	setenv SRCBASE 	`pwd`                     # eg /Downloads/CMAQ  # from git clone
@@ -83,6 +89,9 @@ being_setup_ioapi:
 #####################################################
 #### setup_ioapi() { # begin of former fn in .sh ####
 #####################################################
+		echo "    **>> ========================================== <<**"
+		echo "    **>> start of setup_ioapi in setup.csh          <<**"
+		echo "    **>> ========================================== <<**"
 		setenv 		BASEDIR 	${SRCBASE}/Api 			# source dir, eg /Downloads/CMAQ/Api
 		mkdir -p 	$BASEDIR/$BIN 						# BIN is now Linux2_x86_64gfort
 
@@ -97,6 +106,7 @@ being_setup_ioapi:
 		make HOME=${BASEDIR}/ioapi  install  |& tee make.install.log
 		# in 3.1? only 1 file: /opt/CMAS4.5.1/rel/lib/ioapi_3/libioapi.a
 		# in 3.2, seems to include m3tools 
+		# /opt/CMAS5.2.1/rel/Linux2_x86_64gfort/libioapi.a and m3* 
 
 
 		cd ${SRCBASE}
@@ -113,12 +123,17 @@ being_setup_cmaq52:
 ######################################################
 #### setup_cmaq52() { # begin of former fn in .sh ####
 ######################################################
+	echo "    `` #rst food ``"
+	echo "    **>> ========================== <<**"
 	echo "    **>> starting setup_cmq52 fn... <<**"
+	echo "    **>> ========================== <<**"
 
 	# may end up just calling this config script directly from Dockerfile
 	/bin/cp -p ./config_cmaq.tin.csh ./config_cmaq.csh 
 	pwd
+	echo "    **>> ========================================== <<**"
 	echo "    **>> calling ./config_cmaq.csh ... <<**"
+	echo "    **>> ========================================== <<**"
 	## ++ seems like invokation of these helper script has error with setenv... 
 	## setenv: Variable name must contain alphanumeric characters.
 	source ./config_cmaq.csh gcc              # probably just creating bunch of links
@@ -128,7 +143,9 @@ being_setup_cmaq52:
 
 	# ++ set username?  it created /home/username literary!
 
+	echo "    **>> ========================================== <<**"
 	echo "    **>> calling ./bldit_project.csh ... <<**"
+	echo "    **>> ========================================== <<**"
 	./bldit_project.csh gcc |& tee bldit_project.log 
 		## ++ mkdir: cannot create directory /home/username/CMAQ_Project/POST/combine/scripts/spec_def_files: File exists
 		## edit /home/tin/tin-gh/CMAQ/PREP/bcon/scripts ???
@@ -138,10 +155,11 @@ being_setup_cmaq52:
 	setenv CMAQ_HOME `pwd`
 	cd ${CMAQ_HOME}/PREP/bcon/scripts/
 	pwd
+	echo "    **>> ========================================== <<**"
 	echo "    **>> calling ./bldit_bcon.csh ... <<**"
+	echo "    **>> ========================================== <<**"
 	./bldit_bcon.csh gcc |& tee bldit_bcon.log
-		## ++ setenv: Variable name must contain alphanumeric characters.
-		## ++ myFC: Undefined variable.
+		## ++ myFC: Undefined variable.  # declared above now
 
 
 	cd $CMAQ_HOME
@@ -149,9 +167,11 @@ being_setup_cmaq52:
 	#### actually build cmaq here:
 	cd ${CMAQ_HOME}/CCTM/scripts
 	pwd
+	echo "    **>> ========================================== <<**"
 	echo "    **>> calling ./bldit_cctm.csh ... <<**"
+	echo "    **>> ========================================== <<**"
 	./bldit_cctm.csh gcc |& tee bldit_cctm.log
-		## ++ myFC: Undefined variable.
+		## ++ myFC: Undefined variable.  # declared above now
 
 	cd $CMAQ_HOME
 
@@ -159,7 +179,9 @@ being_setup_cmaq52:
 	#### run b enchmark script
 	cd ${CMAQ_HOME}/CCTM/scripts
 	pwd
+	echo "    **>> ========================================== <<**"
 	echo "    **>> calling ./run_cctm.csh ... <<**"
+	echo "    **>> ========================================== <<**"
 	./run_cctm.csh |& tee run.benchmark.log
 	#### maybe problem here... continue tomorrow...   FIXME ++ 
 
@@ -168,7 +190,9 @@ being_setup_cmaq52:
 
 
 	echo $?
+	echo "    **>> ========================================== <<**"
 	echo "    **>> end of setup_cmaq52 fn. <<**"
+	echo "    **>> ========================================== <<**"
 	cd $CMAQ_HOME
 	pwd
 
@@ -184,3 +208,6 @@ exit 0
 #### csh was supposed to be more c-like
 #### yet i have no way to emulate main() 
 
+################################################################################
+# vim modeline, also see alias `vit`
+# vim:  noexpandtab nosmarttab noautoindent nosmartindent tabstop=4 shiftwidth=4 paste formatoptions-=cro 

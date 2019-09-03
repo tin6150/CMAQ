@@ -30,7 +30,8 @@ RUN mkdir -p Downloads &&  cd Downloads ;\
 RUN  cd / \
   && touch    _TOP_DIR_OF_CONTAINER_  \
   && TZ=PST8PDT date  >> _TOP_DIR_OF_CONTAINER_  \
-  && echo  "Dockerfile.cmaq 2019.0902.2130+"  >> _TOP_DIR_OF_CONTAINER_  
+  && echo  "Dockerfile.cmaq 2019.0814.2218 (setenv fix, add myFC, compilerString)"  >> _TOP_DIR_OF_CONTAINER_   \
+  && echo  "Dockerfile.cmaq 2019.0902.2130+ (added adjoin code)"  >> _TOP_DIR_OF_CONTAINER_  
 
 
 

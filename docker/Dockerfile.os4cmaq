@@ -42,13 +42,16 @@ RUN  yum -y update       \
 		 tree  \
 		 openmpi-devel
 
+# no fish shell in centos 7 yet :(
+# so much about writting csh script with fish...
+ 
 # mpicc in /usr/lib64/openmpi/bin
 # or openmpi3-devel ?   there are some ohpc stuff...
 #
 
 RUN  touch    _TOP_DIR_OF_CONTAINER_  \
-  && date  >> _TOP_DIR_OF_CONTAINER_  \
-  && echo  "os4cmaq 2019.0804.2101"  >> _TOP_DIR_OF_CONTAINER_  \
+  && TZ="PST8PDT" date  >> _TOP_DIR_OF_CONTAINER_  \
+  && echo  "os4cmaq 2019.0804 TZ update 2018.0814.2157"  >> _TOP_DIR_OF_CONTAINER_  \
   && mkdir -p /home  
   ## && mkdir -p /home/tin  \
   ## && mkdir -p /lhome/tin 

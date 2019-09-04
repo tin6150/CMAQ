@@ -32,6 +32,8 @@
 	echo "    **>> ========================================== <<**"
 	echo "    **>> start of env_prep in setup.csh             <<**"
 	echo "    **>> ========================================== <<**"
+	date
+
 
 	# notice how syntax highlight treat PATH vs path differently!
 	if(! ${?PATH} ) then
@@ -91,6 +93,7 @@ being_setup_ioapi:
 #####################################################
 		echo "    **>> ========================================== <<**"
 		echo "    **>> start of setup_ioapi in setup.csh          <<**"
+		date
 		echo "    **>> ========================================== <<**"
 		setenv 		BASEDIR 	${SRCBASE}/Api 			# source dir, eg /Downloads/CMAQ/Api
 		mkdir -p 	$BASEDIR/$BIN 						# BIN is now Linux2_x86_64gfort
@@ -126,6 +129,7 @@ being_setup_cmaq52:
 	echo "    `` #rst food ``"
 	echo "    **>> ========================== <<**"
 	echo "    **>> starting setup_cmq52 fn... <<**"
+	date
 	echo "    **>> ========================== <<**"
 
 	# may end up just calling this config script directly from Dockerfile
@@ -133,6 +137,7 @@ being_setup_cmaq52:
 	pwd
 	echo "    **>> ========================================== <<**"
 	echo "    **>> calling ./config_cmaq.csh ... <<**"
+	date
 	echo "    **>> ========================================== <<**"
 	## ++ seems like invokation of these helper script has error with setenv... 
 	## setenv: Variable name must contain alphanumeric characters.
@@ -145,6 +150,7 @@ being_setup_cmaq52:
 
 	echo "    **>> ========================================== <<**"
 	echo "    **>> calling ./bldit_project.csh ... <<**"
+	date
 	echo "    **>> ========================================== <<**"
 	./bldit_project.csh gcc |& tee bldit_project.log 
 		## ++ mkdir: cannot create directory /home/username/CMAQ_Project/POST/combine/scripts/spec_def_files: File exists
@@ -157,6 +163,7 @@ being_setup_cmaq52:
 	pwd
 	echo "    **>> ========================================== <<**"
 	echo "    **>> calling ./bldit_bcon.csh ... <<**"
+	date
 	echo "    **>> ========================================== <<**"
 	./bldit_bcon.csh gcc |& tee bldit_bcon.log
 		## ++ myFC: Undefined variable.  # declared above now
@@ -169,6 +176,7 @@ being_setup_cmaq52:
 	pwd
 	echo "    **>> ========================================== <<**"
 	echo "    **>> calling ./bldit_cctm.csh ... <<**"
+	date
 	echo "    **>> ========================================== <<**"
 	./bldit_cctm.csh gcc |& tee bldit_cctm.log
 		## ++ myFC: Undefined variable.  # declared above now
@@ -181,6 +189,7 @@ being_setup_cmaq52:
 	pwd
 	echo "    **>> ========================================== <<**"
 	echo "    **>> calling ./run_cctm.csh ... <<**"
+	date
 	echo "    **>> ========================================== <<**"
 	./run_cctm.csh |& tee run.benchmark.log
 	#### maybe problem here... continue tomorrow...   FIXME ++ 
@@ -192,6 +201,7 @@ being_setup_cmaq52:
 	echo $?
 	echo "    **>> ========================================== <<**"
 	echo "    **>> end of setup_cmaq52 fn. <<**"
+	date
 	echo "    **>> ========================================== <<**"
 	cd $CMAQ_HOME
 	pwd

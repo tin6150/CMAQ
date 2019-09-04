@@ -5,6 +5,8 @@
 ## compile Lucas Bastein Adjoin code
 ## largely follow instructions in CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB/documentation/notes-on-building-the-code.txt
 
+echo "starting setup_adjoin.sh"
+date
 
 cd CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB 
 source environment-user
@@ -20,3 +22,5 @@ make adjpost
 
 
 echo $? | tee setup_adjoin.exitCode
+echo "setup_adjoin.sh ends"
+date

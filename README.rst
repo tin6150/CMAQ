@@ -2,8 +2,9 @@ TMP README
 ~~~~~~~~~~
 
 This is my attempt to build CMAQ 5.2.1 in a container.
-does not yet work.
+May not work yet.
 
+Also adding Lucas Bastein Adjoin models, but that maybe for CMAQ 4.5.
 
 Original README.md from CMAQ from EPA/CMAS is at README.orig.md
 
@@ -14,7 +15,7 @@ Adjoin Model from Lucas
 Lucas wrote a model that Ling/Huy are running.  He has a couple of papers.
 supplement said to have source code:
 https://www.atmos-chem-phys.net/19/8363/2019/acp-19-8363-2019-supplement.zip
-	see TMP/ for such extract
+  *	see TMP/ for such extract
 	need to compare against /global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB
 
 if can't find latest from github, then maybe better off get code from Ling...
@@ -27,3 +28,7 @@ run_eta
 
 this folder contain scripts and logs that run Lucas' adjoin model.
 
+CMAQ-4.5-ADJ-LAJB_tutorial
+==========================
+
+Copied code for Lucas Adjoin model, see the README in there for source and what files were included.

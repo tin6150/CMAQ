@@ -11,7 +11,9 @@ MAINTAINER Tin
 # CMAQ 5.2.1 build tutorial: https://github.com/USEPA/CMAQ/blob/5.2.1/DOCS/Tutorials/CMAQ_GettingStarted.md
 
 #### make ioapi 3.1.  i have the source downloaded in the my git repo of CMAQ ####
-RUN mkdir -p Downloads &&  cd Downloads ;\
+RUN echo "begining docker build process at " ;\
+    date ;\
+    mkdir -p Downloads &&  cd Downloads ;\
     git clone --quiet -b tin_521_docker https://tin6150@github.com/tin6150/CMAQ.git ;\
     cd CMAQ ;\
     git log > cmaq.git.log ;\

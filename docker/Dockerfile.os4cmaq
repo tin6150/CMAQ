@@ -35,6 +35,7 @@ RUN  yum -y update       \
 		 openssl-devel \
 		 csh  \
 		 tcsh \
+		 ksh  \
 		 vim  \
 		 tmux \
 		 screen \

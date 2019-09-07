@@ -6,12 +6,14 @@ From: tin6150/cmaq
 %post
 	touch "_ROOT_DIR_OF_CONTAINER_" ## also is "_CURRENT_DIR_CONTAINER_BUILD" 
 	date >> _ROOT_DIR_OF_CONTAINER_
-	echo "Singularity def 2019.0902.2315" >> _ROOT_DIR_OF_SINGULARITY_CONTAINER_
+	echo "Singularity def 2019.0902.2315" >> _ROOT_DIR_OF_CONTAINER_
 
 	# docker run as root, but singularity may run as user, so adding these hacks here
 	mkdir -p /global/scratch/tin
+	mkdir -p /global/home/users/tin
 	mkdir -p /home/tin
 	chown    43143 /global/scratch/tin
+	chown    43143 /global/home/users/tin
 	chown -R 43143 /home/tin
 	chown -R 43143 /home/username  # some oddities resulting from the cmaq make process ran in docker
 	chown -R 43143 /opt

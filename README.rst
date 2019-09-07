@@ -9,6 +9,16 @@ Also adding Lucas Bastein Adjoin models, but that maybe for CMAQ 4.5.
 Original README.md from CMAQ from EPA/CMAS is at README.orig.md
 
 
+Docker parts
+------------
+
+  * tin6150/os4cmaq - base OS layer, currently CentOS 7.  Include OS' OpenMPI rpm.
+  * tin6150/lib4cmaq - supporting libraries: HDF5, NetCDF
+  * tin6150/adjoin   - Lucas' Adjoin model, based on CMAQ 4.5, use IOAPI 3.0
+  * tin6150/cmaq     - cmaq program itself.  Currently for version 5.2.1 
+
+
+
 Adjoin Model from Lucas
 ~~~~~~~~~~~~~~~~~~~~~~~
 

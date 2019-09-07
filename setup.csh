@@ -95,6 +95,7 @@ being_setup_ioapi:
 		echo "    **>> start of setup_ioapi in setup.csh          <<**"
 		date
 		echo "    **>> ========================================== <<**"
+		## docker build problem in here, stuck in m3tools after the cp ... :(   FIXME ++
 		setenv 		BASEDIR 	${SRCBASE}/Api 			# source dir, eg /Downloads/CMAQ/Api
 		mkdir -p 	$BASEDIR/$BIN 						# BIN is now Linux2_x86_64gfort
 

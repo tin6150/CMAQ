@@ -8,7 +8,7 @@
 echo "starting setup_adjoin.sh"
 date
 
-echo '$HOME is set to: ' $HOME	# expect / in container build script
+echo '$HOME is set to: ' $HOME	# hmm... actually docker build , this is still /root.  not sure where got feeling it was / before...
 
 cd CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB 
 source environment-user

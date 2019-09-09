@@ -40,19 +40,20 @@ RUN  yum -y update       \
 		 tmux \
 		 screen \
 		 bc \
-		 tree  \
-		 openmpi-devel
+		 tree  
+		 #openmpi-devel # pretty old, openmpi-devel-1.10.7-2.el7.x86_64
 
 # no fish shell in centos 7 yet :(
 # so much about writting csh script with fish...
  
 # mpicc in /usr/lib64/openmpi/bin
 # or openmpi3-devel ?   there are some ohpc stuff...
-#
+# header in /usr/include/openmpi-x86_64/
+# structure does not work well with Adjoin makefile,
 
 RUN  touch    _TOP_DIR_OF_CONTAINER_  \
   && TZ="PST8PDT" date  >> _TOP_DIR_OF_CONTAINER_  \
-  && echo  "os4cmaq 2019.0804 TZ update 2018.0814.2157"  >> _TOP_DIR_OF_CONTAINER_  \
+  && echo  "os4cmaq 2019.0907 no using os openmpi rpm anymore"  >> _TOP_DIR_OF_CONTAINER_  \
   && mkdir -p /home  
   ## && mkdir -p /home/tin  \
   ## && mkdir -p /lhome/tin 

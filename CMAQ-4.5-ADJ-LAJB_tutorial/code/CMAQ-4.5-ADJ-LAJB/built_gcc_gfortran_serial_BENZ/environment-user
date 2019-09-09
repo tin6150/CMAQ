@@ -41,7 +41,12 @@ export DIR_IOAPI=$SRC_BASE/Downloads/CMAQ/Api/ioapi/
 export DIR_NETCDF=/usr/local/lib
 ##export DIR_MPI=/gpanda/software/sl-6.x86_64/modules/openmpi/1.6.5
 ##--export DIR_MPI=/usr/lib64/openmpi/bin
-export DIR_MPI=/usr/lib64/openmpi
+## export DIR_MPI=/usr/lib64/openmpi:/usr/include/openmpi-x86_64/  # cant define 2 with colon separation  :(
+##export DIR_MPI=/usr/include/openmpi-x86_64/
+## the way how the makefile is defined, expect $DIR_MPI/include
+## so better download mpi source and build it instead of using OS' rpm
+## (using openmpi 2.1.6, see Dockerfile.lib4cmaq for rationale)
+export DIR_MPI=/opt/openmpi/2.1.6 
 
 # Name of the FORTRAN netcdf library (in some installation, the C and FORTRAN
 # netcdf libraries are put together in libnetcdf while in some other

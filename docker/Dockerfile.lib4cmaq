@@ -14,6 +14,27 @@ MAINTAINER Tin
 # tmp till os4cmaq get build by docker hub.  local build NOT getting used by FROM cuz of tin6150/ prefix :(
 RUN  yum -y install m4
 
+#### instal openmpi from source ####
+# using the still supported version 2.1.6 to be closer to  
+# lrc smf openmpi 2.0.2 (gcc 6.3.0)
+RUN  mkdir -p Downloads &&  cd Downloads ;\
+     wget --quiet https://download.open-mpi.org/release/open-mpi/v2.1/openmpi-2.1.6.tar.gz ;\
+     tar xfz openmpi-2.1.6.tar.gz ;\
+		 cd openmpi-2.1.6 ;\
+     export  CCFLAGS="-g"   FC=gfortran FCFLAGS="-g" ;\
+     export   CFLAGS="-g"   ;\
+     export CPPFLAGS="-g"   ;\
+     # using /opt cuz may need source code and header in certain structure for makefile?
+		 # still create bin, etc, lib, share, include  under the prefix dir, but at least include is there
+     ./configure                   --enable-shared --prefix=/opt/openmpi/2.1.6 ;\  
+     make install 2>&1 | tee make.install.log ;\
+     cd .. ;\
+     ## && rm -rf openmpi-2.1.6.tar.gz ;\
+     cd .. 
+     # careful not to end above with \ or the dockerfile RUN command would be treated by the shell and get error
+
+		
+
 #### instal hdf5 from source ####
 RUN  mkdir -p Downloads &&  cd Downloads; \
      wget --quiet https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.8/hdf5-1.8.21/src/hdf5-1.8.21.tar.gz; \
@@ -81,8 +102,9 @@ RUN  mkdir -p Downloads && cd Downloads; \
 
 RUN  cd / \
   && touch    _TOP_DIR_OF_CONTAINER_  \
+  && echo "----"  >> _TOP_DIR_OF_CONTAINER_  \
   && date  >> _TOP_DIR_OF_CONTAINER_  \
-  && echo  "Dockerfile.lib4cmaq 2019.0804.2211 make check 2019.0806.2139"  >> _TOP_DIR_OF_CONTAINER_  
+  && echo  "Dockerfile.lib4cmaq 2019.0907.2100 compile openmpi"  >> _TOP_DIR_OF_CONTAINER_  
 
 #ENTRYPOINT [ "/bin/cat", "/_TOP_DIR_OF_CONTAINER_" ]
 # not defining an ENTRYPOINT will default to a shell inside the container

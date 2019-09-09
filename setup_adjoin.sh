@@ -11,10 +11,13 @@ date
 echo '$HOME is set to: ' $HOME	# hmm... actually docker build , this is still /root.  not sure where got feeling it was / before...
 
 cd CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB 
-source environment-user
+
+cd built_gcc_gfortran_serial_BENZ
+source environment-user				## ie source environment-user in the "build" dir, not the higher level dir I used earlier.
 
 make dir
 make pario
+
 make stenex
 make jproc
 make icon

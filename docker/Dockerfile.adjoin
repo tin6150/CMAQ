@@ -4,7 +4,8 @@
 # depends on a cascade of 2 other containers
  
 
-FROM tin6150/lib4cmaq:latest
+##FROM tin6150/lib4cmaq:latest
+FROM tin6150/cmaq:latest
 MAINTAINER Tin
 
 #RUN  echo "Building CMAQ... this isn't likely working yet" 

@@ -111,11 +111,6 @@ being_setup_ioapi:
 		# in 3.1? only 1 file: /opt/CMAS4.5.1/rel/lib/ioapi_3/libioapi.a
 		# in 3.2, seems to include m3tools 
 		# /opt/CMAS5.2.1/rel/Linux2_x86_64gfort/libioapi.a and m3* 
-		# seems to be stuck in here :(  which is why docker build time out...   FIXME
-		# echo "Installing M3TOOLS in /opt/CMAS5.2.1/rel/Linux2_x86_64gfort"
-		## Installing M3TOOLS in /opt/CMAS5.2.1/rel/Linux2_x86_64gfort
-		## cd /Downloads/CMAQ/Api/Linux2_x86_64gfort; cp airs2m3         bcwndw          camxtom3        datshift        dayagg factor          findwndw        greg2jul        gregdate        gridprobe insertgrid      jul2greg        juldate         juldiff         julshift kfxtract        latlon          m3agmax         m3agmask        m3cple m3combo         m3diff          m3edhdr         m3fake          m3hdr m3interp        m3mask          m3merge         m3pair          m3probe m3stat          m3totxt         m3tproc         m3tshift        m3wndw m3xtract        mtxblend        mtxbuild        mtxcalc         mtxcple presterp        presz           projtool        selmrg2d        timeshift vertot          vertimeproc     vertintegral    wrfgriddesc     wrftom3 mpasdiff        mpasstat        mpastom3 /opt/CMAS5.2.1/rel/Linux2_x86_64gfort
-		## make[1]: Leaving directory `/Downloads/CMAQ/Api/m3tools'
 
 
 
@@ -134,7 +129,7 @@ being_setup_cmaq52:
 ######################################################
 #### setup_cmaq52() { # begin of former fn in .sh ####
 ######################################################
-	echo "    `` #rst food ``"
+	echo '    `` #rst food ``'  # `` inside "" was causing hang inside docker.  but change to be inside '' seems ok.
 	echo "    **>> ========================== <<**"
 	echo "    **>> starting setup_cmq52 fn... <<**"
 	date
@@ -200,10 +195,14 @@ being_setup_cmaq52:
 	date
 	echo "    **>> ========================================== <<**"
 	./run_cctm.csh |& tee run.benchmark.log
-	#### maybe problem here... continue tomorrow...   FIXME ++ 
+	#### problem here... FIXME ++ 
+
 
 		## ++ setenv: Variable name must contain alphanumeric characters.
 		## ++ compilerString: Undefined variable.
+    	# cat: /Downloads/CMAQ/CCTM/scripts/BLD_CCTM_v521_gcc/CCTM_v521.cfg: No such file or directory
+		# ...
+		# set log_test = `ls CTM_LOG_???.${CTM_APPL}`
 
 
 	echo $?

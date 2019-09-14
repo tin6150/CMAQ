@@ -141,9 +141,15 @@ dir:
 	mkdir -vp $(DIR_INSTL)/bld/ADJPOST/mod
 
 clean:
-	rm -rf $(DIR_INSTL)/bld
-	rm -rf $(DIR_INSTL)/lib
-	rm -rf $(DIR_INSTL)/bin
+	ifeq ( $(DIR_INSTL), '' )
+		@echo "DIR_INSTL not defined, would remove /lib and /bin, exiting"
+	else ifeq ( $(DIR_INSTL), '/' )
+		@echo "DIR_INSTL is /, would remove /lib and /bin, exiting"
+	else 
+		rm -rf $(DIR_INSTL)/bld
+		rm -rf $(DIR_INSTL)/lib
+		rm -rf $(DIR_INSTL)/bin
+	endif
 
 ###############
 # GIT_VERBOSE #
@@ -155,16 +161,16 @@ $(DIR_SRC)/git_verbose.F: FORCE $(DIR_SRC)/create_git_verbose.bash
 
 # Force git_verbose.o to be re-built every time
 $(DIR_INSTL)/bld/git_verbose.o: FORCE $(DIR_SRC)/git_verbose.F
-	##$(FC_PAR) $(F77_FLAGS) -I$(DIR_IOAPI)/fixed_src_f77 $(SUBSTS) -c $(DIR_SRC)/git_verbose.F -o $(DIR_INSTL)/bld/git_verbose.o
 	$(FC_PAR) $(F77_FLAGS) -I$(DIR_IOAPI)/fixed_src $(SUBSTS) -c $(DIR_SRC)/git_verbose.F -o $(DIR_INSTL)/bld/git_verbose.o
+	##$(FC_PAR) $(F77_FLAGS) -I$(DIR_IOAPI)/fixed_src_f77 $(SUBSTS) -c $(DIR_SRC)/git_verbose.F -o $(DIR_INSTL)/bld/git_verbose.o
 
 #########
 # PARIO #
 #########
 
 $(DIR_INSTL)/bld/PARIO/%.o: $(DIR_SRC)/PARIO/%.f
-	##$(FC_PAR) $(F77_FLAGS) -I$(DIR_IOAPI)/fixed_src_f77 -I$(DIR_MPI)/include $(FC_FLAG_MOD)bld/PARIO/mod -c $(DIR_SRC)/PARIO/$*.f -o $(DIR_INSTL)/bld/PARIO/$*.o
 	$(FC_PAR) $(F77_FLAGS) -I$(DIR_IOAPI)/fixed_src -I$(DIR_MPI)/include $(FC_FLAG_MOD)bld/PARIO/mod -c $(DIR_SRC)/PARIO/$*.f -o $(DIR_INSTL)/bld/PARIO/$*.o
+	##$(FC_PAR) $(F77_FLAGS) -I$(DIR_IOAPI)/fixed_src_f77 -I$(DIR_MPI)/include $(FC_FLAG_MOD)bld/PARIO/mod -c $(DIR_SRC)/PARIO/$*.f -o $(DIR_INSTL)/bld/PARIO/$*.o
 
 
 $(DIR_INSTL)/lib/PARIO/libpario.a: $(OBJ_PARIO)

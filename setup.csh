@@ -10,8 +10,7 @@
 #### had converted from sh to csh when giving up setup45.csh
 #### maybe functional...
 #### but moving on to compile Lucas' Adjoin model, which seems to be wiht CMAQ 4.5...
-#### see setup_adjoin.sh  (hmm... back to bash...)
-
+#### see setup_adjoin.sh  (which went back to bash...)
 
 #### CMAQ 5.2.1: build tutorial https://github.com/USEPA/CMAQ/blob/5.2.1/DOCS/Tutorials/CMAQ_GettingStarted.md
 
@@ -25,7 +24,7 @@
 
 	### ** CSH Anoyance ** csh craps:
 	### set path = ( $path /bin /usr/local/bin /usr/bin /usr/bin/X11 ~/bin /sbin /usr/sbin . )
-    ### or (use braces {} are required around var name and quotes).
+	### or (use braces {} are required around var name and quotes).
 	### setenv PATH            "${PATH}:${AMGEN_HOME}/bin"
 	### *** CONCLUSION: Best use space and the lower case version!!
 	### LD_LIBRARY_PATH seems to be okay with the setenv LD_LIBRARY_PATH and colon separated list...
@@ -45,11 +44,17 @@
 	endif
 
 	setenv PATH "/usr/local/bin:${PATH}"
-	#setenv PATH "/usr/lib64/openmpi/bin:${PATH}"
+	#setenv PATH "/usr/lib64/openmpi/bin:${PATH}"					# rpm by RHEL
+	setenv PATH "/opt/openmpi/2.1.6/bin:${PATH}" 					# comiled from source
 	setenv LD_LIBRARY_PATH "/usr/local/lib:${LD_LIBRARY_PATH}"
+	setenv LD_LIBRARY_PATH "/opt/openmpi/2.1.6/lib:${LD_LIBRARY_PATH}"
 
-    #echo ${LD_LIBRARY_PATH}
-	#echo ${PATH}
+	
+	echo "--------"
+	echo "PATH is set to ${PATH}"
+	echo "--------"
+    echo "LD_LIBRARY_PATH is set to ${LD_LIBRARY_PATH}"
+	echo "--------"
 
 	##setenv compiler gcc # pgi
 	setenv CC       "cc" 
@@ -103,25 +108,20 @@ being_setup_ioapi:
 		## just to be obvious that I have done some edits and using them in the build
 		## copy file first...
 		/bin/cp -p Makefile.centos7gcc Makefile       # some edit done, now using gcc-gfortran 
-		setenv INSTDIR ${DSTBASE}/lib/ioapi_3 # /opt/CMAS5.2.1/rel/lib/ioapi_3
-		mkdir -p $INSTDIR                     # install destination
+		setenv INSTDIR ${DSTBASE}/lib/ioapi_3         # /opt/CMAS5.2.1/rel/lib/ioapi_3 ## nothing installed there anyway?!
+		mkdir -p $INSTDIR                             # install destination
 		#++ not sure if below HOME=... syntax still work in csh
-		make HOME=${BASEDIR}/ioapi           |& tee make.log
+		make HOME=${BASEDIR}/ioapi           |& tee make.log              # |& works inside docker, `` below was cause of hang
 		make HOME=${BASEDIR}/ioapi  install  |& tee make.install.log
 		# in 3.1? only 1 file: /opt/CMAS4.5.1/rel/lib/ioapi_3/libioapi.a
 		# in 3.2, seems to include m3tools 
 		# /opt/CMAS5.2.1/rel/Linux2_x86_64gfort/libioapi.a and m3* 
-
-
-
 
 		cd ${SRCBASE}
 end_ioapi:
 #########################################
 #### } # end of former setup_ioapi() ####
 #########################################
-
-
 
 
 
@@ -187,7 +187,7 @@ being_setup_cmaq52:
 	cd $CMAQ_HOME
 
 
-	#### run b enchmark script
+	#### run benchmark script
 	cd ${CMAQ_HOME}/CCTM/scripts
 	pwd
 	echo "    **>> ========================================== <<**"

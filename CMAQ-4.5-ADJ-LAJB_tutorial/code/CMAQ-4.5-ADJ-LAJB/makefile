@@ -22,6 +22,9 @@
 #### first one is built_gcc_gfortran_serial_BENZ
 #### -Tin 2019.0913
 
+#### DIR_IOAPI, Lucas expect compiled LIB under source tree
+#### now split into two, DIR_IOAPI_SRC and DIR_IOAPI_LIB, var introduced to environment-user
+
 FORCE:
 
 all: dir pario stenex jproc icon bcon cctm
@@ -167,7 +170,7 @@ $(DIR_SRC)/git_verbose.F: FORCE $(DIR_SRC)/create_git_verbose.bash
 
 # Force git_verbose.o to be re-built every time
 $(DIR_INSTL)/bld/git_verbose.o: FORCE $(DIR_SRC)/git_verbose.F
-	$(FC_PAR) $(F77_FLAGS) -I$(DIR_IOAPI)/fixed_src $(SUBSTS) -c $(DIR_SRC)/git_verbose.F -o $(DIR_INSTL)/bld/git_verbose.o
+	$(FC_PAR) $(F77_FLAGS) -I$(DIR_IOAPI_SRC)             $(SUBSTS) -c $(DIR_SRC)/git_verbose.F -o $(DIR_INSTL)/bld/git_verbose.o
 	##$(FC_PAR) $(F77_FLAGS) -I$(DIR_IOAPI)/fixed_src_f77 $(SUBSTS) -c $(DIR_SRC)/git_verbose.F -o $(DIR_INSTL)/bld/git_verbose.o
 
 #########
@@ -175,7 +178,7 @@ $(DIR_INSTL)/bld/git_verbose.o: FORCE $(DIR_SRC)/git_verbose.F
 #########
 
 $(DIR_INSTL)/bld/PARIO/%.o: $(DIR_SRC)/PARIO/%.f
-	$(FC_PAR) $(F77_FLAGS) -I$(DIR_IOAPI)/fixed_src -I$(DIR_MPI)/include $(FC_FLAG_MOD)bld/PARIO/mod -c $(DIR_SRC)/PARIO/$*.f -o $(DIR_INSTL)/bld/PARIO/$*.o
+	$(FC_PAR) $(F77_FLAGS) -I$(DIR_IOAPI_SRC)             -I$(DIR_MPI)/include $(FC_FLAG_MOD)bld/PARIO/mod -c $(DIR_SRC)/PARIO/$*.f -o $(DIR_INSTL)/bld/PARIO/$*.o
 	##$(FC_PAR) $(F77_FLAGS) -I$(DIR_IOAPI)/fixed_src_f77 -I$(DIR_MPI)/include $(FC_FLAG_MOD)bld/PARIO/mod -c $(DIR_SRC)/PARIO/$*.f -o $(DIR_INSTL)/bld/PARIO/$*.o
 
 
@@ -207,7 +210,8 @@ $(DIR_INSTL)/bld/STENEX/noop_f90/%.o: $(DIR_SRC)/STENEX/noop_f90/%.f
 #########
 
 $(DIR_INSTL)/bin/JPROC/jproc: $(OBJ_JPROC_jproc_table)
-	$(FC_PAR) $(LINK_FLAGS) $^ -L$(DIR_IOAPI)/lib -lioapi -L$(DIR_NETCDF)/lib $(LIB_NETCDF) -o $@
+	$(FC_PAR) $(LINK_FLAGS) $^ -L$(DIR_IOAPI_LIB)   -lioapi -L$(DIR_NETCDF)/lib $(LIB_NETCDF) -o $@
+	##$(FC_PAR) $(LINK_FLAGS) $^ -L$(DIR_IOAPI)/lib -lioapi -L$(DIR_NETCDF)/lib $(LIB_NETCDF) -o $@
 
 $(DIR_INSTL)/bld/JPROC/driver/jproc_table/%.o: $(DIR_SRC)/JPROC/driver/jproc_table/%.[Ff]
 	$(FC_PAR) $(F77_FLAGS) -I$(INC_CONST) -I$(INC_MECH) $(SUBSTS) $(FC_FLAG_MOD)$(DIR_INSTL)/bld/JPROC/driver/jproc_table/mod -c $< -o $@
@@ -217,18 +221,19 @@ $(DIR_INSTL)/bld/JPROC/driver/jproc_table/%.o: $(DIR_SRC)/JPROC/driver/jproc_tab
 ########
 
 $(DIR_INSTL)/bin/ICON/icon: $(OBJ_ICON_driver) $(OBJ_ICON_par) $(OBJ_ICON_input) $(OBJ_ICON_mech_conv)
-	$(FC_PAR) $(LINK_FLAGS) $^ -L$(DIR_IOAPI)/lib -lioapi -L$(DIR_NETCDF)/lib $(LIB_NETCDF) -L$(DIR_INSTL)/lib/STENEX -lstenex_noop_f90 -o $@
+	$(FC_PAR) $(LINK_FLAGS) $^ -L$(DIR_IOAPI_LIB)   -lioapi -L$(DIR_NETCDF)/lib $(LIB_NETCDF) -L$(DIR_INSTL)/lib/STENEX -lstenex_noop_f90 -o $@
+	##$(FC_PAR) $(LINK_FLAGS) $^ -L$(DIR_IOAPI)/lib -lioapi -L$(DIR_NETCDF)/lib $(LIB_NETCDF) -L$(DIR_INSTL)/lib/STENEX -lstenex_noop_f90 -o $@
 
 $(DIR_INSTL)/bld/ICON/driver/icon/%.o: $(DIR_SRC)/ICON/driver/icon/%.[Ff]
+	$(FC_PAR) $(F77_FLAGS) -I$(DIR_IOAPI_SRC)             -I$(INC_MECH) -I$(INC_TRAC) -I$(DIR_INSTL)/bld/STENEX/noop_f90/mod -I$(DIR_SRC)/ICON/icl/icl $(SUBSTS) $(SUBST_STENEX_NOOP) $(FC_FLAG_MOD)$(DIR_INSTL)/bld/ICON/driver/icon/mod -c $< -o $@
 	##$(FC_PAR) $(F77_FLAGS) -I$(DIR_IOAPI)/fixed_src_f77 -I$(INC_MECH) -I$(INC_TRAC) -I$(DIR_INSTL)/bld/STENEX/noop_f90/mod -I$(DIR_SRC)/ICON/icl/icl $(SUBSTS) $(SUBST_STENEX_NOOP) $(FC_FLAG_MOD)$(DIR_INSTL)/bld/ICON/driver/icon/mod -c $< -o $@
-	$(FC_PAR) $(F77_FLAGS) -I$(DIR_IOAPI)/fixed_src -I$(INC_MECH) -I$(INC_TRAC) -I$(DIR_INSTL)/bld/STENEX/noop_f90/mod -I$(DIR_SRC)/ICON/icl/icl $(SUBSTS) $(SUBST_STENEX_NOOP) $(FC_FLAG_MOD)$(DIR_INSTL)/bld/ICON/driver/icon/mod -c $< -o $@
 
 $(DIR_INSTL)/bld/ICON/par/par_noop/%.o: $(DIR_SRC)/ICON/par/par_noop/%.[Ff]
 	$(FC_PAR) $(F77_FLAGS) -I$(DIR_INSTL)/bld/ICON/driver/icon/mod $(FC_FLAG_MOD)$(DIR_INSTL)/bld/ICON/par/par_noop/mod -c $< -o $@
 
 $(DIR_INSTL)/bld/ICON/input/$(ModInpt)/%.o: $(DIR_SRC)/ICON/input/$(ModInpt)/%.[Ff]
+	$(FC_PAR) $(F77_FLAGS) -I$(DIR_IOAPI_SRC) $(SUBSTS) -I$(INC_MECH) -I$(INC_TRAC) -I$(DIR_INSTL)/bld/ICON/driver/icon/mod -I$(DIR_SRC)/ICON/icl/icl $(FC_FLAG_MOD)$(DIR_INSTL)/bld/ICON/input/$(ModInpt)/mod -c $< -o $@
 	##$(FC_PAR) $(F77_FLAGS) -I$(DIR_IOAPI)/fixed_src_f77 $(SUBSTS) -I$(INC_MECH) -I$(INC_TRAC) -I$(DIR_INSTL)/bld/ICON/driver/icon/mod -I$(DIR_SRC)/ICON/icl/icl $(FC_FLAG_MOD)$(DIR_INSTL)/bld/ICON/input/$(ModInpt)/mod -c $< -o $@
-	$(FC_PAR) $(F77_FLAGS) -I$(DIR_IOAPI)/fixed_src $(SUBSTS) -I$(INC_MECH) -I$(INC_TRAC) -I$(DIR_INSTL)/bld/ICON/driver/icon/mod -I$(DIR_SRC)/ICON/icl/icl $(FC_FLAG_MOD)$(DIR_INSTL)/bld/ICON/input/$(ModInpt)/mod -c $< -o $@
 
 $(DIR_INSTL)/bld/ICON/mech_conv/$(DIR_ModMech)/%.o: $(DIR_SRC)/ICON/mech_conv/$(DIR_ModMech)/%.[Ff]
 	$(FC_PAR) $(F77_FLAGS) -I$(INC_MECH) $(SUBSTS) $(FC_FLAG_MOD)$(DIR_INSTL)/bld/ICON/mech_conv/$(DIR_ModMech)/mod -c $< -o $@
@@ -238,15 +243,16 @@ $(DIR_INSTL)/bld/ICON/mech_conv/$(DIR_ModMech)/%.o: $(DIR_SRC)/ICON/mech_conv/$(
 ########
 
 $(DIR_INSTL)/bin/BCON/bcon: $(OBJ_BCON_driver) $(OBJ_BCON_input) $(OBJ_BCON_mech_conv)
-	$(FC_PAR) $(LINK_FLAGS) $^ -L$(DIR_IOAPI)/lib -lioapi -L$(DIR_NETCDF)/lib $(LIB_NETCDF) -o $@
+	$(FC_PAR) $(LINK_FLAGS) $^ -L$(DIR_IOAPI_LIB)   -lioapi -L$(DIR_NETCDF)/lib $(LIB_NETCDF) -o $@
+	##$(FC_PAR) $(LINK_FLAGS) $^ -L$(DIR_IOAPI)/lib -lioapi -L$(DIR_NETCDF)/lib $(LIB_NETCDF) -o $@
 
 $(DIR_INSTL)/bld/BCON/driver/bcon/%.o: $(DIR_SRC)/BCON/driver/bcon/%.[Ff]
+	$(FC_PAR) $(F77_FLAGS) -I$(DIR_IOAPI_SRC)             -I$(INC_MECH) -I$(INC_TRAC) -I$(DIR_SRC)/BCON/icl/icl $(SUBSTS) $(FC_FLAG_MOD)$(DIR_INSTL)/bld/BCON/driver/bcon/mod -c $< -o $@
 	##$(FC_PAR) $(F77_FLAGS) -I$(DIR_IOAPI)/fixed_src_f77 -I$(INC_MECH) -I$(INC_TRAC) -I$(DIR_SRC)/BCON/icl/icl $(SUBSTS) $(FC_FLAG_MOD)$(DIR_INSTL)/bld/BCON/driver/bcon/mod -c $< -o $@
-	$(FC_PAR) $(F77_FLAGS) -I$(DIR_IOAPI)/fixed_src -I$(INC_MECH) -I$(INC_TRAC) -I$(DIR_SRC)/BCON/icl/icl $(SUBSTS) $(FC_FLAG_MOD)$(DIR_INSTL)/bld/BCON/driver/bcon/mod -c $< -o $@
 
 $(DIR_INSTL)/bld/BCON/input/$(ModInpt)/%.o: $(DIR_SRC)/BCON/input/$(ModInpt)/%.[Ff]
+	$(FC_PAR) $(F77_FLAGS) -I$(DIR_IOAPI_SRC)             -I$(INC_MECH) -I$(INC_TRAC) -I$(DIR_SRC)/BCON/icl/icl -I$(DIR_INSTL)/bld/BCON/driver/bcon/mod $(SUBSTS) $(FC_FLAG_MOD)$(DIR_INSTL)/bld/BCON/input/$(ModInpt)/mod -c $< -o $@
 	##$(FC_PAR) $(F77_FLAGS) -I$(DIR_IOAPI)/fixed_src_f77 -I$(INC_MECH) -I$(INC_TRAC) -I$(DIR_SRC)/BCON/icl/icl -I$(DIR_INSTL)/bld/BCON/driver/bcon/mod $(SUBSTS) $(FC_FLAG_MOD)$(DIR_INSTL)/bld/BCON/input/$(ModInpt)/mod -c $< -o $@
-	$(FC_PAR) $(F77_FLAGS) -I$(DIR_IOAPI)/fixed_src -I$(INC_MECH) -I$(INC_TRAC) -I$(DIR_SRC)/BCON/icl/icl -I$(DIR_INSTL)/bld/BCON/driver/bcon/mod $(SUBSTS) $(FC_FLAG_MOD)$(DIR_INSTL)/bld/BCON/input/$(ModInpt)/mod -c $< -o $@
 
 $(DIR_INSTL)/bld/BCON/mech_conv/$(DIR_ModMech)/%.o: $(DIR_SRC)/BCON/mech_conv/$(DIR_ModMech)/%.[Ff]
 	$(FC_PAR) $(F77_FLAGS) -I$(INC_MECH) $(SUBSTS) $(FC_FLAG_MOD)$(DIR_INSTL)/bld/BCON/mech_conv/$(DIR_ModMech)/mod -c $< -o $@
@@ -255,9 +261,10 @@ $(DIR_INSTL)/bld/BCON/mech_conv/$(DIR_ModMech)/%.o: $(DIR_SRC)/BCON/mech_conv/$(
 # CCTM #
 ########
 
-LIBS=$(LIB_PARIO) -L$(DIR_INSTL)/lib/STENEX/ -lstenex_$(STENEX_POPT) -L$(DIR_IOAPI)/lib -lioapi -L$(DIR_NETCDF)/lib $(LIB_NETCDF) -L$(DIR_MPI)/lib -lmpi
+LIBS=$(LIB_PARIO) -L$(DIR_INSTL)/lib/STENEX/ -lstenex_$(STENEX_POPT) -L$(DIR_IOAPI_LIB) -lioapi -L$(DIR_NETCDF)/lib $(LIB_NETCDF) -L$(DIR_MPI)/lib -lmpi
+##LIBS=$(LIB_PARIO) -L$(DIR_INSTL)/lib/STENEX/ -lstenex_$(STENEX_POPT) -L$(DIR_IOAPI)/lib -lioapi -L$(DIR_NETCDF)/lib $(LIB_NETCDF) -L$(DIR_MPI)/lib -lmpi
 ##F_FLAGS_ADD=-I$(DIR_MPI)/include -I$(INC_CONST) -I$(INC_FILES) -I$(INC_MECH) -I$(INC_TRAC) -I$(INC_PAR) -I$(INC_EMCTRL) -I$(DIR_INSTL)/bld/CCTM/adjoint/chem_$(ModAdjChem)/mod -I$(DIR_INSTL)/bld/CCTM/adjutil/mod -I$(DIR_INSTL)/bld/CCTM/driver/$(DIR_ModDriver)/mod -I$(DIR_INSTL)/bld/CCTM/vdiff/$(ModVdiff)/mod -I$(DIR_INSTL)/bld/STENEX/$(STENEX_POPT)/mod -I$(DIR_SRC)/ICL/procan/$(PAOpt) -I$(DIR_IOAPI)/fixed_src_f77 $(PAR_GOODIES) $(SUBSTS) $(SUBST_STENEX_POPT)
-F_FLAGS_ADD=-I$(DIR_MPI)/include -I$(INC_CONST) -I$(INC_FILES) -I$(INC_MECH) -I$(INC_TRAC) -I$(INC_PAR) -I$(INC_EMCTRL) -I$(DIR_INSTL)/bld/CCTM/adjoint/chem_$(ModAdjChem)/mod -I$(DIR_INSTL)/bld/CCTM/adjutil/mod -I$(DIR_INSTL)/bld/CCTM/driver/$(DIR_ModDriver)/mod -I$(DIR_INSTL)/bld/CCTM/vdiff/$(ModVdiff)/mod -I$(DIR_INSTL)/bld/STENEX/$(STENEX_POPT)/mod -I$(DIR_SRC)/ICL/procan/$(PAOpt) -I$(DIR_IOAPI)/fixed_src $(PAR_GOODIES) $(SUBSTS) $(SUBST_STENEX_POPT)
+F_FLAGS_ADD=-I$(DIR_MPI)/include -I$(INC_CONST) -I$(INC_FILES) -I$(INC_MECH) -I$(INC_TRAC) -I$(INC_PAR) -I$(INC_EMCTRL) -I$(DIR_INSTL)/bld/CCTM/adjoint/chem_$(ModAdjChem)/mod -I$(DIR_INSTL)/bld/CCTM/adjutil/mod -I$(DIR_INSTL)/bld/CCTM/driver/$(DIR_ModDriver)/mod -I$(DIR_INSTL)/bld/CCTM/vdiff/$(ModVdiff)/mod -I$(DIR_INSTL)/bld/STENEX/$(STENEX_POPT)/mod -I$(DIR_SRC)/ICL/procan/$(PAOpt) -I$(DIR_IOAPI_SRC) $(PAR_GOODIES) $(SUBSTS) $(SUBST_STENEX_POPT)
 # There are two options for the include file for PROCAN. Not sure what the best is
 #find ../repo/src/ -name PA_CTL.EXT
 #../repo/src/PROCAN/icl/icl_noop/PA_CTL.EXT
@@ -338,8 +345,9 @@ $(DIR_INSTL)/bld/CCTM/adjutil/%.o: $(DIR_SRC)/CCTM/adjutil/%.[Ff]
 ###########
 
 $(DIR_INSTL)/bin/ADJPOST/adjpost: $(OBJ_ADJPOST)
-	$(FC_PAR) $(LINK_FLAGS) $^ -L$(DIR_IOAPI)/lib -lioapi -L$(DIR_NETCDF)/lib $(LIB_NETCDF) -o $@
+	$(FC_PAR) $(LINK_FLAGS) $^ -L$(DIR_IOAPI_LIB)   -lioapi -L$(DIR_NETCDF)/lib $(LIB_NETCDF) -o $@
+	##$(FC_PAR) $(LINK_FLAGS) $^ -L$(DIR_IOAPI)/lib -lioapi -L$(DIR_NETCDF)/lib $(LIB_NETCDF) -o $@
 
 $(DIR_INSTL)/bld/ADJPOST/%.o: $(DIR_SRC)/ADJPOST/%.[Ff]
+	$(FC_PAR) $(F77_FLAGS) -I$(DIR_IOAPI_SRC)             $(SUBSTS) $(FC_FLAG_MOD)$(DIR_INSTL)/bld/ADJPOST/mod -c $< -o $@
 	##$(FC_PAR) $(F77_FLAGS) -I$(DIR_IOAPI)/fixed_src_f77 $(SUBSTS) $(FC_FLAG_MOD)$(DIR_INSTL)/bld/ADJPOST/mod -c $< -o $@
-	$(FC_PAR) $(F77_FLAGS) -I$(DIR_IOAPI)/fixed_src $(SUBSTS) $(FC_FLAG_MOD)$(DIR_INSTL)/bld/ADJPOST/mod -c $< -o $@

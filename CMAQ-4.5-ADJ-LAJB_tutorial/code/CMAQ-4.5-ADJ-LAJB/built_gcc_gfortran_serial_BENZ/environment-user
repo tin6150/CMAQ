@@ -37,10 +37,9 @@ export DIR_REPO=$SRC_BASE/Downloads/CMAQ/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.
 export DIR_INSTL=$DIR_REPO/built_gcc_gfortran_serial_BENZ
 
 ##export DIR_IOAPI=/gpanda/ljin/Shared/CMAQ-4.5-ADJ-LAJB_tutorial/code/IOAPI-3.0/built_nocpl_gcc_gfortran_s
-export DIR_IOAPI=$SRC_BASE/Downloads/CMAQ/Api/ioapi/
-##export DIR_IOAPI=/opt/CMAS5.2.1/rel/Linux2_x86_64gfort/
-## actually makefile will compile IOAPI, so no need for the compiled version dir.
-## but look for a fixed_src dir (and exist in my code tree)
+##export DIR_IOAPI=$SRC_BASE/Downloads/CMAQ/Api/ioapi/
+export DIR_IOAPI_LIB=/opt/CMAS5.2.1/rel/Linux2_x86_64gfort           ## loc for compiled file of libioapi.a 
+export DIR_IOAPI_SRC=$SRC_BASE/Downloads/CMAQ/Api/ioapi/fixed_src    ## loc for source code, makefile originally looked for subdir "fixed_src_f77"
 
 
 ##export DIR_NETCDF=/gpanda/software/sl-6.x86_64/modules/netcdf/4.2.1.1

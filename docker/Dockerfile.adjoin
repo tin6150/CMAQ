@@ -3,10 +3,15 @@
 # based on Dockerfile.cmaq
 # depends on a cascade of 2 other containers
  
+#### there is probably no point for this dockerfile/container
+#### need to compille cmaq, ioapi first
+#### so just install adjoin as part of the main Dockerfile[.cmaq]
 
-##FROM tin6150/lib4cmaq:latest
-FROM tin6150/cmaq:latest
+
+FROM tin6150/lib4cmaq:latest
+##FROM tin6150/cmaq:latest      ## actually, no point to have it based on cmaq container if adjoin and cmaq both need to be compiled.  
 MAINTAINER Tin
+
 
 #RUN  echo "Building CMAQ... this isn't likely working yet" 
 
@@ -37,7 +42,8 @@ RUN  cd / \
   && echo  "----"     >> _TOP_DIR_OF_CONTAINER_  \
   && TZ=PST8PDT date  >> _TOP_DIR_OF_CONTAINER_  \
   && echo  "Dockerfile.cmaq_adjoin 2019.0814.2218 (setenv fix, add myFC, compilerString)"  >> _TOP_DIR_OF_CONTAINER_   \
-  && echo  "Dockerfile.cmaq_adjoin 2019.0907.1900+ (added adjoin code)"  >> _TOP_DIR_OF_CONTAINER_  
+  && echo  "Dockerfile.cmaq_adjoin 2019.0907.1900+ (added adjoin code)"  >> _TOP_DIR_OF_CONTAINER_  \
+  && echo  "Dockerfile.cmaq_adjoin 2019.0913.1400+ back to be a version NOT dependent on Dockerfile[.cmaq]"  >> _TOP_DIR_OF_CONTAINER_  
 
 
 

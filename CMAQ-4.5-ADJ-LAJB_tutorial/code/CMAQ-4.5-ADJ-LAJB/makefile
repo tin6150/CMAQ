@@ -16,6 +16,12 @@
 #
 # Makefile for CMAQ v4.5-ADJ.
 
+#### Lucas documentation says to 
+#### LINK this makefile in each of the target such as *BENZ
+#### so will start replacing makefile with sym link as I work on them.  
+#### first one is built_gcc_gfortran_serial_BENZ
+#### -Tin 2019.0913
+
 FORCE:
 
 all: dir pario stenex jproc icon bcon cctm

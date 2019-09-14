@@ -35,8 +35,14 @@ echo "In environment-user setup, SRC_BASE is set to $SRC_BASE"
 ##export DIR_REPO=/gpanda/ljin/Shared/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB
 export DIR_REPO=$SRC_BASE/Downloads/CMAQ/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB     # expect /Downloads/CMAQ/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB
 export DIR_INSTL=$DIR_REPO/built_gcc_gfortran_serial_BENZ
+
 ##export DIR_IOAPI=/gpanda/ljin/Shared/CMAQ-4.5-ADJ-LAJB_tutorial/code/IOAPI-3.0/built_nocpl_gcc_gfortran_s
 export DIR_IOAPI=$SRC_BASE/Downloads/CMAQ/Api/ioapi/
+##export DIR_IOAPI=/opt/CMAS5.2.1/rel/Linux2_x86_64gfort/
+## actually makefile will compile IOAPI, so no need for the compiled version dir.
+## but look for a fixed_src dir (and exist in my code tree)
+
+
 ##export DIR_NETCDF=/gpanda/software/sl-6.x86_64/modules/netcdf/4.2.1.1
 export DIR_NETCDF=/usr/local/lib
 ##export DIR_MPI=/gpanda/software/sl-6.x86_64/modules/openmpi/1.6.5

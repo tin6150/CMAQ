@@ -150,15 +150,15 @@ dir:
 	mkdir -vp $(DIR_INSTL)/bld/ADJPOST/mod
 
 clean:
-	ifeq ( $(DIR_INSTL), '' )
-		@echo "DIR_INSTL not defined, would remove /lib and /bin, exiting"
-	else ifeq ( $(DIR_INSTL), '/' )
-		@echo "DIR_INSTL is /, would remove /lib and /bin, exiting"
-	else 
-		rm -rf $(DIR_INSTL)/bld
-		rm -rf $(DIR_INSTL)/lib
-		rm -rf $(DIR_INSTL)/bin
-	endif
+ifeq ( $(DIR_INSTL),)
+	@echo "DIR_INSTL not defined, would remove /lib and /bin, exiting"
+else ifeq ( $(DIR_INSTL), '/' )
+	@echo "DIR_INSTL is /, would remove /lib and /bin, exiting"
+else 
+	rm -rf $(DIR_INSTL)/bld
+	rm -rf $(DIR_INSTL)/lib
+	rm -rf $(DIR_INSTL)/bin
+endif
 
 ###############
 # GIT_VERBOSE #

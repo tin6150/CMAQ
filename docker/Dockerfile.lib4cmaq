@@ -35,8 +35,8 @@ RUN  mkdir -p Downloads &&  cd Downloads ;\
      ## && rm -rf openmpi-2.1.6.tar.gz ;\
      cd .. ;\
      #LD_LIBRARY_PATH dont seems to be set at all in csh.login, it is a bit risky to do this but it works:  
-     echo 'setenv LD_LIBRARY_PATH "/usr/lib:/opt/openmpi/2.1.6/lib"'           >> /etc/csh.login ;\
-     echo 'set path = ( ${path:q} /opt/openmpi/2.1.6/bin )'                    >> /etc/csh.login ;\
+     echo 'setenv LD_LIBRARY_PATH "/usr/lib:/opt/openmpi/2.1.6/lib"'           >> /etc/csh.cshrc ;\
+     echo 'set path = ( ${path:q} /opt/openmpi/2.1.6/bin )'                    >> /etc/csh.cshrc ;\
      echo 'export PATH="${PATH}:/opt/openmpi/2.1.6/bin"'                       >> /etc/bashrc    ;\
      echo 'export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/opt/openmpi/2.1.6/lib"' >> /etc/bashrc    ;\
      # seeding the PATH for subsequent compile to be able to use mpicc
@@ -78,9 +78,9 @@ RUN  mkdir -p Downloads &&  cd Downloads; \
      cd .. ;\
      # setting LD_LIBRARY_PATH...  in csh need work to test if var has been defined
      # openmpi above had seeded it, so here just expand on it.  csh is so annoying!
-     #-echo 'setenv LD_LIBRARY_PATH "/usr/lib:/usr/local/lib"'           >> /etc/csh.login ;\
-     echo 'setenv LD_LIBRARY_PATH "${LD_LIBRARY_PATH:q}:/usr/local/lib"' >> /etc/csh.login ;\
-     echo 'set path = ( ${path:q} /usr/local/bin )'                      >> /etc/csh.login ;\
+     #-echo 'setenv LD_LIBRARY_PATH "/usr/lib:/usr/local/lib"'           >> /etc/csh.cshrc ;\
+     echo 'setenv LD_LIBRARY_PATH "${LD_LIBRARY_PATH:q}:/usr/local/lib"' >> /etc/csh.cshrc ;\
+     echo 'set path = ( ${path:q} /usr/local/bin )'                      >> /etc/csh.cshrc ;\
      echo 'export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib"'   >> /etc/bashrc    ;\
      echo 'export PATH=${PATH}:/usr/local/bin'                           >> /etc/bashrc    ;\
      echo '========================================================'                             ;\
@@ -156,7 +156,7 @@ RUN  cd / \
   && echo "----"               >> _TOP_DIR_OF_CONTAINER_  \
   && TZ="PST8PDT" date         >> _TOP_DIR_OF_CONTAINER_  \
   && echo "export TZ=PST8PDT"  >> /etc/bashrc             \
-  && echo "setenv TZ PST8PDT"  >> /etc/csh.login          \
+  && echo "setenv TZ PST8PDT"  >> /etc/csh.cshrc          \
   && echo "Dockerfile.lib4cmaq 2019.0915.14+ PATH/LD_LIBRARY_PATH fiddle for openmpi"  >> _TOP_DIR_OF_CONTAINER_   \
   && echo "Dockerfile.lib4cmaq 2019.0915.14+ (previously did) CC=/full/path/to/mpicc"  >> _TOP_DIR_OF_CONTAINER_   \
   && echo "Dockerfile.lib4cmaq 2019.0915.15+ PATH/LD_LIBRARY_PATH to /etc/bashrc"      >> _TOP_DIR_OF_CONTAINER_   \

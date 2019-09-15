@@ -102,17 +102,29 @@ being_setup_ioapi:
 		echo "    **>> ========================================== <<**"
 		## docker build problem in here, stuck in m3tools after the cp ... :(   FIXME ++
 		setenv 		BASEDIR 	${SRCBASE}/Api 			# source dir, eg /Downloads/CMAQ/Api
-		mkdir -p 	$BASEDIR/$BIN 						# BIN is now Linux2_x86_64gfort
+		##mkdir -p 	$BASEDIR/$BIN 						# BIN is now Linux2_x86_64gfort
+		mkdir -p 	$BASEDIR/ioapi/$BIN 				# BIN is now Linux2_x86_64gfort
 
-		cd $BASEDIR     #cd into .../Api
+		# https://github.com/lizadams/CMAQ/blob/v53_UG/DOCS/Users_Guide/Tutorials/CMAQ_Build_Using_Module_Load_GNU.md
+		# many places says to link the netcdf lib, so doing it
+		cd $BASEDIR/ioapi/$BIN
+		ln -s /usr/local/lib/libnetcdff.a .  # netcdf-Fortran
+		ln -s /usr/local/lib/libnetcdf.a  .  # netcdf-C
+		cd $BASEDIR/ioapi
+		make 2>&1 | tee make.log
+
+		# not seeing libioapi.a yet...
+		
+
+		#cd $BASEDIR     #cd into .../Api
 		## just to be obvious that I have done some edits and using them in the build
 		## copy file first...
-		/bin/cp -p Makefile.centos7gcc Makefile       # some edit done, now using gcc-gfortran 
-		setenv INSTDIR ${DSTBASE}/lib/ioapi_3         # /opt/CMAS5.2.1/rel/lib/ioapi_3 ## nothing installed there anyway?!
-		mkdir -p $INSTDIR                             # install destination
+		#/bin/cp -p Makefile.centos7gcc Makefile       # some edit done, now using gcc-gfortran 
+		#setenv INSTDIR ${DSTBASE}/lib/ioapi_3         # /opt/CMAS5.2.1/rel/lib/ioapi_3 ## nothing installed there anyway?!
+		#mkdir -p $INSTDIR                             # install destination
 		#++ not sure if below HOME=... syntax still work in csh
-		make HOME=${BASEDIR}/ioapi           |& tee make.log              # |& works inside docker, `` below was cause of hang
-		make HOME=${BASEDIR}/ioapi  install  |& tee make.install.log
+		#make HOME=${BASEDIR}/ioapi           |& tee make.log              # |& works inside docker, `` below was cause of hang
+		#make HOME=${BASEDIR}/ioapi  install  |& tee make.install.log
 		# in 3.1? only 1 file: /opt/CMAS4.5.1/rel/lib/ioapi_3/libioapi.a
 		# in 3.2, seems to include m3tools 
 		# /opt/CMAS5.2.1/rel/Linux2_x86_64gfort/libioapi.a and m3* 

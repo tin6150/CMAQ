@@ -40,10 +40,11 @@ export DIR_INSTL=$DIR_REPO/built_gcc_gfortran_serial_BENZ
 ##export DIR_IOAPI=$SRC_BASE/Downloads/CMAQ/Api/ioapi/
 export DIR_IOAPI_LIB=/opt/CMAS5.2.1/rel/Linux2_x86_64gfort           ## loc for compiled file of libioapi.a 
 export DIR_IOAPI_SRC=$SRC_BASE/Downloads/CMAQ/Api/ioapi/fixed_src    ## loc for source code, makefile originally looked for subdir "fixed_src_f77"
+export LD_LIBRARY_PATH=${DIR_IOAPI_LIB}:${LD_LIBRARY_PATH}   ## auch no... .a not meant to be in LD_LIBRARY_PATH ... so still no good
 
 
 ##export DIR_NETCDF=/gpanda/software/sl-6.x86_64/modules/netcdf/4.2.1.1
-export DIR_NETCDF=/usr/local/lib
+export DIR_NETCDF=/usr/local
 ##export DIR_MPI=/gpanda/software/sl-6.x86_64/modules/openmpi/1.6.5
 ##--export DIR_MPI=/usr/lib64/openmpi/bin
 ## export DIR_MPI=/usr/lib64/openmpi:/usr/include/openmpi-x86_64/  # cant define 2 with colon separation  :(

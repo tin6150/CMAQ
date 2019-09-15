@@ -6,6 +6,7 @@
 ## largely follow instructions in CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB/documentation/notes-on-building-the-code.txt
 
 echo "starting setup_adjoin.sh"
+export TZ="PST8PDT"
 date
 
 echo '$HOME is set to: ' $HOME	# hmm... actually docker build , this is still /root.  not sure where got feeling it was / before...
@@ -20,12 +21,12 @@ make pario      2>&1 |  tee make.pario.log
 
 ## not sure if there rest need to cd to a diff folder... 
 
-make stenex 	2>&1 | tee make.mario.log
-make jproc 		2>&1 | tee make.jproc.log
+make stenex 	2>&1 | tee make.stenex.log
+make jproc 		2>&1 | tee make.jproc.log   ## ++ can't find -lioapi
 make icon  		2>&1 | tee make.icon.log
 make bcon		2>&1 | tee make.bcon.log
-make cctm 		2>&1 | tee make.bcon.log
-make adjpost 	2>&1 | tee make.bcon.log
+make cctm 		2>&1 | tee make.cctm.log
+make adjpost 	2>&1 | tee make.adjpost.log
 
 
 echo $? | tee setup_adjoin.exitCode

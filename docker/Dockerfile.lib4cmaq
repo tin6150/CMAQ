@@ -85,10 +85,9 @@ RUN  mkdir -p Downloads && cd Downloads; \
         #export LD_LIBRARY_PATH=/opt/lib:$LD_LIBRARY_PATH
         #./configure --prefix=/opt | tee configure.log
      export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH ;\
-     #./configure --prefix=/usr/local  ;\
      #./configure --prefix=/usr/local  CC=mpicc LDFLAGS=-L/usr/local/lib CFLAGS=-I/usr/local/include ;\
-     ./configure --prefix=/usr/local   CC=cc    LDFLAGS=-L/usr/local/lib CFLAGS=-I/usr/local/include ;\
-     ./configure CC=cc    LDFLAGS=-L/usr/local/lib CFLAGS=-I/usr/local/include --prefix=/usr/local   ;\
+	   ## https://github.com/lizadams/CMAQ/blob/v53_UG/DOCS/Users_Guide/Tutorials/CMAQ_Build_Using_Module_Load_GNU.md # bin seems same
+     ./configure FC=gfortran CC=cc LDFLAGS=-L/usr/local/lib CFLAGS=-I/usr/local/include CPPFLAGS=-I/usr/local/include --prefix=/usr/local   ;\
      # some strange thing about the Makefile not able to do `make install` till after a `make`; thus 2 step process
      make         2>&1 | tee make.log ;\
      make install 2>&1 | tee make.install.log ;\
@@ -104,7 +103,7 @@ RUN  cd / \
   && touch    _TOP_DIR_OF_CONTAINER_  \
   && echo "----"  >> _TOP_DIR_OF_CONTAINER_  \
   && TZ="PST8PDT" date  >> _TOP_DIR_OF_CONTAINER_  \
-  && echo  "Dockerfile.lib4cmaq 2019.0909.0800 compile openmpi"  >> _TOP_DIR_OF_CONTAINER_  
+  && echo  "Dockerfile.lib4cmaq 2019.0914.1700 compile openmpi, slightly changed configure for netcdf-fortran"  >> _TOP_DIR_OF_CONTAINER_  
 
 #ENTRYPOINT [ "/bin/cat", "/_TOP_DIR_OF_CONTAINER_" ]
 # not defining an ENTRYPOINT will default to a shell inside the container

@@ -8,7 +8,8 @@ RUN
 
 ::
 
-	docker run -it -v $HOME:/home/tin tin6150/cmaq
+	docker run  -it -v $HOME:/home/tin tin6150/cmaq
+	docker exec -it uranus_hertz bash                 # additional terminal into existing running container
 
 
 BUILD

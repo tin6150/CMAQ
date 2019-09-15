@@ -16,6 +16,7 @@ RUN echo "begining docker build process at " ;\
     mkdir -p Downloads &&  cd Downloads ;\
     git clone --quiet -b tin_521_docker https://tin6150@github.com/tin6150/CMAQ.git ;\
     cd CMAQ ;\
+    git pull --quiet ;\
     git log > cmaq.git.log ;\
     #export BIN='Linux2_x86_64gfort'     ;\
     # better to write the setup.sh script to compile cmaq, so that it can be used on actual host or singularity
@@ -32,6 +33,7 @@ RUN echo "begining docker build process at " ;\
 RUN  cd / \
   && touch    _TOP_DIR_OF_CONTAINER_  \
   && TZ=PST8PDT date  >> _TOP_DIR_OF_CONTAINER_  \
+  && echo "export TZ=PST8PDT"  >> /etc/profile   \
   && echo  "Dockerfile.cmaq 2019.0814.2218 (setenv fix, add myFC, compilerString)"  >> _TOP_DIR_OF_CONTAINER_   \
   && echo  "Dockerfile.cmaq 2019.0914.2200+ (updated adjoin code; make for ioapi)"  >> _TOP_DIR_OF_CONTAINER_   \
   && echo  "(autobuild for other Dockerfile.* disabled)"            >> _TOP_DIR_OF_CONTAINER_  

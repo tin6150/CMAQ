@@ -29,7 +29,7 @@ RUN echo "begining docker build process at " ;\
     echo $? > _CMAQ_BUILD_END_ ;\
 
     # Adding a bash script to compile Lucas Adjoin models
-		bash ./setup_adjoin.sh  2>&1 | tee setup.adjoin.log.rst ;\
+    bash ./setup_adjoin.sh  2>&1 | tee setup.adjoin.log.rst ;\
     echo $? > _CMAQ_ADJOIN_BUILD_END_
 
 

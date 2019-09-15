@@ -22,7 +22,11 @@ make pario      2>&1 |  tee make.pario.log
 ## not sure if there rest need to cd to a diff folder... 
 
 make stenex 	2>&1 | tee make.stenex.log
-make jproc 		2>&1 | tee make.jproc.log   ## ++ can't find -lioapi
+make jproc 		2>&1 | tee make.jproc.log   
+## error above.  even after using mpic++ as compiler.   ++
+## wratt3.F90:(.text+0xe0b): undefined reference to `GOMP_critical_name_end'
+## enable ParOpt in environment-user next 
+
 make icon  		2>&1 | tee make.icon.log
 make bcon		2>&1 | tee make.bcon.log
 make cctm 		2>&1 | tee make.cctm.log

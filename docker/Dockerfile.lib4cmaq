@@ -159,7 +159,7 @@ RUN  cd / \
   && echo "setenv TZ PST8PDT"  >> /etc/csh.cshrc          \
   && echo "Dockerfile.lib4cmaq 2019.0915.14+ PATH/LD_LIBRARY_PATH fiddle for openmpi"  >> _TOP_DIR_OF_CONTAINER_   \
   && echo "Dockerfile.lib4cmaq 2019.0915.14+ (previously did) CC=/full/path/to/mpicc"  >> _TOP_DIR_OF_CONTAINER_   \
-  && echo "Dockerfile.lib4cmaq 2019.0915.15+ PATH/LD_LIBRARY_PATH to /etc/bashrc"      >> _TOP_DIR_OF_CONTAINER_   \
+  && echo "Dockerfile.lib4cmaq 2019.0915.1550+ PATH/LD_LIBRARY_PATH to /etc/bashrc,csh.cshrc" >> _TOP_DIR_OF_CONTAINER_   \
   && echo $?
 
 # next should work even if invoke other shell like ksh or fish when avail :)

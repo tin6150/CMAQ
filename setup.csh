@@ -58,14 +58,16 @@
 	echo "--------"
 
 	##setenv compiler gcc # pgi
-	setenv CC       "cc" 
+	#setenv CC       "cc" 
+	setenv CC       "/opt/openmpi/2.1.6/bin/mpicc" 
 	setenv CCFLAGS  "-g"                       # not mpicc or ortecc ? (using that tutorial says for now)
 	setenv CPPFLAGS '-DNDEBUG -DgFortran'
 	setenv FC 		gfortran 
 	setenv myFC 	/usr/bin/gfortran # seems to be needed by bldit_bcon.csh:270
 	setenv FCFLAGS 	"-g"
 	setenv FFLAGS 	'-g -w'
-	setenv CXX 		'g++'
+	#setenv CXX 		'g++'
+	setenv CXX 		'/opt/openmpi/2.1.6/bin/mpic++'
 	setenv compilerString  gcc  # needed by run_cctm.csh, but didn't think i need to set it myself in here... but hopefully solve complain.
 
 	#setenv SRCBASE /local/home/tin/tin-gh    # as appropriate 

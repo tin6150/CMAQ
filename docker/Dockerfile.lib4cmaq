@@ -37,8 +37,8 @@ RUN  mkdir -p Downloads &&  cd Downloads ;\
      #LD_LIBRARY_PATH dont seems to be set at all in csh.login, it is a bit risky to do this but it works:  
      echo 'setenv LD_LIBRARY_PATH "/usr/lib:/opt/openmpi/2.1.6/lib"'           >> /etc/csh.login ;\
      echo 'set path = ( ${path:q} /opt/openmpi/2.1.6/bin )'                    >> /etc/csh.login ;\
-     echo 'export PATH="${PATH}:/opt/openmpi/2.1.6/bin"'                       >> /etc/profile   ;\
-     echo 'export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/opt/openmpi/2.1.6/lib"' >> /etc/profile   ;\
+     echo 'export PATH="${PATH}:/opt/openmpi/2.1.6/bin"'                       >> /etc/bashrc    ;\
+     echo 'export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/opt/openmpi/2.1.6/lib"' >> /etc/bashrc    ;\
      # seeding the PATH for subsequent compile to be able to use mpicc
      export PATH="${PATH}:/opt/openmpi/2.1.6/bin"                                                ;\
      export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/opt/openmpi/2.1.6/lib"                          ;\
@@ -48,7 +48,7 @@ RUN  mkdir -p Downloads &&  cd Downloads ;\
      echo '    OpenMPI make finished                               '                             ;\
      echo '========================================================'                             ;\
      echo '========================================================'                             ;\
-		 echo 'last line of RUN block in Dockerbuild without continuation :)'
+     echo 'last line of RUN block in Dockerbuild without continuation :)'
      # careful not to end above with \ or the dockerfile RUN command would be treated by the shell and get error
 
 # could probably set PATH using ENV, but decided to update /etc/csh.login instead.
@@ -62,10 +62,8 @@ RUN  mkdir -p Downloads &&  cd Downloads; \
      wget --quiet https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.8/hdf5-1.8.21/src/hdf5-1.8.21.tar.gz; \
      tar xfz hdf5-1.8.21.tar.gz; \
      cd hdf5-1.8.21; \
-		 #export  CC=cc         ;\
-		 # didn't work last time, no binary procuded.  cuz mpicc not in PATH still?
-		 #export  CC=mpicc       ;\ 
-		 export  CC=/opt/openmpi/2.1.6/bin/mpicc           ;\ 
+     #export  CC=cc         ;\
+     export  CC=/opt/openmpi/2.1.6/bin/mpicc           ;\ 
      export  CCFLAGS="-g"   FC=gfortran FCFLAGS="-g"   ;\
      export   CFLAGS="-g"   ;\
      export CPPFLAGS="-g"   ;\
@@ -79,18 +77,18 @@ RUN  mkdir -p Downloads &&  cd Downloads; \
      ## rm -rf hdf5-1.8.21 hdf5-1.8.21.tar.gz ;\
      cd .. ;\
      # setting LD_LIBRARY_PATH...  in csh need work to test if var has been defined
-		 # openmpi above had seeded it, so here just expand on it.  csh is so annoying!
-		 #-echo 'setenv LD_LIBRARY_PATH "/usr/lib:/usr/local/lib"'           >> /etc/csh.login ;\
-		 echo 'setenv LD_LIBRARY_PATH "${LD_LIBRARY_PATH:q}:/usr/local/lib"' >> /etc/csh.login ;\
-		 echo 'set path = ( ${path:q} /usr/local/bin )'                      >> /etc/csh.login ;\
-		 echo 'export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib"'   >> /etc/profile   ;\
-		 echo 'export PATH=${PATH}:/usr/local/bin'                           >> /etc/profile   ;\
+     # openmpi above had seeded it, so here just expand on it.  csh is so annoying!
+     #-echo 'setenv LD_LIBRARY_PATH "/usr/lib:/usr/local/lib"'           >> /etc/csh.login ;\
+     echo 'setenv LD_LIBRARY_PATH "${LD_LIBRARY_PATH:q}:/usr/local/lib"' >> /etc/csh.login ;\
+     echo 'set path = ( ${path:q} /usr/local/bin )'                      >> /etc/csh.login ;\
+     echo 'export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib"'   >> /etc/bashrc    ;\
+     echo 'export PATH=${PATH}:/usr/local/bin'                           >> /etc/bashrc    ;\
      echo '========================================================'                             ;\
      echo '========================================================'                             ;\
      echo '    HDF5 make finished                                  '                             ;\
      echo '========================================================'                             ;\
      echo '========================================================'                             ;\
-		 echo 'last line of RUN block in Dockerbuild without continuation :)'
+     echo 'last line of RUN block in Dockerbuild without continuation :)'
      # careful not to end above with \ or the dockerfile RUN command would be treated by the shell and get error
 
 
@@ -100,10 +98,10 @@ RUN  mkdir -p Downloads && cd Downloads; \
      wget --quiet https://github.com/Unidata/netcdf-c/archive/v4.7.0.tar.gz ;\
      tar xfz v4.7.0.tar.gz ;\
      cd netcdf-c-4.7.0     ;\
-		 # didn't work last time, no binary procuded.  cuz mpicc not in PATH still?
-		 # could not use mpicc, err: configure: error: C compiler cannot create executables
-		 #export  CC=mpicc       ;\ 
-		 export CC=/opt/openmpi/2.1.6/bin/mpicc  ;\ 
+     # didn't work last time, no binary procuded.  cuz mpicc not in PATH still?
+     # could not use mpicc, err: configure: error: C compiler cannot create executables
+     #export  CC=mpicc       ;\ 
+     export CC=/opt/openmpi/2.1.6/bin/mpicc  ;\ 
      export CPPFLAGS='-DNDEBUG -DgFortran'   ;\
      #export FFLAGS='-O -w'   ;\
      export FFLAGS='-g -w'   ;\
@@ -134,7 +132,7 @@ RUN  mkdir -p Downloads && cd Downloads; \
         #./configure --prefix=/opt | tee configure.log
      export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH ;\
      #./configure --prefix=/usr/local  CC=mpicc LDFLAGS=-L/usr/local/lib CFLAGS=-I/usr/local/include ;\
-	   ## https://github.com/lizadams/CMAQ/blob/v53_UG/DOCS/Users_Guide/Tutorials/CMAQ_Build_Using_Module_Load_GNU.md # bin seems same
+     ## https://github.com/lizadams/CMAQ/blob/v53_UG/DOCS/Users_Guide/Tutorials/CMAQ_Build_Using_Module_Load_GNU.md # bin seems same
      ./configure FC=gfortran       LDFLAGS=-L/usr/local/lib CFLAGS=-I/usr/local/include CPPFLAGS=-I/usr/local/include --prefix=/usr/local   2>&1 | tee configure.out.log  ;\
      # some strange thing about the Makefile not able to do `make install` till after a `make`; thus 2 step process
      make         2>&1 | tee make.log ;\
@@ -149,7 +147,7 @@ RUN  mkdir -p Downloads && cd Downloads; \
      echo '    netcdf-fortran make finished                        '                             ;\
      echo '========================================================'                             ;\
      echo '========================================================'                             ;\
-		 echo 'last line of RUN block in Dockerbuild without continuation :)'
+     echo 'last line of RUN block in Dockerbuild without continuation :)'
      # careful not to end above with \ or the dockerfile RUN command would be treated by the shell and get error
 
 
@@ -157,9 +155,12 @@ RUN  cd / \
   && touch                        _TOP_DIR_OF_CONTAINER_  \
   && echo "----"               >> _TOP_DIR_OF_CONTAINER_  \
   && TZ="PST8PDT" date         >> _TOP_DIR_OF_CONTAINER_  \
-  && echo "export TZ=PST8PDT"  >> /etc/profile            \
+  && echo "export TZ=PST8PDT"  >> /etc/bashrc             \
   && echo "setenv TZ PST8PDT"  >> /etc/csh.login          \
-  && echo "Dockerfile.lib4cmaq 2019.0915.14+ PATH/LD_LIBRARY_PATH fiddle for openmpi"  >> _TOP_DIR_OF_CONTAINER_  
+  && echo "Dockerfile.lib4cmaq 2019.0915.14+ PATH/LD_LIBRARY_PATH fiddle for openmpi"  >> _TOP_DIR_OF_CONTAINER_   \
+  && echo "Dockerfile.lib4cmaq 2019.0915.14+ (previously did) CC=/full/path/to/mpicc"  >> _TOP_DIR_OF_CONTAINER_   \
+  && echo "Dockerfile.lib4cmaq 2019.0915.15+ PATH/LD_LIBRARY_PATH to /etc/bashrc"      >> _TOP_DIR_OF_CONTAINER_   \
+  && echo $?
 
 # next should work even if invoke other shell like ksh or fish when avail :)
 # but since no quoting, dont include comment at end of line

@@ -14,8 +14,12 @@ MAINTAINER Tin
 RUN echo "begining docker build process at " ;\
     date ;\
     mkdir -p Downloads &&  cd Downloads ;\
-    git clone --quiet -b tin_521_docker https://tin6150@github.com/tin6150/CMAQ.git ;\
+    #git clone -b ...; git pull; still does NOT always produce latest repo :(
+    #git clone --quiet -b tin_521_docker https://tin6150@github.com/tin6150/CMAQ.git ;\
+    git clone --quiet                   https://tin6150@github.com/tin6150/CMAQ.git ;\
     cd CMAQ ;\
+    git fetch --quiet ;\
+    git checkout tin_521_docker ;\
     git pull --quiet ;\
     git log > cmaq.git.log ;\
     #export BIN='Linux2_x86_64gfort'     ;\

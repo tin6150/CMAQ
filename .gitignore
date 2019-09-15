@@ -47,6 +47,7 @@ lib/
 #file unique to repository
 CTM_LOG*
 BLD*
+ERASE
 #*.log
 *_bak
 BLDMAKE*

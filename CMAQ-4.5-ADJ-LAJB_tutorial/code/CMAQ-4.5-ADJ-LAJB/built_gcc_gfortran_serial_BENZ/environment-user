@@ -31,6 +31,7 @@ echo "In environment-user setup, HOME is set to $HOME"  # actually, still as /ro
 SRC_BASE=/
 echo "In environment-user setup, SRC_BASE is set to $SRC_BASE"  
 
+export PATH=${PATH}:/opt/CMAS5.2.1/rel/lib/ioapi_3/Linux2_x86_64gfort/  # m3tools 
 
 ##export DIR_REPO=/gpanda/ljin/Shared/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB
 export DIR_REPO=$SRC_BASE/Downloads/CMAQ/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB     # expect /Downloads/CMAQ/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB
@@ -38,8 +39,9 @@ export DIR_INSTL=$DIR_REPO/built_gcc_gfortran_serial_BENZ
 
 ##export DIR_IOAPI=/gpanda/ljin/Shared/CMAQ-4.5-ADJ-LAJB_tutorial/code/IOAPI-3.0/built_nocpl_gcc_gfortran_s
 ##export DIR_IOAPI=$SRC_BASE/Downloads/CMAQ/Api/ioapi/
-export DIR_IOAPI_LIB=/opt/CMAS5.2.1/rel/Linux2_x86_64gfort           ## loc for compiled file of libioapi.a 
-export DIR_IOAPI_SRC=$SRC_BASE/Downloads/CMAQ/Api/ioapi/fixed_src    ## loc for source code, makefile originally looked for subdir "fixed_src_f77"
+#~export DIR_IOAPI_LIB=/opt/CMAS5.2.1/rel/Linux2_x86_64gfort           ## loc for compiled file of libioapi.a 
+export DIR_IOAPI_LIB=/opt/CMAS5.2.1/rel/lib/ioapi_3/Linux2_x86_64gfort ## loc for compiled file of libioapi.a 
+export DIR_IOAPI_SRC=$SRC_BASE/Downloads/CMAQ/Api/ioapi/fixed_src      ## loc for source code, makefile originally looked for subdir "fixed_src_f77"
 export LD_LIBRARY_PATH=${DIR_IOAPI_LIB}:${LD_LIBRARY_PATH}   ## auch no... .a not meant to be in LD_LIBRARY_PATH ... so still no good
 
 

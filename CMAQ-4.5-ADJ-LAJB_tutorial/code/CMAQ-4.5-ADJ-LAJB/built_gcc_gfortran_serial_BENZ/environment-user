@@ -16,13 +16,22 @@
 #
 # Author: Lucas A. J. Bastien
 
+export PATH="${PATH}:/opt/openmpi/2.1.6/bin"
+export PATH="${PATH}:/usr/local/bin"                                     # netcdf, hdf5
+export PATH="${PATH}:/opt/CMAS5.2.1/rel/lib/ioapi_3/Linux2_x86_64gfort"  # m3tools 
+
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/opt/openmpi/2.1.6/lib"
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib"               # netcdf
+
 export FC=gfortran
 export FC_FLAG_MOD="-J"
 export F77_FLAGS="-ffixed-line-length-none -fmax-errors=1 -cpp"
 export F90_FLAGS="-fmax-errors=1 -cpp"
 export FOPT_FLAGS="-O2"
 
-export CC=gcc
+##?? GOMP* undefined problem...  should this be changed to mpicc?   ++
+export CC=mpicc
+##export CC=gcc
 export C_FLAGS=""
 
 export LINK_FLAGS=""
@@ -31,7 +40,6 @@ echo "In environment-user setup, HOME is set to $HOME"  # actually, still as /ro
 SRC_BASE=/
 echo "In environment-user setup, SRC_BASE is set to $SRC_BASE"  
 
-export PATH=${PATH}:/opt/CMAS5.2.1/rel/lib/ioapi_3/Linux2_x86_64gfort/  # m3tools 
 
 ##export DIR_REPO=/gpanda/ljin/Shared/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB
 export DIR_REPO=$SRC_BASE/Downloads/CMAQ/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB     # expect /Downloads/CMAQ/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB

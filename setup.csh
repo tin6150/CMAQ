@@ -100,9 +100,8 @@ being_setup_ioapi:
 		echo "    **>> ========================================== <<**"
 		echo "    **>> start of setup_ioapi in setup.csh          <<**"
 		date
-		date > _make_ioapi_being_
+		date > _Make_ioapi_being_.log
 		echo "    **>> ========================================== <<**"
-		## docker build problem in here, stuck in m3tools after the cp ... :(   FIXME ++
 		setenv 		BASEDIR 	${SRCBASE}/Api 			# source dir, eg /Downloads/CMAQ/Api
 		##mkdir -p 	$BASEDIR/$BIN 						# BIN is now Linux2_x86_64gfort
 		mkdir -p 	$BASEDIR/ioapi/$BIN 				# BIN is now Linux2_x86_64gfort
@@ -137,18 +136,25 @@ being_setup_ioapi:
 		make               BIN=$BIN               INSTALL=$INSTDIR          |& tee make.log 
 		make               BIN=$BIN               INSTALL=$INSTDIR  install |& tee make.install.log 
 		# in 3.1? only 1 file: /opt/CMAS4.5.1/rel/lib/ioapi_3/libioapi.a
-		# in 3.2, seems to include m3tools 
-		# /opt/CMAS5.2.1/rel/Linux2_x86_64gfort/libioapi.a and m3* 
-		# /opt/CMAS5.2.1/rel/lib/ioapi_3/Linux2_x86_64gfort/libioapi.a
+		# in 3.2, make process above include m3tools 
+		# was       /opt/CMAS5.2.1/rel/Linux2_x86_64gfort/libioapi.a and m3* 
+		# f09819 to /opt/CMAS5.2.1/rel/lib/ioapi_3/Linux2_x86_64gfort/libioapi.a and m3*
 
-		echo $? >  _make_ioapi_end_
-		date    >> _make_ioapi_end_
+		echo $status | tee    _Make_ioapi_end_.log
+		date         | tee -a _Make_ioapi_end_.log  # the file is in Api (lower dir thatn _Make_ioapi_begin_.log)
 
 		cd ${SRCBASE}
 end_ioapi:
 #########################################
 #### } # end of former setup_ioapi() ####
 #########################################
+
+## make above (for ioapi and m3tools) maybe compiled okay now
+## cmaq build below seems to have error still
+## but adjoin may not need cmaq below?  it build cctm via its own makefile ?  
+## 2019.0915  at f09819
+
+## GOMP* undefined maybe not using mpi in makefile for adjoin...
 
 
 

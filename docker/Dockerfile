@@ -38,11 +38,17 @@ RUN  cd / \
   && touch    _TOP_DIR_OF_CONTAINER_  \
   && TZ=PST8PDT date  >> _TOP_DIR_OF_CONTAINER_  \
   && echo "export TZ=PST8PDT"  >> /etc/profile   \
+  && echo "setenv TZ PST8PDT"  >> /etc/csh.login \
   && echo  "Dockerfile.cmaq 2019.0814.2218 (setenv fix, add myFC, compilerString)"  >> _TOP_DIR_OF_CONTAINER_   \
   && echo  "Dockerfile.cmaq 2019.0914.2200+ (updated adjoin code; make for ioapi)"  >> _TOP_DIR_OF_CONTAINER_   \
   && echo  "(autobuild for other Dockerfile.* disabled)"            >> _TOP_DIR_OF_CONTAINER_  
 
-
+#- TZ also layer above, in Dockerfile.lib4cmaq.  They can eventually be removed from here. ++ 
+ENV TZ America/Los_Angeles  # this should work even if invoke other shell like ksh or fish when avail :)
+ENV TEST_DOCKER_ENV     this_env_will_be_avail_when_container_is_run_or_exec
+ENV TEST_DOCKER_ENV_2   Can_use_ADD_to_make_ENV_avail_in_build_process
+ENV TEST_DOCKER_ENV_REF https://vsupalov.com/docker-arg-env-variable-guide/#setting-env-values
+# but how to append, eg add to PATH?
 
 #ENTRYPOINT ["cat", "/Downloads/netcdf-fotran-4.4.5/_END_BUILD_NETCDF_"]
 #ENTRYPOINT ["cat", "/Downloads/CMAQ/_CMAQ_BUILD_END_"]

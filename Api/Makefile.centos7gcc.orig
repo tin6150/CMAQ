@@ -29,10 +29,6 @@
 #
 #    make BIN=Linux2_x86_64pg  CPLMODE=pncf INSTALL=/foo/bar
 #    
-## somehow make BIN=Linux2_x86_64gfort CPLMODE=nocpl INSTALL=/opt/CMAS5.2.1/rel/lib/ioapi_3
-## still leave BIN as blank, so forcing it
-BIN        = Linux2_x86_64gfort
-
 #.........................................................................
 #  Environment/Command-line Variables:
 #

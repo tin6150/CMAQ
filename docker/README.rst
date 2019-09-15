@@ -19,6 +19,9 @@ BUILD
 	docker build -t tin6150/os4cmaq   -f Dockerfile.os4cmaq   .  | tee Dockerfile.os4cmaq.log  && \
 	docker build -t tin6150/lib4cmaq  -f Dockerfile.lib4cmaq  .  | tee Dockerfile.lib4cmaq.log && \
 	docker build -t tin6150/cmaq      -f Dockerfile           .  | tee Dockerfile.log 
+	#docker build -t tin6150/adjoin    -f Dockerfile.adjoin    .  | tee Dockerfile.adjoin.log 
+
+	docker build -t bofh/cmaq         -f Dockerfile           .  | tee bofh.Dockerfile.log 
 
 
 

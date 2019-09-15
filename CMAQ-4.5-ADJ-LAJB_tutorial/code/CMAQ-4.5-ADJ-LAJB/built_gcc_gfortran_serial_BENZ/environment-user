@@ -69,6 +69,7 @@ export DIR_MPI=/opt/openmpi/2.1.6
 # installation, the FORTRAN library is in a separate file called netcdff)
 export LIB_NETCDF=-lnetcdff
 
+## so for *BENZ is serial and ParOpt is empty (ie serial), but then why was mpi include needed above?? 
 # If the variable ParOpt is defined (not matter what its value is, even empty),
 # then CCTM is compiled with parallel support.
 #export ParOpt=""

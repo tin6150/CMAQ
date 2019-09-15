@@ -40,7 +40,7 @@ RUN  cd / \
   && echo "export TZ=PST8PDT"  >> /etc/profile   \
   && echo "setenv TZ PST8PDT"  >> /etc/csh.login \
   && echo  "Dockerfile.cmaq 2019.0814.2218 (setenv fix, add myFC, compilerString)"  >> _TOP_DIR_OF_CONTAINER_   \
-  && echo  "Dockerfile.cmaq 2019.0914.2200+ (updated adjoin code; make for ioapi)"  >> _TOP_DIR_OF_CONTAINER_   \
+  && echo  "Dockerfile.cmaq 2019.0915.1350+ (using mpicc)"  >> _TOP_DIR_OF_CONTAINER_   \
   && echo  "(autobuild for other Dockerfile.* disabled)"            >> _TOP_DIR_OF_CONTAINER_  
 
 #- TZ also layer above, in Dockerfile.lib4cmaq.  They can eventually be removed from here. ++ 
@@ -54,6 +54,7 @@ ENV TEST_DOCKER_ENV_REF https://vsupalov.com/docker-arg-env-variable-guide/#sett
 #ENTRYPOINT ["cat", "/Downloads/CMAQ/_CMAQ_BUILD_END_"]
 #ENTRYPOINT ["cat", "/_TOP_DIR_OF_CONTAINER_"]
 
-# not defining an ENTRYPOINT will default to a shell inside the container
+# not defining an ENTRYPOINT expect to default to a shell inside the container
 # otherwise, run with exec bash to get shell:
-# docker exec -it tin6150/cmaq -v /home/tin:/home bash 
+# docker exec -it tin6150/cmaq -v /global/users/home/tin:/home/tin bash 
+# careful not to cover /home/username (for this container)

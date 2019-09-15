@@ -5,13 +5,12 @@
 FROM centos:7.6.1810
 MAINTAINER Tin
 
-
-
 # each command a new docker layer as hash, 
 # chain command using && will reduce layer (and more compact image if there are clean up across layers)
 # layer that does not change will not be re-downloaded in a pull, but it is still rebuild.
 # but to have different image, need diff Dockerfile and tag accordingly
 # to save build time, need separate Dockerfile/image that does not change in the lower layers
+# instead of && could use ;\ to continue RUN block.
 
 #RUN yum -y install wget \
 
@@ -54,12 +53,15 @@ RUN  yum -y update       \
 RUN  touch    _TOP_DIR_OF_CONTAINER_  \
   && TZ="PST8PDT" date  >> _TOP_DIR_OF_CONTAINER_  \
   && echo  "os4cmaq 2019.0907 not installing os openmpi rpm anymore"  >> _TOP_DIR_OF_CONTAINER_  \
+  && echo  "os4cmaq 2019.0915 comment: has m4 (from before?); TZ"     >> _TOP_DIR_OF_CONTAINER_  \
   && mkdir -p /home  
   ## && mkdir -p /home/tin  \
   ## && mkdir -p /lhome/tin 
 
 
-# how to set PATH ?
-# add /usr/lib64/openmpi/bin
-ENTRYPOINT [ "/bin/tcsh" ]
+# OS OpenMPI does not add /usr/lib64/openmpi/bin to PATH
+# how to append to PATH ?
+ENV TZ PST8PDT
+# not defining an ENTRYPOINT expect to default to a shell inside the container
+#ENTRYPOINT [ "/bin/tcsh" ]
 

@@ -29,7 +29,7 @@ export F77_FLAGS="-ffixed-line-length-none -fmax-errors=1 -cpp"
 export F90_FLAGS="-fmax-errors=1 -cpp"
 export FOPT_FLAGS="-O2"
 
-##?? GOMP* undefined problem...  should this be changed to mpicc?   ++
+##?? GOMP* undefined problem... -fopenmp was the culprit.  but using mpicc is fine here.
 export CC=mpicc
 ##export CC=gcc
 export C_FLAGS=""
@@ -76,7 +76,7 @@ export LIB_NETCDF=-lnetcdff
 # error even after using mpic++ as compiler.  
 ## wratt3.F90:(.text+0xe0b): undefined reference to `GOMP_critical_name_end'
 ## so enable ParOpt in environment-user to see if that works.   <-- did not work 11271e
-## disabling -fopenmp in Makeinclude. instead.   xref OMP GOMP 
+## disabling -fopenmp in Makeinclude. and Makeinclude.Linux2_x86_64gfort seems to resolve the issue.   xref OMP GOMP  a437304
 #xx export ParOpt="TRUE"    
 export ParOpt=""    
 

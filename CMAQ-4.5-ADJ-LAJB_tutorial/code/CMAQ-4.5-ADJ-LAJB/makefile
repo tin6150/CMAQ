@@ -252,6 +252,8 @@ $(DIR_INSTL)/bin/JPROC/jproc: $(OBJ_JPROC_jproc_table)
 ## eg Makeinclude.Linux2_x86_64gfort:OMPFLAGS  = #-fopenmp
 ## libgomp-4.8.5-36.el7_6.2.x86_64 rpm already present
 ## hmm... maybe disable such include.  since libioapi.a in Ling's dir didn't have any GOMP_ symbols
+## that should have done it.
+## (ioapi was said to be stable between releases. so 3.2 should be fine for this.)
 
 
 $(DIR_INSTL)/bld/JPROC/driver/jproc_table/%.o: $(DIR_SRC)/JPROC/driver/jproc_table/%.[Ff]

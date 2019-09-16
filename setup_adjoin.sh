@@ -23,10 +23,11 @@ make pario      2>&1 |  tee make.pario.log
 
 make stenex 	2>&1 | tee make.stenex.log
 make jproc 		2>&1 | tee make.jproc.log   
-## error above.  even after using mpic++ as compiler.   ++
-## wratt3.F90:(.text+0xe0b): undefined reference to `GOMP_critical_name_end'
-## enable ParOpt in environment-user next 
-## GOMP = Gnu OpenMP implementation.  disable -fopenmp in Makeinclude. 
+## above had lot of errors like
+## wratt3.F90:(.text+0xe0b): undefined reference to `GOMP_critical_name_end'   11271e
+## GOMP = Gnu OpenMP implementation.  
+## disable -fopenmp in Makeinclude.  AND Makeinclude.Linux2_x86_64gfort seems to have solved the problme. a437304
+## (keep ParOpt="" in environment-user)
 
 make icon  		2>&1 | tee make.icon.log
 make bcon		2>&1 | tee make.bcon.log

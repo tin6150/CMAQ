@@ -75,8 +75,10 @@ export LIB_NETCDF=-lnetcdff
 #export ParOpt=""
 # error even after using mpic++ as compiler.  
 ## wratt3.F90:(.text+0xe0b): undefined reference to `GOMP_critical_name_end'
-## so enable ParOpt in environment-user to see if that works.
-export ParOpt="TRUE"    
+## so enable ParOpt in environment-user to see if that works.   <-- did not work 11271e
+## disabling -fopenmp in Makeinclude. instead.   xref OMP GOMP 
+#xx export ParOpt="TRUE"    
+export ParOpt=""    
 
 export ModInpt=profile
 export ModMech=mc_noop

@@ -96,6 +96,8 @@ being_setup_ioapi:
 #### cmaq ioapi build: https://www.cmascenter.org/ioapi/documentation/all_versions/html/AVAIL.html#build
 #### will use ioapi 3.2
 #### pre-downloaded into my git repo from https://www.cmascenter.org/ioapi/download/ioapi-3.2.tar.gz inside ioapi/
+#### GOMP_* undefined error maybe cuz using incompatible ioapi lib?
+#### pondering... move to ioapi 3.0 (used by Lucas).  but i am not finding actual incompatibility  in code ref... should do that before swapping (which should get new branch)
 #####################################################
 #### setup_ioapi() { # begin of former fn in .sh ####
 #####################################################
@@ -115,7 +117,6 @@ being_setup_ioapi:
 		ln -s /usr/local/lib/libnetcdf.a  .  # netcdf-C
 		#xx cd $BASEDIR/ioapi
 		#xx make |& tee make.log
-		# not seeing libioapi.a yet...  actually, no makefile in the ioapi dir, only in parent...
 		
 
 		cd $BASEDIR     #cd into /Downloads/CMAQ/Api
@@ -133,6 +134,8 @@ being_setup_ioapi:
 		#echo content of Makefile::
 		#cat -n Makefile
 		#echo "RUNNING make BIN=$BIN CPLMODE=nocpl INSTALL=$INSTDIR" 
+		setenv CPLMOD nocpl # hinted by /global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/code/IOAPI-3.0/built_nocpl_gcc_gfortran_s
+		echo "CPLMOD is set to $CPLMOD"
 		#make BIN=$BIN CPLMODE=nocpl INSTALL=$INSTDIR  |& tee make.log     
 		echo "RUNNING make BIN=$BIN               INSTALL=$INSTDIR" 
 		make               BIN=$BIN               INSTALL=$INSTDIR          |& tee make.log 

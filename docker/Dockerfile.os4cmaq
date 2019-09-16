@@ -54,6 +54,7 @@ RUN  touch    _TOP_DIR_OF_CONTAINER_  \
   && TZ="PST8PDT" date  >> _TOP_DIR_OF_CONTAINER_  \
   && echo  "os4cmaq 2019.0907 not installing os openmpi rpm anymore"  >> _TOP_DIR_OF_CONTAINER_  \
   && echo  "os4cmaq 2019.0915 comment: has m4 (from before?); TZ"     >> _TOP_DIR_OF_CONTAINER_  \
+  && echo  "os4cmaq 2019.0915.18+ (trivial change)"                   >> _TOP_DIR_OF_CONTAINER_  \
   && mkdir -p /home  
   ## && mkdir -p /home/tin  \
   ## && mkdir -p /lhome/tin 
@@ -62,6 +63,7 @@ RUN  touch    _TOP_DIR_OF_CONTAINER_  \
 # OS OpenMPI does not add /usr/lib64/openmpi/bin to PATH
 # how to append to PATH ?
 ENV TZ PST8PDT
-# not defining an ENTRYPOINT expect to default to a shell inside the container
+ENV DOCKERFILE Dockerfile.os4cmaq
+# not defining an ENTRYPOINT will default bash inside the container
 #ENTRYPOINT [ "/bin/tcsh" ]
 

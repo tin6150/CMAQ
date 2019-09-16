@@ -24,8 +24,9 @@ E132 = -ffixed-line-length-132
 
 MFLAGS    = -ffast-math -funroll-loops -m64  #  -Wall -Wsurprising -march=native -mtune=native
 
-OMPFLAGS  = -fopenmp
-OMPLIBS   = -fopenmp
+##OMPFLAGS  = -fopenmp
+##OMPLIBS   = -fopenmp
+## disabled use of openmp cuz got lot of GOMP_ undefined error at link time.  -Tin 11271e
 COPTFLAGS = -O3 ${MFLAGS}
 FOPTFLAGS = -O3 ${MFLAGS}
 FPPFLAGS  = -DF90=1

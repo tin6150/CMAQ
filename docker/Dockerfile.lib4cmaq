@@ -11,10 +11,6 @@ MAINTAINER Tin
 # to save build time, need separate Dockerfile/image that does not change in the lower layers
 # instead of && could use ;\ to continue RUN block.
 
-
-# tmp till os4cmaq get rebuild by docker hub.  local build NOT getting used by FROM cuz of tin6150/ prefix :(
-RUN  yum -y install m4
-
 #xx RUN  cat -n Dockerfile.lib4cmaq #dont work
 
 #### instal openmpi from source ####
@@ -160,13 +156,16 @@ RUN  cd / \
   && echo "Dockerfile.lib4cmaq 2019.0915.14+ PATH/LD_LIBRARY_PATH fiddle for openmpi"  >> _TOP_DIR_OF_CONTAINER_   \
   && echo "Dockerfile.lib4cmaq 2019.0915.14+ (previously did) CC=/full/path/to/mpicc"  >> _TOP_DIR_OF_CONTAINER_   \
   && echo "Dockerfile.lib4cmaq 2019.0915.1550+ PATH/LD_LIBRARY_PATH to /etc/bashrc,csh.cshrc" >> _TOP_DIR_OF_CONTAINER_   \
+  && echo "Dockerfile.lib4cmaq 2019.0915.1755  trivial change: tcsh" >> _TOP_DIR_OF_CONTAINER_   \
   && echo $?
 
 # next should work even if invoke other shell like ksh or fish when avail :)
 # but since no quoting, dont include comment at end of line
+# does not seems to overwrite TZ declared in "parent" container Dockerfile.os4cmaq ++??
 ENV TZ America/Los_Angeles 
+ENV DOCKERFILE Dockerfile.lib4cmaq
 
+# not defining an ENTRYPOINT will default bash inside the container
 #ENTRYPOINT [ "/bin/cat", "/_TOP_DIR_OF_CONTAINER_" ]
-# not defining an ENTRYPOINT will default to a shell inside the container
-# or cuz parent container defined tcsh?
-ENTRYPOINT [ "/bin/bash" ]
+ENTRYPOINT [ "/bin/tcsh" ]  # cmaq build may need to have tcsh as default...
+#ENTRYPOINT [ "/bin/sh" ]

@@ -209,9 +209,50 @@ $(DIR_INSTL)/bld/STENEX/noop_f90/%.o: $(DIR_SRC)/STENEX/noop_f90/%.f
 # JPROC #
 #########
 
+## DIR_REPO : /Downloads/CMAQ/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB
+## export DIR_INSTL=$DIR_REPO/built_gcc_gfortran_serial_BENZ
+## DIR_INSTL : /Downloads/CMAQ/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB/built_gcc_gfortran_serial_BENZ
+
+## OBJ_JPROC_jproc_table : def in environment (not -user)
+## export OBJ_JPROC_jproc_table="$DIR_INSTL/bld/JPROC/driver/jproc_table/calczen.o\
+##	                             $DIR_INSTL/bld/JPROC/driver/jproc_table/chj.o         [...]
+
+## FC_PAR : ${FC} : gfortran (when $ParOpt=0) or mpif90 (when $ParOpt != 0)
+## $(LINK_FLAGS)="" 
+
+## result in 
+## mpif90  //Downloads/CMAQ/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB/built_gcc_gfortran_serial_BENZ/bld/JPROC/driver/jproc_table/calczen.o   
+## ... //Downloads/CMAQ/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB/built_gcc_gfortran_serial_BENZ/bld/JPROC/driver/jproc_table/chj.o ... 
+## //Downloads/.../twostr.o 
+## -L/opt/CMAS5.2.1/rel/lib/ioapi_3/Linux2_x86_64gfort   -lioapi  -L/usr/local/lib -lnetcdff -o //Downloads/CMAQ/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB/built_gcc_gfortran_serial_BENZ/bin/JPROC/jproc
+
+## $^ maybe all the .o in the table
+## $@ likely target being made: $(DIR_INSTL)/bin/JPROC/jproc 
+##    ie /Downloads/CMAQ/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB/built_gcc_gfortran_serial_BENZ/bin/JPROC/jproc
+
 $(DIR_INSTL)/bin/JPROC/jproc: $(OBJ_JPROC_jproc_table)
 	$(FC_PAR) $(LINK_FLAGS) $^ -L$(DIR_IOAPI_LIB)   -lioapi -L$(DIR_NETCDF)/lib $(LIB_NETCDF) -o $@
 	##$(FC_PAR) $(LINK_FLAGS) $^ -L$(DIR_IOAPI)/lib -lioapi -L$(DIR_NETCDF)/lib $(LIB_NETCDF) -o $@
+
+
+## in log, step before, did:
+## mpif90 -ffixed-line-length-none -fmax-errors=1 -cpp -I//Downloads/CMAQ/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB/src/ICL/fixed/const -I//Downloads/CMAQ/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB/src/ICL/mech/BENZ -DSUBST_GRID_ID= -DSUBST_IOPARMS=\"PARMS3.EXT\" 
+## ...
+## -J//Downloads/CMAQ/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB/built_gcc_gfortran_serial_BENZ/bld/JPROC/driver/jproc_table/mod 
+## -c //Downloads/CMAQ/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB/src/JPROC/driver/jproc_table/twostr.f 
+## -o //Downloads/CMAQ/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB/built_gcc_gfortran_serial_BENZ/bld/JPROC/driver/jproc_table/twostr.o
+
+
+## still no clue why it has many error relating to eg GOMP_* being undefined.  eg
+## wratt3.F90:(.text+0xe0b): undefined reference to `GOMP_critical_name_end'
+## GOMP is Gnu OpenMP implementation c/c++/fortran.
+## so... do I need some OpenMP stuff installed? 
+## https://gcc.gnu.org/onlinedocs/libgomp/Enabling-OpenMP.html#Enabling-OpenMP
+## add -fopenmp
+## eg Makeinclude.Linux2_x86_64gfort:OMPFLAGS  = #-fopenmp
+## libgomp-4.8.5-36.el7_6.2.x86_64 rpm already present
+## hmm... maybe disable such include.  since libioapi.a in Ling's dir didn't have any GOMP_ symbols
+
 
 $(DIR_INSTL)/bld/JPROC/driver/jproc_table/%.o: $(DIR_SRC)/JPROC/driver/jproc_table/%.[Ff]
 	$(FC_PAR) $(F77_FLAGS) -I$(INC_CONST) -I$(INC_MECH) $(SUBSTS) $(FC_FLAG_MOD)$(DIR_INSTL)/bld/JPROC/driver/jproc_table/mod -c $< -o $@

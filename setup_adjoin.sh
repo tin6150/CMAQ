@@ -26,6 +26,7 @@ make jproc 		2>&1 | tee make.jproc.log
 ## error above.  even after using mpic++ as compiler.   ++
 ## wratt3.F90:(.text+0xe0b): undefined reference to `GOMP_critical_name_end'
 ## enable ParOpt in environment-user next 
+## GOMP = Gnu OpenMP implementation.  disable -fopenmp in Makeinclude. 
 
 make icon  		2>&1 | tee make.icon.log
 make bcon		2>&1 | tee make.bcon.log

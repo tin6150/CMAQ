@@ -38,14 +38,16 @@ RUN  cd / \
   && touch    _TOP_DIR_OF_CONTAINER_  \
   && TZ=PST8PDT date  >> _TOP_DIR_OF_CONTAINER_  \
   && echo  "Dockerfile.cmaq 2019.0814.2218 (setenv fix, add myFC, compilerString)"  >> _TOP_DIR_OF_CONTAINER_   \
-  && echo  "Dockerfile.cmaq 2019.0915.1350+ (using mpicc)"  >> _TOP_DIR_OF_CONTAINER_   \
-  && echo  "Dockerfile.cmaq 2019.0915.18+   (trivial?)"     >> _TOP_DIR_OF_CONTAINER_   \
-  && echo  "(autobuild for other Dockerfile.* disabled)"            >> _TOP_DIR_OF_CONTAINER_  
+  && echo  "Dockerfile.cmaq 2019.0915.1350+ (using mpicc)"                          >> _TOP_DIR_OF_CONTAINER_   \
+  && echo  "Dockerfile.cmaq 2019.0920 (setup_adjoin tries to build *SAPRc99)"       >> _TOP_DIR_OF_CONTAINER_   \
+  && echo  "(autobuild for other Dockerfile.* disabled)"                            >> _TOP_DIR_OF_CONTAINER_  
 
 #- TZ also layer above, in Dockerfile.lib4cmaq.  They can eventually be removed from here. ++ 
 #- ENV TZ America/Los_Angeles  
-ENV DOCKERFILE Dockerfile[.cmaq]
 ENV TZ EST5EDT
+# ENV TZ likely changed/overwritten by container's /etc/csh.cshrc
+ENV DOCKERFILE Dockerfile[.cmaq]
+# does overwrite parent def of ENV DOCKERFILE
 ENV TEST_DOCKER_ENV     this_env_will_be_avail_when_container_is_run_or_exec
 ENV TEST_DOCKER_ENV_2   Can_use_ADD_to_make_ENV_avail_in_build_process
 ENV TEST_DOCKER_ENV_REF https://vsupalov.com/docker-arg-env-variable-guide/#setting-env-values
@@ -55,7 +57,8 @@ ENV TEST_DOCKER_ENV_REF https://vsupalov.com/docker-arg-env-variable-guide/#sett
 #ENTRYPOINT ["cat", "/Downloads/CMAQ/_CMAQ_BUILD_END_"]
 #ENTRYPOINT ["cat", "/_TOP_DIR_OF_CONTAINER_"]
 
-# not defining an ENTRYPOINT expect to default to a shell inside the container
-# otherwise, run with exec bash to get shell:
-# docker exec -it tin6150/cmaq -v /global/users/home/tin:/home/tin bash 
+# if no defined ENTRYPOINT, default to bash inside the container
+# parent container defined tcsh.
+# can also run with exec bash to get shell:
+# docker exec -it tin6150/cmaq -v $HOME:/home/tin  bash 
 # careful not to cover /home/username (for this container)

@@ -156,14 +156,15 @@ RUN  cd / \
   && echo "Dockerfile.lib4cmaq 2019.0915.14+ PATH/LD_LIBRARY_PATH fiddle for openmpi"  >> _TOP_DIR_OF_CONTAINER_   \
   && echo "Dockerfile.lib4cmaq 2019.0915.14+ (previously did) CC=/full/path/to/mpicc"  >> _TOP_DIR_OF_CONTAINER_   \
   && echo "Dockerfile.lib4cmaq 2019.0915.1550+ PATH/LD_LIBRARY_PATH to /etc/bashrc,csh.cshrc" >> _TOP_DIR_OF_CONTAINER_   \
-  && echo "Dockerfile.lib4cmaq 2019.0915.1755  trivial change: tcsh" >> _TOP_DIR_OF_CONTAINER_   \
+  && echo "Dockerfile.lib4cmaq 2019.0916  comment/note update" >> _TOP_DIR_OF_CONTAINER_   \
   && echo $?
 
 # next should work even if invoke other shell like ksh or fish when avail :)
 # but since no quoting, dont include comment at end of line
-# does not seems to overwrite TZ declared in "parent" container Dockerfile.os4cmaq ++??
+# but if container has settings, eg /etc/csh.cshrc changing TZ, then ENV TZ will be overwritten.
 ENV TZ America/Los_Angeles 
 ENV DOCKERFILE Dockerfile.lib4cmaq
+# does overwrite parent def of ENV DOCKERFILE
 
 # not defining an ENTRYPOINT will default bash inside the container
 #ENTRYPOINT [ "/bin/cat", "/_TOP_DIR_OF_CONTAINER_" ]

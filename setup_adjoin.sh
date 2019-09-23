@@ -13,11 +13,16 @@ echo '$HOME is set to: ' $HOME	# hmm... actually docker build , this is still /r
 
 cd CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB 
 
-AdjModel_list="built_gcc_gfortran_serial_BENZ built_gcc_gfortran_serial_SAPRC99ROS built_gcc_gfortran_parallel_SAPRC99ROS"
+AdjModelList="built_gcc_gfortran_serial_BENZ built_gcc_gfortran_serial_SAPRC99ROS built_gcc_gfortran_parallel_SAPRC99ROS"
 
 for AdjModel in $AdjModelList; do
 
-	cd built_gcc_gfortran_serial_BENZ
+	echo "========================================"
+	echo " Building $AdjModel"
+	echo "========================================"
+
+	#xx cd built_gcc_gfortran_serial_BENZ
+	cd $AdjModel
 	source environment-user				## ie source environment-user in the "build" dir, not the higher level dir I used earlier.
 
 	make dir		2>&1 |  tee make.dir.log					## this isn't relative.  it is hard coded to use path in var DIR_REPO or something.

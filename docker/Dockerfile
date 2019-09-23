@@ -11,8 +11,10 @@ MAINTAINER Tin
 # CMAQ 5.2.1 build tutorial: https://github.com/USEPA/CMAQ/blob/5.2.1/DOCS/Tutorials/CMAQ_GettingStarted.md
 
 #### make ioapi 3.1.  i have the source downloaded in the my git repo of CMAQ ####
-RUN echo "begining docker build process at " ;\
-    date ;\
+RUN 
+    touch    _TOP_DIR_OF_CONTAINER_  ;\
+    echo "begining docker build process at " | tee -a _TOP_DIR_OF_CONTAINER_ ;\
+    date | TZ=PST8PDT tee -a _TOP_DIR_OF_CONTAINER_ ;\
     mkdir -p Downloads &&  cd Downloads ;\
     #git clone -b ...; git pull; still does NOT always produce latest repo :(
     #git clone --quiet -b tin_521_docker https://tin6150@github.com/tin6150/CMAQ.git ;\
@@ -30,17 +32,17 @@ RUN echo "begining docker build process at " ;\
 
     # Adding a bash script to compile Lucas Adjoin models
     bash ./setup_adjoin.sh  2>&1 | tee setup.adjoin.log.rst ;\
-    echo $? > _CMAQ_ADJOIN_BUILD_END_
+    echo $? > _CMAQ_ADJOIN_BUILD_END_ ;\
 
-
-
-RUN  cd / \
+     cd / \
   && touch    _TOP_DIR_OF_CONTAINER_  \
   && TZ=PST8PDT date  >> _TOP_DIR_OF_CONTAINER_  \
   && echo  "Dockerfile.cmaq 2019.0814.2218 (setenv fix, add myFC, compilerString)"  >> _TOP_DIR_OF_CONTAINER_   \
   && echo  "Dockerfile.cmaq 2019.0915.1350+ (using mpicc)"                          >> _TOP_DIR_OF_CONTAINER_   \
-  && echo  "Dockerfile.cmaq 2019.0920 (setup_adjoin tries to build *SAPRc99)"       >> _TOP_DIR_OF_CONTAINER_   \
-  && echo  "(autobuild for other Dockerfile.* disabled)"                            >> _TOP_DIR_OF_CONTAINER_  
+  && echo  "Dockerfile.cmaq 2019.0922 (setup_adjoin tries to build *SAPRC99)"       >> _TOP_DIR_OF_CONTAINER_   \
+  && echo  "(autobuild for other Dockerfile.* disabled)"                            >> _TOP_DIR_OF_CONTAINER_   \
+  && echo  "(Each RUN block must have changes or docker build web site will use a catche)" | tee -a _TOP_DIR_OF_CONTAINER_ \
+  && echo  "Grand Finale"
 
 #- TZ also layer above, in Dockerfile.lib4cmaq.  They can eventually be removed from here. ++ 
 #- ENV TZ America/Los_Angeles  

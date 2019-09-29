@@ -7,6 +7,7 @@ From: tin6150/cmaq
 	touch "_ROOT_DIR_OF_CONTAINER_" ## also is "_CURRENT_DIR_CONTAINER_BUILD" 
 	date >> _ROOT_DIR_OF_CONTAINER_
 	echo "Singularity def 2019.0902.2315" >> _ROOT_DIR_OF_CONTAINER_
+	echo "Singularity def 2019.0929 (timestamp change only)" >> _ROOT_DIR_OF_CONTAINER_
 
 	# docker run as root, but singularity may run as user, so adding these hacks here
 	mkdir -p /global/scratch/tin

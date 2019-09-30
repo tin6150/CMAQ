@@ -22,14 +22,21 @@ From: tin6150/cmaq
 
 %runscript
     #pgcc $@
-    /bin/tcsh
     #pgf95 $@
+    #/bin/tcsh
+    #/bin/bash -i 
+    source /etc/bashrc && /Downloads/CMAQ/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB/./built_gcc_gfortran_serial_SAPRC99ROS/bin/CCTM/cctm
+	
 
 %help
     EPA CMAQ, Lucas Bastein Adjon modesl, tryin to get them to work in a container, may not work yet.
     
+# Pull and run via singularity-hub:
+# singularity pull shub://tin6150/CMAQ
+# singularity pull --name CMAQ_b0929.sif shub://tin6150/CMAQ
+# singularity shell CMAQ_b0929.sif
 
-# build cmd:
+# manual build cmd:
 # sudo /opt/singularity-2.6/bin/singularity build --writable cmaq_b0902a.img Singularity 2>&1  | tee singularity_build.log
 #
 # eg run cmd on bofh w/ singularity 2.6.2:
@@ -38,5 +45,6 @@ From: tin6150/cmaq
 
 # eg run cmd on lrc, singularity 2.6-dist (maybe locally compiled)
 #      singularity shell -w -B /global/scratch/tin ./cmaq_b0902a.img
+#
 
 # vim: nosmartindent tabstop=4 noexpandtab shiftwidth=4

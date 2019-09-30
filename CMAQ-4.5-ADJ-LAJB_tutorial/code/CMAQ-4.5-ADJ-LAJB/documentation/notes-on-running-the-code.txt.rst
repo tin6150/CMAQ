@@ -60,11 +60,7 @@ and outputs are. For example:
  - and so on
 
     *eg*
-	DIR_RUN=
-	?
-	/global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/run/
-
-
+	DIR_RUN=/global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/run/
 	Ling/Huy puts everything in single folder instead?  see:
 	/global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/run/ CCTM/SARMAP_KZMIN_F_O3/ADJ_RUN/ run_CCTM_258_7day.tin.csh
 
@@ -77,7 +73,11 @@ into:
 $DIR_RUN/CCTM/DOMTEST_JULD1_BENZ
 	*eg* /global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/run/ CCTM/CCTM/DOMTEST_JULD1_BENZ
 	*eg* /global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/run/ CCTM/CCTM/SARMAP_206_O3  ?  or this has altered dir struct by Ling already?
-	**>> where is the cctm bin? <**
+	**>> cctm bin is not under the DIR_RUN  <**
+	     /global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB/./built_gcc_gfortran_serial_SAPRC99ROS/bin/CCTM/cctm
+	                       /Downloads/CMAQ/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB/./built_gcc_gfortran_serial_SAPRC99ROS/bin/CCTM/cctm
+	                       /Downloads/CMAQ/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB/./built_gcc_gfortran_parallel_SAPRC99ROS/bin/CCTM/cctm
+	                       /Downloads/CMAQ/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB/./built_gcc_gfortran_serial_BENZ/bin/CCTM/cctm
 
 c.2) We edit the run script located in that diretory
 (run_CCTM.csh). This script does two things:
@@ -141,10 +141,13 @@ outputs. It does not necessarily have to contain the model code.
 
 $DIR_RUN/com_global.csh             # Script that sets generic resources. It is used by several components of the modeling system
 $DIR_RUN/CCTM/                      # Directory that contains all CCTM-related scripts and all CCTM outputs
+	*eg* /global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/run/ CCTM/ 
 $DIR_RUN/CCTM/com_CCTM.csh          # Script that defines CCTM-specific resources
 $DIR_RUN/CCTM/com_CCTM_inout.csh    # Script that defines CCTM-specific resources
 $DIR_RUN/CCTM/DOMTEST_JULD1_BENZ/   # Directory that contains the run script and outputs of the CCTM simulation for domain "DOMTEST", simulation period "JULD1", and chemical mechanism "BENZ"
 $DIR_RUN/CCTM/DOMTEST_JULD1_BENZ/run_CCTM.csh # Script that runs CCTM for domain "DOMTEST", simulation period "JULD1", and chemical mechanism "BENZ"
+	*ie* run "lowest level" script, which will call the higher level script to define default params.
+	/global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/run/ CCTM/DOMTEST_JULD1_BENZ/ run_CCTM.csh
 
 To run CCTM for domain "DOMTEST", simulation period "JULD1", and chemical
 mechanism "BENZ", run $DIR_RUN/CCTM/DOMTEST_JULD1_BENZ/run_CCTM.csh from its
@@ -169,6 +172,8 @@ This approach is used for other components of the modeling system. For example
 for JPROC:
 
 $DIR_RUN/JPROC/                     # Directory that contains all JPROC-related scripts and all JPROC outputs
+	*eg* /global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/run/ JPROC/ 
+	     but no run script here.
 $DIR_RUN/JPROC/com_JPROC.csh        # Script that defines JPROC-specific resources
 $DIR_RUN/JPROC/BENZ/                # Directory that contains the run script and outputs of the JPROC simulation for chemical mechanism "BENZ"
 $DIR_RUN/JPROC/BENZ/run_JPROC.csh   # Script that runs JPROC for chemical mechanism "BENZ"

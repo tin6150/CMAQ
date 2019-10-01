@@ -19,13 +19,16 @@ From: tin6150/cmaq
 	chown -R 43143 /home/username  # some oddities resulting from the cmaq make process ran in docker
 	chown -R 43143 /opt
 	chown -R 43143 /Downloads
+	ln -s /Downloads/CMAQ /CMAQ
 
 %runscript
     #pgcc $@
     #pgf95 $@
     #/bin/tcsh
     #/bin/bash -i 
-    source /etc/bashrc && /Downloads/CMAQ/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB/./built_gcc_gfortran_serial_SAPRC99ROS/bin/CCTM/cctm
+    #xx source /etc/bashrc && /Downloads/CMAQ/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB/./built_gcc_gfortran_serial_SAPRC99ROS/bin/CCTM/cctm
+	LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/opt/openmpi/2.1.6/lib:/usr/local/lib   /Downloads/CMAQ/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB/./built_gcc_gfortran_serial_SAPRC99ROS/bin/CCTM/cctm
+
 	
 
 %help

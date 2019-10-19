@@ -38,7 +38,8 @@ RUN  yum -y update       \
 		 vim  \
 		 tmux \
 		 screen \
-		 bc \
+		 bc     \
+		 xterm  \
 		 tree  
 		 #openmpi-devel # pretty old, openmpi-devel-1.10.7-2.el7.x86_64
 
@@ -59,6 +60,7 @@ RUN  touch    _TOP_DIR_OF_CONTAINER_  \
   && echo  "os4cmaq 2019.0915 comment: has m4 (from before?); TZ"     >> _TOP_DIR_OF_CONTAINER_  \
   && echo  "os4cmaq 2019.0915.18+ (trivial change)"                   >> _TOP_DIR_OF_CONTAINER_  \
   && echo  "os4cmaq 2019.0922.    (mpi comment update)"               >> _TOP_DIR_OF_CONTAINER_  \
+  && echo  "os4cmaq 2019.1019.    (xterm test)"                       >> _TOP_DIR_OF_CONTAINER_  \
   && mkdir -p /home  
   ## && mkdir -p /home/tin  \
   ## && mkdir -p /lhome/tin 

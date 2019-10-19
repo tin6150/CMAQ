@@ -34,11 +34,12 @@ RUN touch    _TOP_DIR_OF_CONTAINER_  ;\
     echo $? > _CMAQ_ADJOIN_BUILD_END_ ;\
 
      cd / \
-  && touch    _TOP_DIR_OF_CONTAINER_  \
+  && ln -s /Downloads/CMAQ /cmaq   \
+  && touch _TOP_DIR_OF_CONTAINER_  \
   && TZ=PST8PDT date  >> _TOP_DIR_OF_CONTAINER_  \
   && echo  "Dockerfile.cmaq 2019.0814.2218 (setenv fix, add myFC, compilerString)"  >> _TOP_DIR_OF_CONTAINER_   \
   && echo  "Dockerfile.cmaq 2019.0915.1350+ (using mpicc)"                          >> _TOP_DIR_OF_CONTAINER_   \
-  && echo  "Dockerfile.cmaq 2019.0922 (setup_adjoin tries to build *SAPRC99)"       >> _TOP_DIR_OF_CONTAINER_   \
+  && echo  "Dockerfile.cmaq 2019.1001 (setup_adjoin build *SAPRC99 ok)"             >> _TOP_DIR_OF_CONTAINER_   \
   && echo  "(autobuild for other Dockerfile.* disabled)"                            >> _TOP_DIR_OF_CONTAINER_   \
   && echo  "(Each RUN block must have changes or docker build web site will use a catche)" | tee -a _TOP_DIR_OF_CONTAINER_ \
   && echo  "Grand Finale"

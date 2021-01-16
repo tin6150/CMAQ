@@ -52,3 +52,13 @@ autobuild using docker hub is prefered over the local BUILD and REGISTRY process
 
 
 
+X11 GUI app
+===========
+
+docker run -it  -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY  --name xterm   --rm  tin6150/os4cmaq /usr/bin/xterm
+# works.  used Docker version 18.09.7, build 2d0083d (ubuntu 18.04)
+# note that must use source and destination in -v map.
+# cannot just use -v /tmp/.X11-unix , nor -v /tmp
+# could use -e DISPLAY=:0
+# probably don't need to run xhost +
+

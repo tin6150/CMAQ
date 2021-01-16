@@ -13,7 +13,8 @@ former name    run_CCTM_258_7day.csh
 name i gave it run_CCTM_258_7day.tin.csh  (much annotation in it now)
 
 simply submit job as
-sbatch run_CCTM_258_7day.tin.csh
+sbatch run_CCTM_258_7day.tin.csh      ## orig version
+sbatch run_CCTM_258_7day.tin1a.csh    ## slightly tweaked for multiple concurrent run, has lots of comments in it, use this in lrc **<<**
 
 the ADJ*slurm_info files are manually captured output info of my job
 such as squeue, ls output, and notes of what i have observed
@@ -67,6 +68,17 @@ seems to be what Ling explained to Huy.
 ccmt modeling code and config likely in a tutorial in 
 /global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial
 
+
+
+~~~~~
+
+2021.01.14
+trying to pick up again and debug the crashing problem.
+maybe use valgrind to check if memory problem...
+valgrand will take the debug (-g) bin from gcc and gfortran.
+
+where is the script that actually run my example?  Ans:  run_eta/ [see higher up]
+but need to get input files, since stuff in my global scratch got deleted somehow :-\
 
 
 

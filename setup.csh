@@ -92,7 +92,7 @@
 #goto hell
 
 
-being_setup_ioapi:
+begin_setup_ioapi:
 #### cmaq ioapi build: https://www.cmascenter.org/ioapi/documentation/all_versions/html/AVAIL.html#build
 #### will use ioapi 3.2
 #### pre-downloaded into my git repo from https://www.cmascenter.org/ioapi/download/ioapi-3.2.tar.gz inside ioapi/

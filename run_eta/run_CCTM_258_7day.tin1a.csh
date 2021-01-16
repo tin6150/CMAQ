@@ -1,13 +1,19 @@
 #!/bin/csh
 
-#SBATCH --job-name=ADJ258Sn1_cmaq_run1_8x16_lr3		## ++++
-#SBATCH --partition=lr3    #lr3	#lr6			## ++++
+## ++ this version should be copied back to just run_CCTM_258_7day.tin.csh (ie drop 1a after tin)
+## ++ 2021.0115 as input file path etc changed
+
+#SBATCH --job-name=ADJ258Sn1_cmaq_run1_8x16_lr6 		## ++++
+#SBATCH --partition=lr6    #lr3	#lr6  				## ++++
+#SBATCH -o ADJ258Sn_%N_job_%j.8x16_lr6.out  			## ++++
+##SBATCH --job-name=ADJ258Sn1_cmaq_run1_8x16_lr6		## ++++
+##SBATCH --partition=lr3    #lr3	#lr6			## ++++
+##SBATCH -o ADJ258Sn_%N_job_%j.8x16_lr3.out  			## ++++
 #SBATCH --qos=lr_normal
 # #SBATCH --qos=cf_normal
 #SBATCH --account=scs
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=tin@lbl.gov
-#SBATCH -o ADJ258Sn_%N_job_%j.8x16_lr3.out  		## ++++
 ### 4 nodes perf was ok.  24 nodes was unbearably slow.  8 or 6 nodes were bad too.
 ### hmmm... using 8 nodes (x32core), *nc creation takes too long :(
 #SBATCH --nodes=8  # 4 nodes perf was ok.  24 nodes was unbearably slow.  8 or 6 nodes were bad too.    ## ++++
@@ -31,6 +37,9 @@
 ##setenv NPROCS 512 # 64 
 ##setenv NPCOL_NPROW "32 24" 
 ##setenv NPROCS 768
+setenv NPCOL_NPROW "8 8" 
+setenv NPROCS 64
+## above were param used by pghuy and worked, below is what i am testing which may crash
 setenv NPCOL_NPROW "16 8" # "32 4" 			## ++++
 setenv NPROCS 128 #112 #128 #64			## ++++
 
@@ -39,10 +48,15 @@ echo "NPROCS is set to: ${NPROCS}"
 
 ## input, need to read:
 ## /global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/run/RECEPTORS/SARMAP_EP258_F.nc
+## considered change to ...
+## /global/home/groups-sw/pc_adjoint/data/SARMAP/RECEPTOR/LAY35_LingOpt
+## but actually have moved to different input already, see more below
+## run_CCTM_258_7day.tin1a.csh
 ## output was set in my env var below:
 ## /global/scratch/tin/adj_kzF_O3_GE66_Popdens_258_${JOBID}/iolog_000.out  
 ## this script location:
 ## /global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/run/CCTM/SARMAP_KZMIN_F_O3/ADJ_RUN/run_CCTM_258_7day.tin.csh
+## .tin.csh version removed, that was dir by pghuy
 
 ## timing info is printed into the output file when a step is completed, 
 ## see tin-gh/CMAQ/run_eta/perf.rst for newer results.
@@ -98,6 +112,9 @@ echo "====beyond all the module load stuff===================================="
 which mpirun
 which mpicc
 
+## expect these: ? 
+## /global/software/sl-7.x86_64/modules/gcc/6.3.0/openmpi/3.0.1-gcc/bin/mpirun
+## /global/software/sl-7.x86_64/modules/gcc/6.3.0/openmpi/3.0.1-gcc/bin/mpicc
 
 
 echo "===============end=of=tin=stuff========================="
@@ -171,8 +188,14 @@ ls -l ${DIR_OUT}
 
 # ---> Use the weekday bio emis
 ##setenv DIR_CONC /global/scratch/pghuy/DIR_CONC/${NME_DOM}_${NME_MONTH}_F
-#### made my own copy only for _F, per Ling suggestion.
-setenv DIR_CONC /global/scratch/tin/cmaq_run1/DIR_CONC/${NME_DOM}_${NME_MONTH}_F   ## simultaneous run  (cmaq_run1) in a cmaq2 INPUT++++
+#### made my own copy only for _F, per Ling suggestion.  (SARMAP_258_F)
+#### but no longer there, wipded by clean up script??
+#### need new copy...  but wei's file removed also... ++FIXME++ ...
+## cp   ...
+setenv  DIR_CONC /global/scratch/tin/cmaq_run1/DIR_CONC/${NME_DOM}_${NME_MONTH}_F   ## simultaneous run  (cmaq_run1) in a cmaq2 INPUT++++   ## restored
+	## actually maybe moved to /global/scratch/tin/cmaq_run1/DIR_CONC/SARMAP_258_F
+	## which was sym link to   /global/scratch/w.zhou/SARMAP_258_20237178/  and removed by Ling
+#--setenv  DIR_CONC /global/scratch/w.zhou/SARMAP/CCTM/SARMAP_258_1LEMIS_35ling3.3     ## not sure if this is similar to what i had
 #setenv DIR_CONC /global/scratch/tin/DIR_CONC/${NME_DOM}_${NME_MONTH}_F
 ##setenv DIR_CONC /global/scratch/tin/cmaq2/DIR_CONC/${NME_DOM}_${NME_MONTH}_F     ## simultaneous run 2 in a cmaq2 INPUT dir
 echo "=== INput  DIR_CONC set to ${DIR_CONC} :: ==="
@@ -225,9 +248,11 @@ echo "========================================"
 ## found one at /global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/my-run-directory-tree/lawrencium-modules.csh
 ## but too old, so created a dummy lawrencium-modules.csh
 
-
-# ie /global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/run/com_global.csh, seems to only set variables
-set scr=../../../com_global.csh
+### script used to be in  /global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/run/CCTM/SARMAP_KZMIN_F_O3
+set scr=../../../com_global.csh 
+### should have refer to /global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/run/com_global.csh, seems to only set variables
+### i am not putting my script there, so using absolute path now, so just hard code absolute path:
+set scr=/global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/run/com_global.csh ## left above uncommented for sdiff sync
 echo "Script: ${scr}" ; cat -n ${scr} ; echo "Running ${scr}" ; 
 echo "----------------------------------------"
 source ${scr}
@@ -240,15 +265,28 @@ echo "========================================"
 #   time $MPIRUN -v -np $NPROCS valgrind --track-origins=yes --leak-check=yes $EXECPATH/$EXECNAME
 # EXECNAME is cctm
 # EXECPATH is ${DIR_CMAQ_W}/bin/CCTM  ie 
-
+#
+alias cat "cat -n"
 set scr=../../com_CCTM.csh
-echo "Script: ${scr}" ; cat -n ${scr} ; echo "Running ${scr}" ; 
+#set scr=/global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/run/CCTM/com_CCTM.csh ## above left uncommented for sdiff sync'ing
+set scr=./com_CCTM.tin.csh
+echo "Script: ${scr}" ; cat ${scr} ; echo "Running ${scr}" ; 
 
-echo "----------------------------------------"
-source ${scr}
-echo "-----reverse-eng-com_CCTM-----------------------------------"
+echo "-----reverse-eng-com_CCTM--BEFORE---------------------------"
 echo "{DIR_CMAQ_W} is ${DIR_CMAQ_W}"
-echo "{EXECPATH}   is ${EXECPATH}"
+#-echo "{EXECPATH}   is ${EXECPATH:q}" # likely not set yet at this pt  # eg  /global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB/built_gcc_gfortran_parallel_O3_default-eddy/bin/CCTM
+which cctm
+which CCTM
+echo "========================================"
+echo "========================================"
+echo "TIN: cctm would be run by the next sourcing of script"
+echo "========================================"
+echo "========================================"
+source ${scr}
+echo "-----reverse-eng-com_CCTM--AFTER----------------------------"
+## may have to copy these csh script and add vagrant before run of cctm
+echo "{DIR_CMAQ_W} is ${DIR_CMAQ_W}"
+echo "{EXECPATH}   is ${EXECPATH:q}" # eg  /global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB/built_gcc_gfortran_parallel_O3_default-eddy/bin/CCTM
 which cctm
 which CCTM
 echo "========================================"
@@ -261,10 +299,14 @@ echo "========================================"
 ## dir=  /global/scratch/pghuy/DIR_CONC/SARMAP_258_F/SARMAP_258_2012_ALL_HYBRID.CONC.nc
 ## but that was under "Output files" section... can't write?
 
+## below doesn't actually run any cmaq stuff?  just echo-ing things.  did pghuy miss something??
 
 # ie /global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/run/CCTM/com_CCTM_inout.csh
 set scr=../../com_CCTM_inout.csh
-echo "Script: ${scr}" ; ## cat ${scr}
+set scr=/global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/run/CCTM/com_CCTM_inout.csh  ## above left uncommented for sdiff sync'ing
+echo "Script: ${scr}" ; ##cat ${scr}
+## commented cat, it just litter the output
+## it really doesn't do anything here , so the set and echo are useless too
 
 
 echo "========================================"

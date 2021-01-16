@@ -14,6 +14,7 @@ name i gave it run_CCTM_258_7day.tin.csh  (much annotation in it now)
 
 simply submit job as
 sbatch run_CCTM_258_7day.tin.csh
+sbatch run_CCTM_258_7day.tin1a.csh
 
 the ADJ*slurm_info files are manually captured output info of my job
 such as squeue, ls output, and notes of what i have observed
@@ -69,4 +70,12 @@ ccmt modeling code and config likely in a tutorial in
 
 
 
-
+copied several com*cctm*csh file here
+problem running 
+ cctm isn't found, something isn't getting setup correctly either.  or maybe just not inherited after the source was done?
+ but:
+____running TIN's local copy of com_CCTM_inout.csh
+ /global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/run/MCIP/SARMAP_258/SARMAP_258.METCRO2D.nc not found
+ cuz 
+      /global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/run/MCIP/SARMAP_258/SARMAP_258.METCRO2D.nc 
+   -> /global/home/groups-sw/pc_adjoint/data/SARMAP/MET/METCRO2D_G258 is a broken link

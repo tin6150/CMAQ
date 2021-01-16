@@ -8,7 +8,8 @@ RUN
 
 ::
 
-	docker run -it -v $HOME:/home/tin tin6150/cmaq
+	docker run  -it -v $HOME:/home/tin tin6150/cmaq
+	docker exec -it uranus_hertz bash                 # additional terminal into existing running container
 
 
 BUILD
@@ -19,6 +20,11 @@ BUILD
 	docker build -t tin6150/os4cmaq   -f Dockerfile.os4cmaq   .  | tee Dockerfile.os4cmaq.log  && \
 	docker build -t tin6150/lib4cmaq  -f Dockerfile.lib4cmaq  .  | tee Dockerfile.lib4cmaq.log && \
 	docker build -t tin6150/cmaq      -f Dockerfile           .  | tee Dockerfile.log 
+	docker build -t tin6150/adjoin    -f Dockerfile.adjoin    .  | tee Dockerfile.adjoin.log      # no longer needed
+
+	# actually, could build locally with just the same tag.  run can invoke by image id?  but this is less confusing for human :)
+	docker build -t bofh/lib4cmaq     -f Dockerfile.lib4cmaq  .  | tee bofh.Dockerfile.lib4cmaq.log 
+	docker build -t bofh/cmaq         -f Dockerfile           .  | tee bofh.Dockerfile.log 
 
 
 

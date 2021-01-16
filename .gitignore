@@ -47,7 +47,8 @@ lib/
 #file unique to repository
 CTM_LOG*
 BLD*
-*.log
+ERASE
+#*.log
 *_bak
 BLDMAKE*
 CHEMMECH*

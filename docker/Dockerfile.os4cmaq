@@ -5,13 +5,12 @@
 FROM centos:7.6.1810
 MAINTAINER Tin
 
-
-
 # each command a new docker layer as hash, 
 # chain command using && will reduce layer (and more compact image if there are clean up across layers)
 # layer that does not change will not be re-downloaded in a pull, but it is still rebuild.
 # but to have different image, need diff Dockerfile and tag accordingly
 # to save build time, need separate Dockerfile/image that does not change in the lower layers
+# instead of && could use ;\ to continue RUN block.
 
 #RUN yum -y install wget \
 
@@ -39,7 +38,8 @@ RUN  yum -y update       \
 		 vim  \
 		 tmux \
 		 screen \
-		 bc \
+		 bc     \
+		 xterm  \
 		 tree  
 		 #openmpi-devel # pretty old, openmpi-devel-1.10.7-2.el7.x86_64
 
@@ -51,15 +51,25 @@ RUN  yum -y update       \
 # header in /usr/include/openmpi-x86_64/
 # structure does not work well with Adjoin makefile,
 
+## ++ 
+## consider moving mpi build from source from lib4cmaq to here.
+
 RUN  touch    _TOP_DIR_OF_CONTAINER_  \
   && TZ="PST8PDT" date  >> _TOP_DIR_OF_CONTAINER_  \
-  && echo  "os4cmaq 2019.0907 no using os openmpi rpm anymore"  >> _TOP_DIR_OF_CONTAINER_  \
+  && echo  "os4cmaq 2019.0907 not installing os openmpi rpm anymore"  >> _TOP_DIR_OF_CONTAINER_  \
+  && echo  "os4cmaq 2019.0915 comment: has m4 (from before?); TZ"     >> _TOP_DIR_OF_CONTAINER_  \
+  && echo  "os4cmaq 2019.0915.18+ (trivial change)"                   >> _TOP_DIR_OF_CONTAINER_  \
+  && echo  "os4cmaq 2019.0922.    (mpi comment update)"               >> _TOP_DIR_OF_CONTAINER_  \
+  && echo  "os4cmaq 2019.1019.    (xterm test)"                       >> _TOP_DIR_OF_CONTAINER_  \
   && mkdir -p /home  
   ## && mkdir -p /home/tin  \
   ## && mkdir -p /lhome/tin 
 
 
-# how to set PATH ?
-# add /usr/lib64/openmpi/bin
-ENTRYPOINT [ "/bin/tcsh" ]
+# OS OpenMPI does not add /usr/lib64/openmpi/bin to PATH
+# how to append to PATH ?
+ENV TZ PST8PDT
+ENV DOCKERFILE Dockerfile.os4cmaq
+# not defining an ENTRYPOINT will default bash inside the container
+#ENTRYPOINT [ "/bin/tcsh" ]
 

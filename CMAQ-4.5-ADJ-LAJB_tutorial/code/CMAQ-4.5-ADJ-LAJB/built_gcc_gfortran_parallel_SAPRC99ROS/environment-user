@@ -16,34 +16,76 @@
 #
 # Author: Lucas A. J. Bastien
 
+export PATH="${PATH}:/opt/openmpi/2.1.6/bin"
+export PATH="${PATH}:/usr/local/bin"                                     # netcdf, hdf5
+export PATH="${PATH}:/opt/CMAS5.2.1/rel/lib/ioapi_3/Linux2_x86_64gfort"  # m3tools 
+
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/opt/openmpi/2.1.6/lib"
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib"               # netcdf
+
 export FC=gfortran
 export FC_FLAG_MOD="-J"
 export F77_FLAGS="-ffixed-line-length-none -fmax-errors=1 -cpp"
 export F90_FLAGS="-fmax-errors=1 -cpp"
 export FOPT_FLAGS="-O2"
 
-export CC=gcc
+##?? GOMP* undefined problem... -fopenmp was the culprit.  but using mpicc is fine here.
+export CC=mpicc
+##export CC=gcc
 export C_FLAGS=""
 
 export LINK_FLAGS=""
 
-export DIR_REPO=/global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB
+echo "In environment-user setup, HOME is set to $HOME"  # actually, still as /root, not sure where it was  / in some? container build env
+SRC_BASE=/
+echo "In environment-user setup, SRC_BASE is set to $SRC_BASE"  
 
+
+##export DIR_REPO=/gpanda/ljin/Shared/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB
+export DIR_REPO=$SRC_BASE/Downloads/CMAQ/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB     # expect /Downloads/CMAQ/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB
+##export DIR_INSTL=$DIR_REPO/built_gcc_gfortran_serial_BENZ
 export DIR_INSTL=$DIR_REPO/built_gcc_gfortran_parallel_SAPRC99ROS
-export DIR_IOAPI=/global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/code/IOAPI-3.0/built_nocpl_gcc_gfortran_s
-export DIR_NETCDF=/global/software/sl-7.x86_64/modules/gcc/6.3.0/netcdf/4.4.1.1-gcc-s
-export DIR_MPI=/global/software/sl-7.x86_64/modules/gcc/6.3.0/openmpi/3.0.1-gcc
+
+##export DIR_IOAPI=/gpanda/ljin/Shared/CMAQ-4.5-ADJ-LAJB_tutorial/code/IOAPI-3.0/built_nocpl_gcc_gfortran_s
+##export DIR_IOAPI=$SRC_BASE/Downloads/CMAQ/Api/ioapi/
+#~export DIR_IOAPI_LIB=/opt/CMAS5.2.1/rel/Linux2_x86_64gfort           ## loc for compiled file of libioapi.a 
+export DIR_IOAPI_LIB=/opt/CMAS5.2.1/rel/lib/ioapi_3/Linux2_x86_64gfort ## loc for compiled file of libioapi.a 
+export DIR_IOAPI_SRC=$SRC_BASE/Downloads/CMAQ/Api/ioapi/fixed_src      ## loc for source code, makefile originally looked for subdir "fixed_src_f77"
+export LD_LIBRARY_PATH=${DIR_IOAPI_LIB}:${LD_LIBRARY_PATH}   ## auch no... .a not meant to be in LD_LIBRARY_PATH ... so still no good
+
+
+##export DIR_NETCDF=/gpanda/software/sl-6.x86_64/modules/netcdf/4.2.1.1
+export DIR_NETCDF=/usr/local
+##export DIR_MPI=/gpanda/software/sl-6.x86_64/modules/openmpi/1.6.5
+##--export DIR_MPI=/usr/lib64/openmpi/bin
+## export DIR_MPI=/usr/lib64/openmpi:/usr/include/openmpi-x86_64/  # cant define 2 with colon separation  :(
+##export DIR_MPI=/usr/include/openmpi-x86_64/
+## the way how the makefile is defined, expect $DIR_MPI/include
+## so better download mpi source and build it instead of using OS' rpm
+## (using openmpi 2.1.6, see Dockerfile.lib4cmaq for rationale)
+export DIR_MPI=/opt/openmpi/2.1.6 
 
 # Name of the FORTRAN netcdf library (in some installation, the C and FORTRAN
 # netcdf libraries are put together in libnetcdf while in some other
 # installation, the FORTRAN library is in a separate file called netcdff)
-# export LIB_NETCDF=-lnetcdff
+##export LIB_NETCDF=-lnetcdff
+## not sure why Lucas disabled this library in the parallel version of SAPRC99
 
+## so for *BENZ is serial and ParOpt is empty (ie serial), but then why was mpi include needed above?? 
 # If the variable ParOpt is defined (not matter what its value is, even empty),
 # then CCTM is compiled with parallel support.
-export ParOpt=""
+#export ParOpt=""
+# error even after using mpic++ as compiler.  
+## wratt3.F90:(.text+0xe0b): undefined reference to `GOMP_critical_name_end'
+## so enable ParOpt in environment-user to see if that works.   <-- did not work 11271e
+## disabling -fopenmp in Makeinclude. and Makeinclude.Linux2_x86_64gfort seems to resolve the issue.   xref OMP GOMP  a437304
+#xx export ParOpt="TRUE"    
+##export ParOpt=""    
+## for parallel version of SAPRC99, Lucas has disabled defining PartOpt.  but I thought to build paralle, need to defined it to a non zero value... ++ ??
+
 export ModInpt=profile
 export ModMech=mc_noop
+##export Mechanism=BENZ
 export Mechanism=saprc99
 export ModDriver=ctm
 export ModInit=init
@@ -62,6 +104,7 @@ export ModCloud=cloud_noop
 export ModPa=pa
 export ModUtil=util
 export PAOpt=pa_noop
+##export ModAdjChem=noop
 export ModAdjChem=SAPRC99ROS
 # Emissions will be processed in chem if Cemis is defined and in vdiff
 # otherwise.

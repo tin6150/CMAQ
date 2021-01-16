@@ -80,5 +80,14 @@ valgrand will take the debug (-g) bin from gcc and gfortran.
 where is the script that actually run my example?  Ans:  run_eta/ [see higher up]
 but need to get input files, since stuff in my global scratch got deleted somehow :-\
 
+++ 
 
-
+copied several com*cctm*csh file here
+problem running 
+ cctm isn't found, something isn't getting setup correctly either.  or maybe just not inherited after the source was done?
+ but:
+____running TIN's local copy of com_CCTM_inout.csh
+ /global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/run/MCIP/SARMAP_258/SARMAP_258.METCRO2D.nc not found
+ cuz 
+      /global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/run/MCIP/SARMAP_258/SARMAP_258.METCRO2D.nc 
+   -> /global/home/groups-sw/pc_adjoint/data/SARMAP/MET/METCRO2D_G258 is a broken link

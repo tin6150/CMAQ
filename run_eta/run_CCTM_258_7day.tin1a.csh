@@ -178,6 +178,7 @@ setenv L5FCHK_WRITE F
 ## KZMIN has to do with Min eddy diffusivity
 setenv KZMIN F 
 
+#### seems like DIR_OUT default to `pwd` in com_global.csh
 mkdir       -p /global/scratch/tin/cmaq_run1/adj_kzF_${REC_VAR}_${NME_MONTH}_${SLURM_JOBID}   ## OUTPUT++++
 setenv DIR_OUT /global/scratch/tin/cmaq_run1/adj_kzF_${REC_VAR}_${NME_MONTH}_${SLURM_JOBID}   ## OUTPUT++++
 ##mkdir       -p /global/scratch/tin/cmaq2/adj_kzF_${REC_VAR}_${NME_MONTH}_${SLURM_JOBID}
@@ -284,7 +285,7 @@ echo "========================================"
 echo "========================================"
 source ${scr}
 echo "-----reverse-eng-com_CCTM--AFTER----------------------------"
-## may have to copy these csh script and add vagrant before run of cctm
+## may have to copy these csh script and add valgrind before run of cctm
 echo "{DIR_CMAQ_W} is ${DIR_CMAQ_W}"
 echo "{EXECPATH}   is ${EXECPATH:q}" # eg  /global/home/groups-sw/pc_adjoint/CMAQ-4.5-ADJ-LAJB_tutorial/code/CMAQ-4.5-ADJ-LAJB/built_gcc_gfortran_parallel_O3_default-eddy/bin/CCTM
 which cctm
